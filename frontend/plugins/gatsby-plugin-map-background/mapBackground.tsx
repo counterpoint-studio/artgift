@@ -24,9 +24,13 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
     let map = new mapboxgl.Map({
       container: mapEl.current,
       style: "mapbox://styles/mapbox/streets-v11",
-      zoom: 9,
+      zoom: 7,
+      pitch: 45,
       attributionControl: false,
     }).addControl(new mapboxgl.AttributionControl({ compact: false }))
+    map.once("load", () => {
+      map.easeTo({ zoom: 9, pitch: 0, duration: 10000 })
+    })
     setMap(map)
   }, [])
 
