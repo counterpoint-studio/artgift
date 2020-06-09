@@ -9,3 +9,16 @@
 
   z-index: -1;
 }
+
+.pointMarker {
+  display: block;
+  border-radius: 50%;
+  width: 5px;
+  height: 5px;
+  background-color: rgba(black, 0.75);
+  opacity: 0;
+  transition: opacity 0.5s;
+  &.isAdded {
+    opacity: 1;
+  }
+}

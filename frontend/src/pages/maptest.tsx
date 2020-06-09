@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { Feature } from "geojson"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -7,7 +8,10 @@ import { MAP_CENTER } from "../constants"
 import { getRegionGeoJSON } from "../services/regionLookup"
 
 const MapTestPage = () => {
-  let [focusedRegion, setFocusedRegion] = useState<GeoJSON.Feature>()
+  let [focusedRegion, setFocusedRegion] = useState<{
+    feature: Feature
+    bounds: mapboxgl.LngLatBoundsLike
+  }>()
   useMapBackground({
     center: MAP_CENTER,
     regions: getRegionGeoJSON(),
@@ -17,12 +21,12 @@ const MapTestPage = () => {
   return (
     <Layout>
       <SEO title="Home" />
-      {getRegionGeoJSON().features.map((f, idx) => (
+      {getRegionGeoJSON().map((f, idx) => (
         <button
           key={idx}
-          onClick={() => setFocusedRegion(getRegionGeoJSON().features[idx])}
+          onClick={() => setFocusedRegion(getRegionGeoJSON()[idx])}
         >
-          {f.properties.nimi_fi}
+          {f.feature.properties.nimi_fi}
         </button>
       ))}
     </Layout>

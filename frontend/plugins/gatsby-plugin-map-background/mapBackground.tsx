@@ -8,14 +8,19 @@ mapboxgl.accessToken = process.env.GATSBY_MAPBOX_ACCESS_TOKEN
 
 export interface MapBackgroundProps {
   center?: [number, number]
-  regions?: GeoJSON.FeatureCollection
-  focusedRegion?: GeoJSON.Feature
+  regions?: { feature: GeoJSON.Feature; bounds: mapboxgl.LngLatBoundsLike }[]
+  focusedRegion?: {
+    feature: GeoJSON.Feature
+    bounds: mapboxgl.LngLatBoundsLike
+  }
+  points?: [number, number][]
 }
 
 const MapBackground: React.FC<MapBackgroundProps> = ({
   center,
   regions,
   focusedRegion,
+  points,
 }) => {
   let mapEl = useRef<HTMLDivElement>()
   let [map, setMap] = useState<mapboxgl.Map>()
@@ -46,11 +51,17 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
         added = true
         if (map.getSource("regions")) {
           let src = map.getSource("regions") as mapboxgl.GeoJSONSource
-          src.setData(regions)
+          src.setData({
+            type: "FeatureCollection",
+            features: regions.map(r => r.feature),
+          })
         } else {
           map.addSource("regions", {
             type: "geojson",
-            data: regions,
+            data: {
+              type: "FeatureCollection",
+              features: regions.map(r => r.feature),
+            },
           })
           map.addLayer({
             id: "regions",
@@ -80,19 +91,34 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
   useEffect(
     function focusOnRegion() {
       if (!focusedRegion || !map) return
-      let poly = focusedRegion.geometry as Polygon
-      let bounds = poly.coordinates.reduce(
-        (bounds, coords) =>
-          coords.reduce(
-            (bounds, coord) => bounds.extend(coord as [number, number]),
-            bounds
-          ),
-        new mapboxgl.LngLatBounds()
-      )
-      map.fitBounds(bounds)
+      map.fitBounds(focusedRegion.bounds)
     },
     [focusedRegion, map]
   )
+
+  useEffect(() => {
+    if (!points || !map) return
+
+    let running = true,
+      markers: mapboxgl.Marker[] = [],
+      pts = points.slice()
+    function addNext() {
+      if (!running || pts.length === 0) return
+      let markerEl = document.createElement("div")
+      markerEl.classList.add("pointMarker")
+      markers.push(
+        new mapboxgl.Marker(markerEl).setLngLat(pts.shift()).addTo(map)
+      )
+      setTimeout(() => markerEl.classList.add("isAdded"))
+      setTimeout(addNext, Math.random() * 30)
+    }
+    setTimeout(addNext, 2000)
+
+    return () => {
+      running = false
+      markers.forEach(m => m.remove())
+    }
+  }, [points, map])
 
   return <div ref={mapEl} className="mapBackground"></div>
 }
