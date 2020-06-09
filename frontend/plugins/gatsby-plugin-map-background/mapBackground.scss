@@ -1,0 +1,11 @@
+@import url("https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.css");
+
+.mapBackground {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+
+  z-index: -1;
+}
