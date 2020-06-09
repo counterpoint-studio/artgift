@@ -4,7 +4,12 @@ import mapboxgl from "mapbox-gl"
 import regionData from '../data/region_data.json';
 import { GiftSlot } from './gifts';
 
-export function getRegionGeoJSON(): { feature: Feature, bounds: mapboxgl.LngLatBounds }[] {
+export type Region = {
+    feature: Feature
+    bounds: mapboxgl.LngLatBounds
+};
+
+export function getRegionGeoJSON(): Region[] {
     let data = regionData as FeatureCollection;
     return data.features.map(region => ({
         feature: region,
