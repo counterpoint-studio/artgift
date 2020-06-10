@@ -13,11 +13,11 @@ import "./layout.scss"
 
 const Layout = ({ children }) => {
   return (
-    <>
+    <div className="wrapper">
       <Header />
-      <main>{children}</main>
-      <footer></footer>
-    </>
+      <main className="main">{children}</main>
+      <footer className="footer"></footer>
+    </div>
   )
 }
 

@@ -1,10 +1,5 @@
 import React from "react"
-import Language from "./language"
 
-const Header = () => (
-  <header>
-    <Language />
-  </header>
-)
+const Header = () => <header className="header"></header>
 
 export default Header

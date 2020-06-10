@@ -1,2 +1,18 @@
-.languages {
+.language {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+
+  &Link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    cursor: pointer;
+
+    &.isCurrent {
+      text-decoration: underline;
+    }
+  }
 }

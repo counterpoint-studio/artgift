@@ -2,5 +2,43 @@
   "title": "Art Gift",
   "404SEOTitle": "404: Not Found",
   "404Title": "Not Found",
-  "404Body": "You just hit a route that doesn't exist..."
+  "404Body": "Sorry, but this page cannot be found.",
+
+  "indexSEOTitle": "Art Gift",
+  "indexSEODescription": "",
+  "indexTitle": "Lorem ipsum dolor sit amet",
+  "indexBody": "Penatibus hac ultricies eleifend facilisis a fusce cubilia sodales suspendisse vestibulum felis dapibus gravida sem fringilla est per justo a.",
+  "indexButtonNext": "Give a gift",
+
+  "toSEOTitle": "Gift recipient",
+  "toSEODescription": "",
+  "toTitle": "Gift recipient",
+  "toFormLabelFor": "For",
+  "toFormLabelAddress": "Who lives at",
+  "toFormLabelMessage": "Who is special to me because",
+  "toButtonNext": "Next",
+
+  "giftsSEOTitle": "Explore gifts",
+  "giftsSEODescription": "Explore the available Art Gifts",
+  "giftsTitle": "Gifts available in",
+  "giftsButtonBook": "Book",
+  "giftsButtonNext": "",
+
+  "fromSEOTitle": "",
+  "fromSEODescription": "",
+  "fromTitle": "Thank you",
+  "fromFormLabelName": "My name",
+  "fromFormLabelPhone": "My phone number",
+  "fromFormLabelEmail": "My email",
+  "fromFormLabelSpecialInfo": "Special requirements of your gift recipient",
+  "fromReservedTime": "Your gift is reserved for",
+  "fromReservedTextEnd": "Please complete the booking by adding your own details.",
+  "fromNextButton": "Send gift",
+
+  "deliveryTitle": "Your gift was delivered!",
+  "deliveryDescription": "Please await approval of your gift order by our team, which you will receive confirmation of via text message.",
+
+  "giftSEOTitle": "",
+  "giftSEODescription": "",
+  "giftTitle": ""
 }

@@ -1,0 +1,101 @@
+@import "variables.scss";
+
+/* Tenor Sans Regular - 400 */
+// @font-face {
+//   font-family: "Tenor Sans";
+//   font-style: normal;
+//   font-weight: 400;
+//   src: local("Tenor Sans"), local("TenorSans"),
+//     url("../fonts/tenor-sans-v11-latin-regular.woff2") format("woff2"),
+//     url("../fonts/tenor-sans-v11-latin-regular.woff") format("woff");
+// }
+
+body {
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures contextual;
+  font-feature-settings: "kern", "liga", "clig", "calt";
+  -webkit-font-smoothing: antialiased;
+  font-family: $fontStackBody;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  font-size: $fontSizeBase;
+  text-align: left;
+  color: $colorFontBody;
+}
+
+h1,
+.h1 {
+  font-family: $fontStackHeader;
+  font-weight: $fontWeightMedium;
+  color: $colorFontBody;
+  line-height: 1.1666;
+  font-size: 26px;
+
+  @media (min-width: 768px) {
+    font-size: 42px;
+  }
+}
+
+h2,
+.h2 {
+  font-family: $fontStackHeader;
+  font-weight: $fontWeightMedium;
+  color: $colorFontHeader;
+  font-size: 22px;
+
+  @media (min-width: 768px) {
+    font-size: 36px;
+  }
+}
+
+h3,
+.h3 {
+  font-family: $fontStackHeader;
+  font-weight: $fontWeightMedium;
+  font-size: 18px;
+  color: $colorFontHeader;
+
+  @media (min-width: 768px) {
+    font-size: 28px;
+  }
+}
+
+p,
+.p {
+  font-family: $fontStackBody;
+  font-weight: $fontWeightMedium;
+  font-size: $fontSizeBase;
+  line-height: 1.5;
+  margin: 0 0 $fontSizeBase 0;
+  color: $colorFontBody;
+}
+
+strong {
+  font-weight: $fontWeightBold;
+}
+
+a,
+p a {
+  font-weight: $fontWeightMedium;
+  text-decoration: none;
+  color: $colorFontBody;
+}
+
+ul {
+  color: $colorFontBody;
+
+  li {
+    font-size: $fontSizeBase;
+    line-height: 1.5;
+  }
+}
+
+// Visible to screen readers only
+.sr-only {
+  position: fixed;
+  top: -100%;
+  left: -100%;
+  color: rgba(0, 0, 0, 0);
+  user-select: none;
+}

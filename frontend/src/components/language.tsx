@@ -15,7 +15,7 @@ const Language = () => (
       {({ languages, language: currentLocale }) =>
         languages.map(language => (
           <a
-            className={classNames("language", {
+            className={classNames("languageLink", {
               isCurrent: currentLocale === language,
             })}
             key={language}
