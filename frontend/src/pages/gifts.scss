@@ -1,2 +1,23 @@
+@import "../components/variables";
+
 .gifts {
+  .giftsTable {
+    td {
+      border-bottom: 1px solid $colorHFGrey;
+      padding: 5px 0;
+      font-size: 14px;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    &Time {
+      text-align: left;
+    }
+
+    &Book {
+      text-align: right;
+    }
+  }
 }

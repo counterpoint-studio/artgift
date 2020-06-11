@@ -50,22 +50,26 @@ const IntroPage = () => {
           isVisible: !isMapMoving,
         })}
       >
-        <Language />
-        <img
-          className="introLogo"
-          src={Logo}
-          alt={intl.formatMessage({ id: "title" })}
-        />
-        <h1 className="introTitle">
-          {intl.formatMessage({ id: "introTitle" })}
-        </h1>
-        <div className="introBody">
-          <p>{intl.formatMessage({ id: "introBody" })}</p>
-        </div>
-        <NextButton
-          to="/to"
-          text={intl.formatMessage({ id: "introButtonNext" })}
-        />
+        <header className="header">
+          <Language />
+          <img
+            className="introLogo"
+            src={Logo}
+            alt={intl.formatMessage({ id: "title" })}
+          />
+        </header>
+        <main>
+          <h1 className="introTitle">
+            {intl.formatMessage({ id: "introTitle" })}
+          </h1>
+          <div className="introBody">
+            <p>{intl.formatMessage({ id: "introBody" })}</p>
+          </div>
+          <NextButton
+            to="/to"
+            text={intl.formatMessage({ id: "introButtonNext" })}
+          />
+        </main>
       </div>
     </Layout>
   )

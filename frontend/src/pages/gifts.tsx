@@ -37,15 +37,11 @@ const GiftsPage = () => {
           {intl.formatMessage({ id: "giftsTitle" })} {region}
         </h1>
         <table className="giftsTable">
-          <colgroup>
-            <col className="giftsTableColumn giftsTableColumn--time" />
-            <col className="giftsTableColumn giftsTableColumn--book" />
-          </colgroup>
           <tbody>
             {slots.map(slot => (
               <tr key={slot.id}>
-                <td>{formatTime(slot.time)}</td>
-                <td>
+                <td className="giftsTableTime">{formatTime(slot.time)}</td>
+                <td className="giftsTableBook">
                   <Link to="/from" className="button button--book">
                     {intl.formatMessage({ id: "giftsButtonBook" })}
                   </Link>

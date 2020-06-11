@@ -25,12 +25,12 @@ body {
   background: $colorBackground;
   display: grid;
   grid-template-columns: auto;
-  grid-template-rows: auto auto auto;
+  grid-template-rows: auto 1fr auto;
   grid-template-areas:
     "header"
     "main"
     "footer";
-  gap: 60px;
+  gap: 30px;
 
   .header {
     grid-area: header;
@@ -51,6 +51,11 @@ body {
   text-align: center;
   text-transform: uppercase;
   color: white;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
 
   &--next {
     margin-top: $fontSizeBase * 2;
@@ -58,7 +63,8 @@ body {
 
   &--book {
     display: inline-block;
-    padding: 5px 10px;
+    font-size: 10px;
+    padding: 0px 10px;
   }
 }
 
