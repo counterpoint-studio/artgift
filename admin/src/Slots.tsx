@@ -45,7 +45,7 @@ export const Slots: React.FC = () => {
   let onAddNewSlot = useCallback(
     (evt: FormEvent) => {
       evt.preventDefault();
-      coll.add(newSlot).then(() => setNewSlot(INIT_SLOT));
+      coll.add(newSlot);
     },
     [coll, newSlot]
   );
