@@ -34,7 +34,7 @@ const GiftsPage = () => {
               <td>09:00</td>
               <td>
                 <Link to="/from" className="button button--book">
-                  Book
+                  {intl.formatMessage({ id: "giftsButtonBook" })}
                 </Link>
               </td>
             </tr>
@@ -42,7 +42,7 @@ const GiftsPage = () => {
               <td>10:00</td>
               <td>
                 <Link to="/from" className="button button--book">
-                  Book
+                  {intl.formatMessage({ id: "giftsButtonBook" })}
                 </Link>
               </td>
             </tr>
@@ -50,7 +50,7 @@ const GiftsPage = () => {
               <td>11:00</td>
               <td>
                 <Link to="/from" className="button button--book">
-                  Book
+                  {intl.formatMessage({ id: "giftsButtonBook" })}
                 </Link>
               </td>
             </tr>
@@ -58,7 +58,7 @@ const GiftsPage = () => {
               <td>12:00</td>
               <td>
                 <Link to="/from" className="button button--book">
-                  Book
+                  {intl.formatMessage({ id: "giftsButtonBook" })}
                 </Link>
               </td>
             </tr>
@@ -66,7 +66,7 @@ const GiftsPage = () => {
               <td>13:00</td>
               <td>
                 <Link to="/from" className="button button--book">
-                  Book
+                  {intl.formatMessage({ id: "giftsButtonBook" })}
                 </Link>
               </td>
             </tr>
@@ -74,7 +74,7 @@ const GiftsPage = () => {
               <td>14:00</td>
               <td>
                 <Link to="/from" className="button button--book">
-                  Book
+                  {intl.formatMessage({ id: "giftsButtonBook" })}
                 </Link>
               </td>
             </tr>
@@ -82,7 +82,7 @@ const GiftsPage = () => {
               <td>15:00</td>
               <td>
                 <Link to="/from" className="button button--book">
-                  Book
+                  {intl.formatMessage({ id: "giftsButtonBook" })}
                 </Link>
               </td>
             </tr>
@@ -90,7 +90,7 @@ const GiftsPage = () => {
               <td>16:00</td>
               <td>
                 <Link to="/from" className="button button--book">
-                  Book
+                  {intl.formatMessage({ id: "giftsButtonBook" })}
                 </Link>
               </td>
             </tr>
