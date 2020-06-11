@@ -28,7 +28,6 @@ body {
 
 .main {
   grid-area: main;
-  background: #222;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -57,6 +56,11 @@ body {
     height: 40px;
     padding: 10px 10px;
     margin-top: $fontSizeBase * 2;
+  }
+
+  &--book {
+    display: inline-block;
+    padding: 5px 10px;
   }
 }
 
