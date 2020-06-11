@@ -5,6 +5,7 @@ body {
   height: 100%;
   overscroll-behavior: none;
   position: relative;
+  background: #222;
 }
 
 .wrapper {
@@ -20,6 +21,7 @@ body {
     "header"
     "main"
     "footer";
+  z-index: 1; // everything on top of map
 }
 
 .header {

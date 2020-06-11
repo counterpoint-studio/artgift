@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -8,11 +8,13 @@ import {
 } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/firestore";
 
-import "./App.scss";
 import { Slots } from "./Slots";
 import { SignIn } from "./SignIn";
 import { SignOut } from "./SignOut";
+
+import "./App.scss";
 
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,

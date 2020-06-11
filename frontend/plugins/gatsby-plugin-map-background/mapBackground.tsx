@@ -14,6 +14,7 @@ export interface MapBackgroundProps {
     bounds: mapboxgl.LngLatBoundsLike
   }
   points?: [number, number][]
+  onSetMoving: (moving: boolean) => void
 }
 
 const MapBackground: React.FC<MapBackgroundProps> = ({
@@ -21,6 +22,7 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
   regions,
   focusedRegion,
   points,
+  onSetMoving,
 }) => {
   let mapEl = useRef<HTMLDivElement>()
   let [map, setMap] = useState<mapboxgl.Map>()
@@ -34,10 +36,33 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
       attributionControl: false,
     }).addControl(new mapboxgl.AttributionControl({ compact: false }))
     map.once("load", () => {
-      map.easeTo({ zoom: 9, pitch: 0, duration: 10000 })
+      map.easeTo({ zoom: 9, pitch: 0, duration: 5000 })
     })
     setMap(map)
   }, [])
+
+  useEffect(() => {
+    if (!map) return
+    let onMoveStart = () => {
+      console.log("s"), onSetMoving(true)
+    }
+    let onMoveEnd = () => {
+      console.log("e"), onSetMoving(false)
+    }
+    let attach = () => {
+      map.on("movestart", onMoveStart)
+      map.on("moveend", onMoveEnd)
+    }
+    if (map.loaded()) {
+      attach()
+    } else {
+      map.once("load", attach)
+    }
+    return () => {
+      map.off("movestart", onMoveStart)
+      map.off("moveend", onMoveEnd)
+    }
+  }, [map, onSetMoving])
 
   useEffect(() => {
     map?.setCenter(center)

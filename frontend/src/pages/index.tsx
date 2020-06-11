@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import Helmet from "react-helmet"
 import { useIntl } from "gatsby-plugin-intl"
+import classNames from "classnames"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -17,13 +18,19 @@ import "./index.scss"
 
 const IntroPage = () => {
   let intl = useIntl()
+  let [isVisible, setVisible] = useState(false)
   let [introPoints, setIntroPoints] = useState<[number, number][]>([])
 
-  useMapBackground({ center: MAP_CENTER, points: introPoints })
+  let { isMoving: isMapMoving } = useMapBackground({
+    center: MAP_CENTER,
+    points: introPoints,
+  })
+
   useEffect(() => {
     gifts.subscribeToGiftSlotsOverview(giftSlots =>
       setIntroPoints(regions.getRandomLocations(giftSlots))
     )
+    setTimeout(() => setVisible(true), 2000)
   }, [])
 
   return (
@@ -38,7 +45,11 @@ const IntroPage = () => {
         }}
         key="helmet"
       />
-      <div className="pageContent pageContent--intro">
+      <div
+        className={classNames("pageContent", "pageContent--intro", {
+          isVisible: !isMapMoving,
+        })}
+      >
         <Language />
         <img
           className="introLogo"
