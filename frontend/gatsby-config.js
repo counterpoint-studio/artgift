@@ -10,6 +10,7 @@ module.exports = {
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
+    `gatsby-plugin-map-background`,
     `gatsby-plugin-sass`,
     //`gatsby-plugin-sitemap`,
     `gatsby-plugin-netlify`,

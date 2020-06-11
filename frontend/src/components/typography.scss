@@ -29,11 +29,12 @@ h1,
   font-family: $fontStackHeader;
   font-weight: $fontWeightMedium;
   color: $colorFontBody;
-  line-height: 1.1666;
+  line-height: 1;
   font-size: 26px;
+  margin: 0 0 $fontSizeBase 0;
 
   @media (min-width: 768px) {
-    font-size: 42px;
+    font-size: 36px;
   }
 }
 
