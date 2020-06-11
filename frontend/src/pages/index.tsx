@@ -52,11 +52,11 @@ const IntroPage = () => {
       >
         <header className="header">
           <Language />
-          <img
+          {/* <img
             className="introLogo"
             src={Logo}
             alt={intl.formatMessage({ id: "title" })}
-          />
+          /> */}
         </header>
         <main>
           <h1 className="introTitle">

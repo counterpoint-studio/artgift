@@ -31,20 +31,20 @@ const FromPage = () => {
         </p>
         <form>
           <div className="inputGroup">
-            <label>{intl.formatMessage({ id: "fromFormLabelName" })}</label>
+            <label>{intl.formatMessage({ id: "fromFormLabelName" })}:</label>
             <input type="text" />
           </div>
           <div className="inputGroup">
-            <label>{intl.formatMessage({ id: "fromFormLabelPhone" })}</label>
+            <label>{intl.formatMessage({ id: "fromFormLabelPhone" })}:</label>
             <input type="text" />
           </div>
           <div className="inputGroup">
-            <label>{intl.formatMessage({ id: "fromFormLabelEmail" })}</label>
+            <label>{intl.formatMessage({ id: "fromFormLabelEmail" })}:</label>
             <input type="text" />
           </div>
           <div className="inputGroup">
             <label>
-              {intl.formatMessage({ id: "fromFormLabelSpecialInfo" })}
+              {intl.formatMessage({ id: "fromFormLabelSpecialInfo" })}:
             </label>
             <textarea></textarea>
           </div>
