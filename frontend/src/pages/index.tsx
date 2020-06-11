@@ -10,37 +10,40 @@ import Logo from "../images/imagePlaceholder.svg"
 
 import "./index.scss"
 
-const IndexPage = () => {
+const IntroPage = () => {
   let intl = useIntl()
 
   return (
     <Layout>
       <SEO
-        title={intl.formatMessage({ id: "indexSEOTitle" })}
-        description={intl.formatMessage({ id: "indexSEODescription" })}
+        title={intl.formatMessage({ id: "introSEOTitle" })}
+        description={intl.formatMessage({ id: "introSEODescription" })}
       />
       <Helmet
         bodyAttributes={{
-          class: "index",
+          class: "intro",
         }}
         key="helmet"
       />
-      <div className="pageContent pageContent--index">
+      <div className="pageContent pageContent--intro">
         <Language />
         <img
-          className="indexLogo"
+          className="introLogo"
           src={Logo}
           alt={intl.formatMessage({ id: "title" })}
         />
-        <h1 className="indexTitle">
-          {intl.formatMessage({ id: "indexTitle" })}
+        <h1 className="introTitle">
+          {intl.formatMessage({ id: "introTitle" })}
         </h1>
-        <div className="indexBody">
-          <p>{intl.formatMessage({ id: "indexBody" })}</p>
+        <div className="introBody">
+          <p>{intl.formatMessage({ id: "introBody" })}</p>
         </div>
+        <a href="/to" className="button button--next">
+          {intl.formatMessage({ id: "introButtonNext" })}
+        </a>
       </div>
     </Layout>
   )
 }
 
-export default IndexPage
+export default IntroPage

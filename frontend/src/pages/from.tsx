@@ -47,9 +47,9 @@ const FromPage = () => {
             </label>
             <textarea></textarea>
           </div>
-          <button type="submit">
+          <a href="/delivery" className="button button--next">
             {intl.formatMessage({ id: "fromButtonNext" })}
-          </button>
+          </a>
         </form>
       </div>
     </Layout>

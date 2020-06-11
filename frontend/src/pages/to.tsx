@@ -36,9 +36,9 @@ const ToPage = () => {
             <label>{intl.formatMessage({ id: "toFormLabelMessage" })}</label>
             <textarea></textarea>
           </div>
-          <button type="submit">
+          <a href="/gifts" className="button button--next">
             {intl.formatMessage({ id: "toButtonNext" })}
-          </button>
+          </a>
         </form>
       </div>
     </Layout>

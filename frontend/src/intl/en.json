@@ -4,11 +4,11 @@
   "404Title": "Not Found",
   "404Body": "Sorry, but this page cannot be found.",
 
-  "indexSEOTitle": "Art Gift",
-  "indexSEODescription": "",
-  "indexTitle": "Lorem ipsum dolor sit amet",
-  "indexBody": "Penatibus hac ultricies eleifend facilisis a fusce cubilia sodales suspendisse vestibulum felis dapibus gravida sem fringilla est per justo a.",
-  "indexButtonNext": "Give a gift",
+  "introSEOTitle": "Art Gift",
+  "introSEODescription": "",
+  "introTitle": "Lorem ipsum dolor sit amet",
+  "introBody": "Penatibus hac ultricies eleifend facilisis a fusce cubilia sodales suspendisse vestibulum felis dapibus gravida sem fringilla est per justo a.",
+  "introButtonNext": "Give a gift",
 
   "toSEOTitle": "Gift recipient",
   "toSEODescription": "",

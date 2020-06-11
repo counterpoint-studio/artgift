@@ -4,11 +4,11 @@
   "404Title": "Sivua ei löydy",
   "404Body": "Olet osunut sivulle jota ei näyttäisi olevan olemassa...",
 
-  "indexSEOTitle": "Art Gift",
-  "indexSEODescription": "",
-  "indexTitle": "Lorem ipsum dolor sit amet",
-  "indexBody": "Penatibus hac ultricies eleifend facilisis a fusce cubilia sodales suspendisse vestibulum felis dapibus gravida sem fringilla est per justo a.",
-  "indexButtonNext": "Give a gift",
+  "introSEOTitle": "Art Gift",
+  "introSEODescription": "",
+  "introTitle": "Lorem ipsum dolor sit amet",
+  "introBody": "Penatibus hac ultricies eleifend facilisis a fusce cubilia sodales suspendisse vestibulum felis dapibus gravida sem fringilla est per justo a.",
+  "introButtonNext": "Give a gift",
 
   "toSEOTitle": "Gift recipient",
   "toSEODescription": "",

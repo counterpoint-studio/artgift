@@ -23,7 +23,7 @@ const GiftsPage = () => {
         key="helmet"
       />
       <div className="pageContent pageContent--gifts">
-        <h1>{intl.formatMessage({ id: "giftsTitle" })}</h1>
+        <h1>{intl.formatMessage({ id: "giftsTitle" })} [region]</h1>
         <table className="giftsTable">
           <colgroup>
             <col className="giftsTableColumn giftsTableColumn--time" />
@@ -33,65 +33,65 @@ const GiftsPage = () => {
             <tr>
               <td>09:00</td>
               <td>
-                <button className="giftsTableButton giftsTableButton--book">
+                <a href="/from" className="button button--book">
                   Book
-                </button>
+                </a>
               </td>
             </tr>
             <tr>
               <td>10:00</td>
               <td>
-                <button className="giftsTableButton giftsTableButton--book">
+                <a href="/from" className="button button--book">
                   Book
-                </button>
+                </a>
               </td>
             </tr>
             <tr>
               <td>11:00</td>
               <td>
-                <button className="giftsTableButton giftsTableButton--book">
+                <a href="/from" className="button button--book">
                   Book
-                </button>
+                </a>
               </td>
             </tr>
             <tr>
               <td>12:00</td>
               <td>
-                <button className="giftsTableButton giftsTableButton--book">
+                <a href="/from" className="button button--book">
                   Book
-                </button>
+                </a>
               </td>
             </tr>
             <tr>
               <td>13:00</td>
               <td>
-                <button className="giftsTableButton giftsTableButton--book">
+                <a href="/from" className="button button--book">
                   Book
-                </button>
+                </a>
               </td>
             </tr>
             <tr>
               <td>14:00</td>
               <td>
-                <button className="giftsTableButton giftsTableButton--book">
+                <a href="/from" className="button button--book">
                   Book
-                </button>
+                </a>
               </td>
             </tr>
             <tr>
               <td>15:00</td>
               <td>
-                <button className="giftsTableButton giftsTableButton--book">
+                <a href="/from" className="button button--book">
                   Book
-                </button>
+                </a>
               </td>
             </tr>
             <tr>
               <td>16:00</td>
               <td>
-                <button className="giftsTableButton giftsTableButton--book">
+                <a href="/from" className="button button--book">
                   Book
-                </button>
+                </a>
               </td>
             </tr>
           </tbody>
