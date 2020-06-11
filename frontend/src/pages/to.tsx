@@ -1,15 +1,31 @@
-import React from "react"
+import React, { useState, useCallback } from "react"
 import Helmet from "react-helmet"
 import { useIntl } from "gatsby-plugin-intl"
+import AutoSuggest from "react-autosuggest"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import NextButton from "../components/nextButton"
+import * as addresses from "../services/streetAddressLookup"
 
 import "./to.scss"
 
 const ToPage = () => {
   let intl = useIntl()
+  let [address, setAddress] = useState("f")
+  let [addressSuggestions, setAddressSuggestions] = useState<string[]>([])
+
+  let onLoadAddressSuggestions = useCallback((address: string) => {
+    if (address.length > 0) {
+      addresses.findAddresses(address).then(setAddressSuggestions)
+    } else {
+      setAddressSuggestions([])
+    }
+  }, [])
+  let onClearAddressSuggestions = useCallback(() => {
+    setAddressSuggestions([])
+  }, [])
+  console.log(address)
 
   return (
     <Layout>
@@ -31,7 +47,19 @@ const ToPage = () => {
           </div>
           <div className="inputGroup">
             <label>{intl.formatMessage({ id: "toFormLabelAddress" })}:</label>
-            <input type="text" />
+            <AutoSuggest
+              suggestions={addressSuggestions}
+              onSuggestionsFetchRequested={evt =>
+                onLoadAddressSuggestions(evt.value)
+              }
+              onSuggestionsClearRequested={onClearAddressSuggestions}
+              getSuggestionValue={v => v}
+              renderSuggestion={v => v}
+              inputProps={{
+                value: address,
+                onChange: (_, { newValue }) => setAddress(newValue),
+              }}
+            />
           </div>
           <div className="inputGroup">
             <label>{intl.formatMessage({ id: "toFormLabelLanguage" })}:</label>
