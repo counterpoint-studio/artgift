@@ -25,15 +25,15 @@ const ToPage = () => {
       <div className="pageContent pageContent--to">
         <form>
           <div className="inputGroup">
-            <label>{intl.formatMessage({ id: "toFormLabelFor" })}</label>
+            <label>{intl.formatMessage({ id: "toFormLabelFor" })}:</label>
             <input type="text" />
           </div>
           <div className="inputGroup">
-            <label>{intl.formatMessage({ id: "toFormLabelAddress" })}</label>
+            <label>{intl.formatMessage({ id: "toFormLabelAddress" })}:</label>
             <input type="text" />
           </div>
           <div className="inputGroup">
-            <label>{intl.formatMessage({ id: "toFormLabelMessage" })}</label>
+            <label>{intl.formatMessage({ id: "toFormLabelMessage" })}:</label>
             <textarea></textarea>
           </div>
           <a href="/gifts" className="button button--next">
