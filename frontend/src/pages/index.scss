@@ -13,4 +13,12 @@
 
   &Body {
   }
+
+  .pageContent {
+    opacity: 0;
+    transition: opacity 0.5s;
+    &.isVisible {
+      opacity: 1;
+    }
+  }
 }
