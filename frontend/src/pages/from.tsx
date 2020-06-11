@@ -24,35 +24,37 @@ const FromPage = () => {
         key="helmet"
       />
       <div className="pageContent pageContent--from">
-        <h1>{intl.formatMessage({ id: "fromTitle" })}</h1>
-        <p>
-          {intl.formatMessage({ id: "fromReservedTimeStart" })} [time]{" "}
-          {intl.formatMessage({ id: "fromReservedTimeEnd" })}
-        </p>
-        <form>
-          <div className="inputGroup">
-            <label>{intl.formatMessage({ id: "fromFormLabelName" })}:</label>
-            <input type="text" />
-          </div>
-          <div className="inputGroup">
-            <label>{intl.formatMessage({ id: "fromFormLabelPhone" })}:</label>
-            <input type="text" />
-          </div>
-          <div className="inputGroup">
-            <label>{intl.formatMessage({ id: "fromFormLabelEmail" })}:</label>
-            <input type="text" />
-          </div>
-          <div className="inputGroup">
-            <label>
-              {intl.formatMessage({ id: "fromFormLabelSpecialInfo" })}:
-            </label>
-            <textarea></textarea>
-          </div>
-          <NextButton
-            to="/delivery"
-            text={intl.formatMessage({ id: "fromButtonNext" })}
-          />
-        </form>
+        <main className="main">
+          <h1>{intl.formatMessage({ id: "fromTitle" })}</h1>
+          <p>
+            {intl.formatMessage({ id: "fromReservedTimeStart" })} [time]{" "}
+            {intl.formatMessage({ id: "fromReservedTimeEnd" })}
+          </p>
+          <form>
+            <div className="inputGroup">
+              <label>{intl.formatMessage({ id: "fromFormLabelName" })}:</label>
+              <input type="text" />
+            </div>
+            <div className="inputGroup">
+              <label>{intl.formatMessage({ id: "fromFormLabelPhone" })}:</label>
+              <input type="text" />
+            </div>
+            <div className="inputGroup">
+              <label>{intl.formatMessage({ id: "fromFormLabelEmail" })}:</label>
+              <input type="text" />
+            </div>
+            <div className="inputGroup">
+              <label>
+                {intl.formatMessage({ id: "fromFormLabelSpecialInfo" })}:
+              </label>
+              <textarea></textarea>
+            </div>
+            <NextButton
+              to="/delivery"
+              text={intl.formatMessage({ id: "fromButtonNext" })}
+            />
+          </form>
+        </main>
       </div>
     </Layout>
   )

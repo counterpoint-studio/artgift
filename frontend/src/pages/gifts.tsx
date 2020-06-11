@@ -33,23 +33,25 @@ const GiftsPage = () => {
         key="helmet"
       />
       <div className="pageContent pageContent--gifts">
-        <h1>
-          {intl.formatMessage({ id: "giftsTitle" })} {region}
-        </h1>
-        <table className="giftsTable">
-          <tbody>
-            {slots.map(slot => (
-              <tr key={slot.id}>
-                <td className="giftsTableTime">{formatTime(slot.time)}</td>
-                <td className="giftsTableBook">
-                  <Link to="/from" className="button button--book">
-                    {intl.formatMessage({ id: "giftsButtonBook" })}
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <main className="main">
+          <h1>
+            {intl.formatMessage({ id: "giftsTitle" })} {region}
+          </h1>
+          <table className="giftsTable">
+            <tbody>
+              {slots.map(slot => (
+                <tr key={slot.id}>
+                  <td className="giftsTableTime">{formatTime(slot.time)}</td>
+                  <td className="giftsTableBook">
+                    <Link to="/from" className="button button--book">
+                      {intl.formatMessage({ id: "giftsButtonBook" })}
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </main>
       </div>
     </Layout>
   )

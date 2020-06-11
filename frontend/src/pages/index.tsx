@@ -58,7 +58,7 @@ const IntroPage = () => {
             alt={intl.formatMessage({ id: "title" })}
           /> */}
         </header>
-        <main>
+        <main className="main">
           <h1 className="introTitle">
             {intl.formatMessage({ id: "introTitle" })}
           </h1>

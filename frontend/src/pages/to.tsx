@@ -40,50 +40,54 @@ const ToPage = () => {
         key="helmet"
       />
       <div className="pageContent pageContent--to">
-        <form>
-          <div className="inputGroup">
-            <label>{intl.formatMessage({ id: "toFormLabelFor" })}:</label>
-            <input type="text" />
-          </div>
-          <div className="inputGroup">
-            <label>{intl.formatMessage({ id: "toFormLabelAddress" })}:</label>
-            <AutoSuggest
-              suggestions={addressSuggestions}
-              onSuggestionsFetchRequested={evt =>
-                onLoadAddressSuggestions(evt.value)
-              }
-              onSuggestionsClearRequested={onClearAddressSuggestions}
-              getSuggestionValue={v => v}
-              renderSuggestion={v => v}
-              inputProps={{
-                value: address,
-                onChange: (_, { newValue }) => setAddress(newValue),
-              }}
+        <main className="main">
+          <form>
+            <div className="inputGroup">
+              <label>{intl.formatMessage({ id: "toFormLabelFor" })}:</label>
+              <input type="text" />
+            </div>
+            <div className="inputGroup">
+              <label>{intl.formatMessage({ id: "toFormLabelAddress" })}:</label>
+              <AutoSuggest
+                suggestions={addressSuggestions}
+                onSuggestionsFetchRequested={evt =>
+                  onLoadAddressSuggestions(evt.value)
+                }
+                onSuggestionsClearRequested={onClearAddressSuggestions}
+                getSuggestionValue={v => v}
+                renderSuggestion={v => v}
+                inputProps={{
+                  value: address,
+                  onChange: (_, { newValue }) => setAddress(newValue),
+                }}
+              />
+            </div>
+            <div className="inputGroup">
+              <label>
+                {intl.formatMessage({ id: "toFormLabelLanguage" })}:
+              </label>
+              <select>
+                <option>
+                  {intl.formatMessage({ id: "toFormLabelLanguageFi" })}
+                </option>
+                <option>
+                  {intl.formatMessage({ id: "toFormLabelLanguageEn" })}
+                </option>
+                <option>
+                  {intl.formatMessage({ id: "toFormLabelLanguageSe" })}
+                </option>
+              </select>
+            </div>
+            <div className="inputGroup">
+              <label>{intl.formatMessage({ id: "toFormLabelMessage" })}:</label>
+              <textarea></textarea>
+            </div>
+            <NextButton
+              to="/gifts"
+              text={intl.formatMessage({ id: "toButtonNext" })}
             />
-          </div>
-          <div className="inputGroup">
-            <label>{intl.formatMessage({ id: "toFormLabelLanguage" })}:</label>
-            <select>
-              <option>
-                {intl.formatMessage({ id: "toFormLabelLanguageFi" })}
-              </option>
-              <option>
-                {intl.formatMessage({ id: "toFormLabelLanguageEn" })}
-              </option>
-              <option>
-                {intl.formatMessage({ id: "toFormLabelLanguageSe" })}
-              </option>
-            </select>
-          </div>
-          <div className="inputGroup">
-            <label>{intl.formatMessage({ id: "toFormLabelMessage" })}:</label>
-            <textarea></textarea>
-          </div>
-          <NextButton
-            to="/gifts"
-            text={intl.formatMessage({ id: "toButtonNext" })}
-          />
-        </form>
+          </form>
+        </main>
       </div>
     </Layout>
   )
