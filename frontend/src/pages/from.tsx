@@ -13,17 +13,44 @@ const FromPage = () => {
   return (
     <Layout>
       <SEO
-        title={intl.formatMessage({ id: "title" })}
-        description={intl.formatMessage({ id: "title" })}
+        title={intl.formatMessage({ id: "fromSEOTitle" })}
+        description={intl.formatMessage({ id: "fromSEODescription" })}
       />
       <Helmet
         bodyAttributes={{
-          class: "fromPage",
+          class: "from",
         }}
         key="helmet"
       />
-      <div className="pageContent">
-        <h1>from page</h1>
+      <div className="pageContent pageContent--from">
+        <h1>{intl.formatMessage({ id: "fromTitle" })}</h1>
+        <p>
+          {intl.formatMessage({ id: "fromReservedTimeStart" })} [time]{" "}
+          {intl.formatMessage({ id: "fromReservedTimeEnd" })}
+        </p>
+        <form>
+          <div className="inputGroup">
+            <label>{intl.formatMessage({ id: "fromFormLabelName" })}</label>
+            <input type="text" />
+          </div>
+          <div className="inputGroup">
+            <label>{intl.formatMessage({ id: "fromFormLabelPhone" })}</label>
+            <input type="text" />
+          </div>
+          <div className="inputGroup">
+            <label>{intl.formatMessage({ id: "fromFormLabelEmail" })}</label>
+            <input type="text" />
+          </div>
+          <div className="inputGroup">
+            <label>
+              {intl.formatMessage({ id: "fromFormLabelSpecialInfo" })}
+            </label>
+            <textarea></textarea>
+          </div>
+          <button type="submit">
+            {intl.formatMessage({ id: "fromButtonNext" })}
+          </button>
+        </form>
       </div>
     </Layout>
   )

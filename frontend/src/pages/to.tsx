@@ -7,7 +7,7 @@ import SEO from "../components/seo"
 
 import "./to.scss"
 
-const ForPage = () => {
+const ToPage = () => {
   let intl = useIntl()
 
   return (
@@ -36,10 +36,13 @@ const ForPage = () => {
             <label>{intl.formatMessage({ id: "toFormLabelMessage" })}</label>
             <textarea></textarea>
           </div>
-          <button type="submit">{intl.formatMessage({ id: "toButtonNext" })}
+          <button type="submit">
+            {intl.formatMessage({ id: "toButtonNext" })}
+          </button>
+        </form>
       </div>
     </Layout>
   )
 }
 
-export default ForPage
+export default ToPage

@@ -26,14 +26,14 @@
 
   "fromSEOTitle": "",
   "fromSEODescription": "",
-  "fromTitle": "Thank you",
+  "fromTitle": "Thank you!",
+  "fromReservedTimeStart": "Your gift is reserved for",
+  "fromReservedTimeEnd": "Please complete the booking by adding your own details.",
   "fromFormLabelName": "My name",
   "fromFormLabelPhone": "My phone number",
   "fromFormLabelEmail": "My email",
   "fromFormLabelSpecialInfo": "Special requirements of your gift recipient",
-  "fromReservedTime": "Your gift is reserved for",
-  "fromReservedTextEnd": "Please complete the booking by adding your own details.",
-  "fromNextButton": "Send gift",
+  "fromButtonNext": "Send gift",
 
   "deliveryTitle": "Your gift was delivered!",
   "deliveryDescription": "Please await approval of your gift order by our team, which you will receive confirmation of via text message.",

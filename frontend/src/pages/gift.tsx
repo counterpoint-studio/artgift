@@ -13,17 +13,20 @@ const GiftPage = () => {
   return (
     <Layout>
       <SEO
-        title={intl.formatMessage({ id: "title" })}
-        description={intl.formatMessage({ id: "title" })}
+        title={intl.formatMessage({ id: "giftSEOTitle" })}
+        description={intl.formatMessage({ id: "giftSEODescription" })}
       />
       <Helmet
         bodyAttributes={{
-          class: "giftPage",
+          class: "gift",
         }}
         key="helmet"
       />
-      <div className="pageContent">
-        <h1>gift page</h1>
+      <div className="pageContent pageContent--gift">
+        <div className="giftMap"></div>
+        <div className="giftInfo">
+          <h1>{intl.formatMessage({ id: "giftTitle" })}</h1>
+        </div>
       </div>
     </Layout>
   )
