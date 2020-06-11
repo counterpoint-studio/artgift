@@ -17,12 +17,12 @@ body {
   left: 3vw;
   width: 30vw;
   height: 100%;
-  padding: 30px 60px;
-  background: $colorBackground;
 }
 
 .pageContent {
   height: 100%;
+  padding: 30px 60px;
+  background: $colorBackground;
   display: grid;
   grid-template-columns: auto;
   grid-template-rows: auto auto auto;
