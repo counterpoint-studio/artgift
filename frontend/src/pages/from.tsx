@@ -1,6 +1,6 @@
 import React from "react"
 import Helmet from "react-helmet"
-import { useIntl } from "gatsby-plugin-intl"
+import { useIntl, Link } from "gatsby-plugin-intl"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -47,9 +47,9 @@ const FromPage = () => {
             </label>
             <textarea></textarea>
           </div>
-          <a href="/delivery" className="button button--next">
+          <Link to="/delivery" className="button button--next">
             {intl.formatMessage({ id: "fromButtonNext" })}
-          </a>
+          </Link>
         </form>
       </div>
     </Layout>

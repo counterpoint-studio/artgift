@@ -1,6 +1,6 @@
 import React from "react"
 import Helmet from "react-helmet"
-import { useIntl } from "gatsby-plugin-intl"
+import { useIntl, Link } from "gatsby-plugin-intl"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -33,65 +33,65 @@ const GiftsPage = () => {
             <tr>
               <td>09:00</td>
               <td>
-                <a href="/from" className="button button--book">
+                <Link to="/from" className="button button--book">
                   Book
-                </a>
+                </Link>
               </td>
             </tr>
             <tr>
               <td>10:00</td>
               <td>
-                <a href="/from" className="button button--book">
+                <Link to="/from" className="button button--book">
                   Book
-                </a>
+                </Link>
               </td>
             </tr>
             <tr>
               <td>11:00</td>
               <td>
-                <a href="/from" className="button button--book">
+                <Link to="/from" className="button button--book">
                   Book
-                </a>
+                </Link>
               </td>
             </tr>
             <tr>
               <td>12:00</td>
               <td>
-                <a href="/from" className="button button--book">
+                <Link to="/from" className="button button--book">
                   Book
-                </a>
+                </Link>
               </td>
             </tr>
             <tr>
               <td>13:00</td>
               <td>
-                <a href="/from" className="button button--book">
+                <Link to="/from" className="button button--book">
                   Book
-                </a>
+                </Link>
               </td>
             </tr>
             <tr>
               <td>14:00</td>
               <td>
-                <a href="/from" className="button button--book">
+                <Link to="/from" className="button button--book">
                   Book
-                </a>
+                </Link>
               </td>
             </tr>
             <tr>
               <td>15:00</td>
               <td>
-                <a href="/from" className="button button--book">
+                <Link to="/from" className="button button--book">
                   Book
-                </a>
+                </Link>
               </td>
             </tr>
             <tr>
               <td>16:00</td>
               <td>
-                <a href="/from" className="button button--book">
+                <Link to="/from" className="button button--book">
                   Book
-                </a>
+                </Link>
               </td>
             </tr>
           </tbody>

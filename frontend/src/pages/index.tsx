@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import Helmet from "react-helmet"
-import { useIntl } from "gatsby-plugin-intl"
+import { useIntl, Link } from "gatsby-plugin-intl"
 import classNames from "classnames"
 
 import Layout from "../components/layout"
@@ -61,9 +61,9 @@ const IntroPage = () => {
         <div className="introBody">
           <p>{intl.formatMessage({ id: "introBody" })}</p>
         </div>
-        <a href="/to" className="button button--next">
+        <Link to="/to" className="button button--next">
           {intl.formatMessage({ id: "introButtonNext" })}
-        </a>
+        </Link>
       </div>
     </Layout>
   )

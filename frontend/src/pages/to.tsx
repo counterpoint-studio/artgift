@@ -1,6 +1,6 @@
 import React from "react"
 import Helmet from "react-helmet"
-import { useIntl } from "gatsby-plugin-intl"
+import { useIntl, Link } from "gatsby-plugin-intl"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -36,9 +36,9 @@ const ToPage = () => {
             <label>{intl.formatMessage({ id: "toFormLabelMessage" })}:</label>
             <textarea></textarea>
           </div>
-          <a href="/gifts" className="button button--next">
+          <Link to="/gifts" className="button button--next">
             {intl.formatMessage({ id: "toButtonNext" })}
-          </a>
+          </Link>
         </form>
       </div>
     </Layout>
