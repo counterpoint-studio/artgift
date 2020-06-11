@@ -9,8 +9,9 @@ import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hoo
 import { MAP_CENTER } from "../constants"
 import * as gifts from "../services/gifts"
 import * as regions from "../services/regionLookup"
+import NextButton from "../components/nextButton"
 
-import Logo from "../images/imagePlaceholder.svg"
+import Logo from "../images/logo.svg"
 
 import "./index.scss"
 
@@ -50,9 +51,10 @@ const IntroPage = () => {
         <div className="introBody">
           <p>{intl.formatMessage({ id: "introBody" })}</p>
         </div>
-        <a href="/to" className="button button--next">
-          {intl.formatMessage({ id: "introButtonNext" })}
-        </a>
+        <NextButton
+          to="/to"
+          text={intl.formatMessage({ id: "introButtonNext" })}
+        />
       </div>
     </Layout>
   )

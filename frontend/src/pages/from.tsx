@@ -4,6 +4,7 @@ import { useIntl } from "gatsby-plugin-intl"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
+import NextButton from "../components/nextButton"
 
 import "./from.scss"
 
@@ -47,9 +48,10 @@ const FromPage = () => {
             </label>
             <textarea></textarea>
           </div>
-          <a href="/delivery" className="button button--next">
-            {intl.formatMessage({ id: "fromButtonNext" })}
-          </a>
+          <NextButton
+            to="/delivery"
+            text={intl.formatMessage({ id: "fromButtonNext" })}
+          />
         </form>
       </div>
     </Layout>

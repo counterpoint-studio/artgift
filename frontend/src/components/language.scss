@@ -1,8 +1,9 @@
 .language {
+  width: auto;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 
   &Link {
     display: flex;
@@ -10,6 +11,7 @@
     justify-content: center;
     padding: 5px;
     cursor: pointer;
+    font-size: 14px;
 
     &.isCurrent {
       text-decoration: underline;
