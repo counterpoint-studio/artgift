@@ -1,3 +1,5 @@
+@import "variables.scss";
+
 .language {
   width: auto;
   display: flex;
@@ -6,20 +8,23 @@
   justify-content: flex-start;
 
   &Link {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 10px;
     text-transform: uppercase;
-    margin-right: 15px;
+    margin-right: 5px;
 
     &:last-child {
       margin-right: 0;
     }
 
     &.isCurrent {
-      text-decoration: underline;
+      background: $colorHFGrey;
     }
   }
 }
