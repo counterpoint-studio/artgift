@@ -9,5 +9,5 @@ export async function findAddresses(query: string) {
         autocomplete: true,
         language: [MAPBOX_LANGUAGE_CODE]
     }).send()
-    return res.body;
+    return res.body.features.map(f => f.text);
 }
