@@ -42,14 +42,15 @@ body {
   width: 95%;
   max-width: 500px;
   padding: 60px;
-  background: white;
+  background: $colorBackground;
 }
 
 .button {
   display: block;
   background: black;
-  color: white;
   text-align: center;
+  text-transform: uppercase;
+  color: white;
 
   &--next {
     width: 100%;
