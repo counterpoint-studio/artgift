@@ -20,3 +20,15 @@ export function subscribeToGiftSlotsOverview(callback: (slots: GiftSlot[]) => vo
     return unSub
 
 }
+
+export function subscribeToGiftSlotsInRegion(region: string, callback: (slots: GiftSlot[]) => void) {
+    let unSub = firebase.firestore().collection("slots").where('region', '==', region).orderBy("date")
+        .orderBy("time")
+        .onSnapshot((slotsSnapshot) => {
+            callback(
+                slotsSnapshot.docs.map((d) => ({ id: d.id, ...d.data() } as GiftSlot))
+            );
+        });
+    return unSub
+
+}
