@@ -5,8 +5,8 @@ import classNames from "classnames"
 import "./language.scss"
 
 const languageName = {
-  en: "English",
-  fi: "Suomi",
+  en: "En",
+  fi: "Fi",
 }
 
 const Language = () => (

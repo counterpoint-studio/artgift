@@ -15,6 +15,10 @@
   "toTitle": "Lahjan saaja",
   "toFormLabelFor": "Lahjan saaja",
   "toFormLabelAddress": "Joka asuu osoitteessa",
+  "toFormLabelLanguage": "Who speaks",
+  "toFormLabelLanguageFi": "Finnish",
+  "toFormLabelLanguageEn": "English",
+  "toFormLabelLanguageSe": "Swedish",
   "toFormLabelMessage": "Ja on tärkeä minulle koska",
   "toButtonNext": "Seuraava",
 

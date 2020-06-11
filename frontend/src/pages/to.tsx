@@ -34,11 +34,25 @@ const ToPage = () => {
             <input type="text" />
           </div>
           <div className="inputGroup">
+            <label>{intl.formatMessage({ id: "toFormLabelLanguage" })}:</label>
+            <select>
+              <option>
+                {intl.formatMessage({ id: "toFormLabelLanguageFi" })}
+              </option>
+              <option>
+                {intl.formatMessage({ id: "toFormLabelLanguageEn" })}
+              </option>
+              <option>
+                {intl.formatMessage({ id: "toFormLabelLanguageSe" })}
+              </option>
+            </select>
+          </div>
+          <div className="inputGroup">
             <label>{intl.formatMessage({ id: "toFormLabelMessage" })}:</label>
             <textarea></textarea>
           </div>
           <NextButton
-            to="/gift"
+            to="/gifts"
             text={intl.formatMessage({ id: "toButtonNext" })}
           />
         </form>

@@ -14,7 +14,11 @@
   "toSEODescription": "",
   "toTitle": "Gift recipient",
   "toFormLabelFor": "For",
-  "toFormLabelAddress": "Who lives at",
+  "toFormLabelAddress": "Who's address is",
+  "toFormLabelLanguage": "Who speaks",
+  "toFormLabelLanguageFi": "Finnish",
+  "toFormLabelLanguageEn": "English",
+  "toFormLabelLanguageSe": "Swedish",
   "toFormLabelMessage": "Who is special to me because",
   "toButtonNext": "Next",
 
