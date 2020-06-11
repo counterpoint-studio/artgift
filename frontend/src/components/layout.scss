@@ -12,16 +12,21 @@ body {
 .wrapper {
   z-index: 1; // everything on top of map
   position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 3vw;
-  width: 30vw;
-  height: 100%;
+  top: 5vw;
+  bottom: 5vw;
+  left: 5vw;
+  width: 90vw;
+
+  @media (min-width: 768px) {
+    top: 0;
+    bottom: 0;
+    left: 3vw;
+    width: 30vw;
+  }
 }
 
 .pageContent {
   height: 100%;
-  padding: 30px 60px;
   background: $colorBackground;
   display: grid;
   grid-template-columns: auto;
@@ -30,7 +35,13 @@ body {
     "header"
     "main"
     "footer";
-  gap: 30px;
+  gap: 20px;
+  padding: 20px 40px;
+
+  @media (min-width: 768px) {
+    gap: 30px;
+    padding: 30px 60px;
+  }
 
   .header {
     grid-area: header;
