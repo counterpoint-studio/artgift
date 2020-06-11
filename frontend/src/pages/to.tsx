@@ -12,7 +12,7 @@ import "./to.scss"
 
 const ToPage = () => {
   let intl = useIntl()
-  let [address, setAddress] = useState("f")
+  let [address, setAddress] = useState("")
   let [addressSuggestions, setAddressSuggestions] = useState<string[]>([])
 
   let onLoadAddressSuggestions = useCallback((address: string) => {
