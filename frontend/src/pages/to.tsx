@@ -14,18 +14,34 @@ const ToPage = () => {
   let intl = useIntl()
   let [address, setAddress] = useState("")
   let [addressSuggestions, setAddressSuggestions] = useState<string[]>([])
+  let [suggestionSelected, setSuggestionSelected] = useState(false)
 
-  let onLoadAddressSuggestions = useCallback((address: string) => {
-    if (address.length > 0) {
-      addresses.findAddresses(address).then(setAddressSuggestions)
-    } else {
-      setAddressSuggestions([])
+  let onUpdateAddress = useCallback((address: string) => {
+    setAddress(address)
+    if (address.trim().length === 0) {
+      setSuggestionSelected(false)
     }
   }, [])
+  let onLoadAddressSuggestions = useCallback(
+    (address: string) => {
+      if (
+        address.length > 0 &&
+        !/\d/.test(address) &&
+        (!suggestionSelected || address.length < 4)
+      ) {
+        addresses.findAddresses(address).then(setAddressSuggestions)
+      } else {
+        setAddressSuggestions([])
+      }
+    },
+    [suggestionSelected]
+  )
   let onClearAddressSuggestions = useCallback(() => {
     setAddressSuggestions([])
   }, [])
-  console.log(address)
+  let onSelectSuggestion = useCallback(() => {
+    setSuggestionSelected(true)
+  }, [])
 
   return (
     <Layout>
@@ -50,16 +66,17 @@ const ToPage = () => {
               <label>{intl.formatMessage({ id: "toFormLabelAddress" })}:</label>
               <AutoSuggest
                 suggestions={addressSuggestions}
-                onSuggestionsFetchRequested={evt =>
-                  onLoadAddressSuggestions(evt.value)
-                }
-                onSuggestionsClearRequested={onClearAddressSuggestions}
                 getSuggestionValue={v => v}
                 renderSuggestion={v => v}
                 inputProps={{
                   value: address,
-                  onChange: (_, { newValue }) => setAddress(newValue),
+                  onChange: (_, { newValue }) => onUpdateAddress(newValue),
                 }}
+                onSuggestionsFetchRequested={evt =>
+                  onLoadAddressSuggestions(evt.value)
+                }
+                onSuggestionsClearRequested={onClearAddressSuggestions}
+                onSuggestionSelected={onSelectSuggestion}
               />
             </div>
             <div className="inputGroup">
