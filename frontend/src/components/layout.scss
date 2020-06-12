@@ -18,10 +18,21 @@ body {
   width: 90vw;
 
   @media (min-width: 768px) {
-    top: 0;
-    bottom: 0;
-    left: 5vw;
+    top: calc(4vw + 5px);
+    bottom: calc(4vw + 5px);
+    left: calc(4vw + 5px);
     width: 500px;
+  }
+
+  &:after {
+    content: "";
+    display: block;
+    position: fixed;
+    top: 1vw;
+    right: 1vw;
+    bottom: 1vw;
+    left: 1vw;
+    border: 5px solid $colorHFYellow;
   }
 }
 
