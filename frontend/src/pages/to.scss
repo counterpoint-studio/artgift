@@ -1,9 +1,43 @@
+@import "../components/variables.scss";
+
 .to {
   .pageContent {
     opacity: 0;
     &.isVisible {
       opacity: 1;
       transition: opacity 1s;
+    }
+  }
+
+  .react-autosuggest__container {
+    position: relative;
+
+    .react-autosuggest__suggestions-container--open {
+      z-index: 3;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      transform: translateY(100%);
+      background: white;
+      box-shadow: 0px 5px 10px 5px rgba($colorHFGrey, 1);
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+          padding: 10px 14px;
+          margin: 0;
+          border-bottom: 1px solid $colorHFGrey;
+          cursor: pointer;
+
+          &:hover {
+            background: rgba($colorHFGrey, 0.3);
+          }
+        }
+      }
     }
   }
 }
