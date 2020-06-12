@@ -177,7 +177,6 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
 
   useEffect(
     function notifyMovement() {
-      console.log("m", moving, addingPoints)
       onSetMoving(moving || addingPoints)
     },
     [moving, addingPoints, onSetMoving]

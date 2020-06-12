@@ -1,4 +1,4 @@
-import React, { useMemo } from "react"
+import React, { useMemo, useState, useEffect } from "react"
 import Helmet from "react-helmet"
 import { useIntl } from "gatsby-plugin-intl"
 import classNames from "classnames"
@@ -12,12 +12,20 @@ import { useMounted, useGiftState } from "../hooks"
 import { getRegionGeoJSON } from "../services/regionLookup"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
 import { INIT_GIFT, REGION_BOUNDING_BOX } from "../constants"
+import { getGiftSlot } from "../services/gifts"
+import { GiftSlot } from "../types"
+import { formatTime, formatDate } from "../services/dates"
 
 const FromPage = () => {
   let intl = useIntl()
   let mounted = useMounted()
   let regions = useMemo(() => getRegionGeoJSON(), [])
   let [gift, setGift] = useGiftState(INIT_GIFT)
+  let [giftSlot, setGiftSlot] = useState<GiftSlot>()
+  useEffect(() => {
+    console.log("load slot")
+    getGiftSlot(gift.slotId).then(setGiftSlot)
+  }, [gift?.slotId])
   let { isMoving: isMapMoving } = useMapBackground({
     bounds: gift.toLocation
       ? boundsAround(gift.toLocation.point)
@@ -46,8 +54,13 @@ const FromPage = () => {
         <main className="main">
           <h1>{intl.formatMessage({ id: "fromTitle" })}</h1>
           <p>
-            {intl.formatMessage({ id: "fromReservedTimeStart" })} [time]{" "}
-            {intl.formatMessage({ id: "fromReservedTimeEnd" })}
+            {intl.formatMessage({ id: "fromReservedTimeStart" })}{" "}
+            {giftSlot && (
+              <>
+                {formatDate(giftSlot.date, intl)} {formatTime(giftSlot.time)}
+              </>
+            )}
+            . {intl.formatMessage({ id: "fromReservedTimeEnd" })}
           </p>
           <form>
             <div className="inputGroup">

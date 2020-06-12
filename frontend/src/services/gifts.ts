@@ -31,3 +31,7 @@ export function subscribeToGiftSlotsInRegion(region: string, callback: (slots: {
     return unSub
 
 }
+
+export function getGiftSlot(id: string): Promise<GiftSlot> {
+    return firebase.firestore().collection("slots").doc(id).get().then(d => ({ id: d.id, ...d.data() } as GiftSlot))
+}
