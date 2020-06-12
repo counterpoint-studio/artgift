@@ -11,18 +11,20 @@ import "./from.scss"
 import { useMounted, useGiftState } from "../hooks"
 import { getRegionGeoJSON } from "../services/regionLookup"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
-import { INIT_GIFT } from "../constants"
+import { INIT_GIFT, REGION_BOUNDING_BOX } from "../constants"
 
 const FromPage = () => {
   let intl = useIntl()
   let mounted = useMounted()
   let regions = useMemo(() => getRegionGeoJSON(), [])
+  let [gift, setGift] = useGiftState(INIT_GIFT)
   let { isMoving: isMapMoving } = useMapBackground({
-    bounds: regions[0].bounds,
+    bounds: gift.toLocation
+      ? boundsAround(gift.toLocation.point)
+      : REGION_BOUNDING_BOX,
     boundsPadding: 0,
     regions,
   })
-  let [gift, setGift] = useGiftState(INIT_GIFT)
 
   return (
     <Layout>
@@ -101,6 +103,13 @@ const FromPage = () => {
       </div>
     </Layout>
   )
+}
+
+function boundsAround([lng, lat]: [number, number]) {
+  return [
+    [lng - 0.002, lat - 0.002],
+    [lng + 0.002, lat + 0.002],
+  ]
 }
 
 export default FromPage
