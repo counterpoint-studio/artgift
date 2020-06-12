@@ -82,6 +82,7 @@ const ToPage = () => {
               <label>{intl.formatMessage({ id: "toFormLabelFor" })}:</label>
               <input
                 type="text"
+                maxLength={50}
                 value={gift.toName}
                 onChange={evt =>
                   setGift({ ...gift, toName: evt.currentTarget.value })
@@ -129,6 +130,7 @@ const ToPage = () => {
             <div className="inputGroup">
               <label>{intl.formatMessage({ id: "toFormLabelMessage" })}:</label>
               <textarea
+                maxLength={1000}
                 value={gift.toSignificance}
                 onChange={evt =>
                   setGift({ ...gift, toSignificance: evt.currentTarget.value })

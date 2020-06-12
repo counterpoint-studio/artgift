@@ -89,7 +89,8 @@ body {
     line-height: $fontSizeBase * 1.25;
   }
 
-  input[type="text"] {
+  input[type="text"],
+  input[type="email"] {
     width: 100%;
     height: 40px;
     border-radius: 0;

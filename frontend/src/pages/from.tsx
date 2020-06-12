@@ -52,6 +52,7 @@ const FromPage = () => {
               <label>{intl.formatMessage({ id: "fromFormLabelName" })}:</label>
               <input
                 type="text"
+                maxLength={50}
                 value={gift.fromName}
                 onChange={evt =>
                   setGift({ ...gift, fromName: evt.currentTarget.value })
@@ -62,6 +63,7 @@ const FromPage = () => {
               <label>{intl.formatMessage({ id: "fromFormLabelPhone" })}:</label>
               <input
                 type="text"
+                maxLength={25}
                 value={gift.fromPhoneNumber}
                 onChange={evt =>
                   setGift({ ...gift, fromPhoneNumber: evt.currentTarget.value })
@@ -71,7 +73,7 @@ const FromPage = () => {
             <div className="inputGroup">
               <label>{intl.formatMessage({ id: "fromFormLabelEmail" })}:</label>
               <input
-                type="text"
+                type="email"
                 value={gift.fromEmail}
                 onChange={evt =>
                   setGift({ ...gift, fromEmail: evt.currentTarget.value })
@@ -83,6 +85,7 @@ const FromPage = () => {
                 {intl.formatMessage({ id: "fromFormLabelSpecialInfo" })}:
               </label>
               <textarea
+                maxLength={1000}
                 value={gift.fromMessage}
                 onChange={evt =>
                   setGift({ ...gift, fromMessage: evt.currentTarget.value })
