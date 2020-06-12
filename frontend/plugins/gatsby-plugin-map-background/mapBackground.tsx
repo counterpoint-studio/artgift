@@ -30,7 +30,7 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
   useEffect(function initMap() {
     let map = new mapboxgl.Map({
       container: mapEl.current,
-      style: "mapbox://styles/mapbox/streets-v11",
+      style: "mapbox://styles/teropa/ckbc1rriu0mcx1inu9wlkna38",
       zoom: 7,
       pitch: 45,
       attributionControl: false,
