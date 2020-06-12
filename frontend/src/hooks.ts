@@ -10,7 +10,7 @@ export function useMounted() {
     return mounted
 }
 
-export const useGiftState: (initGift: Gift) => [Gift, (newGift: Gift) => void] = createPersistedState(
+export const useGiftState: (initGift: Gift) => [Gift, (newGift: Gift | ((oldGift: Gift) => Gift)) => void] = createPersistedState(
     'gift',
     typeof window !== 'undefined' ? window.sessionStorage : null
 )

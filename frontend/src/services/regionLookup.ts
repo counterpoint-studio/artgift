@@ -2,16 +2,12 @@ import { Polygon, Feature, FeatureCollection } from "geojson"
 import { LngLatBoundsLike } from "mapbox-gl"
 
 import regionData from '../data/region_data.json';
-import { GiftSlot } from './gifts';
-
-export type Region = {
-    feature: Feature
-    bounds: LngLatBoundsLike
-};
+import { Region, GiftSlot } from "../types";
 
 export function getRegionGeoJSON(): Region[] {
     let data = regionData as FeatureCollection;
     return data.features.map(region => ({
+        name: region.properties.nimi_fi,
         feature: region,
         bounds: getRegionBounds(region)
     }));

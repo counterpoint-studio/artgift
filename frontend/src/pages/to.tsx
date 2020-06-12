@@ -29,12 +29,28 @@ const ToPage = () => {
   let [addressSuggestions, setAddressSuggestions] = useState<string[]>([])
   let [suggestionSelected, setSuggestionSelected] = useState(false)
 
-  let onUpdateAddress = useCallback((address: string) => {
-    setGift({ ...gift, toAddress: address })
-    if (address.trim().length === 0) {
-      setSuggestionSelected(false)
-    }
-  }, [])
+  let onUpdateAddressLocation = useDebounceCallback(
+    useCallback(
+      async (address: string) => {
+        let addressLoc = await addresses.locateAddress(address, regions)
+        setGift(gift => ({ ...gift, toLocation: addressLoc }))
+      },
+      [regions]
+    ),
+    400
+  )
+
+  let onUpdateAddress = useCallback(
+    async (address: string) => {
+      setGift({ ...gift, toAddress: address })
+      if (address.trim().length === 0) {
+        setSuggestionSelected(false)
+      } else {
+        onUpdateAddressLocation(address)
+      }
+    },
+    [regions, onUpdateAddressLocation]
+  )
   let onLoadAddressSuggestions = useDebounceCallback(
     useCallback(
       (address: string) => {

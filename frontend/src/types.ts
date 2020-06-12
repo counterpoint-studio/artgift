@@ -1,8 +1,19 @@
+import { Feature } from "geojson"
+import { LngLatBoundsLike } from "mapbox-gl"
+
+export type GiftSlot = {
+    id: string;
+    region: string;
+    date: string;
+    time: string;
+    status: 'available' | 'reserved' | 'onHold'
+}
+
 export type Gift = {
     slotId?: string;
     toName: string;
     toAddress: string;
-    toLocation?: [number, number];
+    toLocation?: GiftLocation;
     toLanguage: string;
     toSignificance: string;
     fromName: string;
@@ -10,3 +21,14 @@ export type Gift = {
     fromEmail: string;
     fromMessage: string;
 }
+
+export type GiftLocation = {
+    region: string;
+    point: [number, number];
+}
+
+export type Region = {
+    name: string;
+    feature: Feature;
+    bounds: LngLatBoundsLike;
+};
