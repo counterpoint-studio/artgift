@@ -5,33 +5,37 @@ import classNames from "classnames"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
-import { subscribeToGiftSlotsInRegion, GiftSlot } from "../services/gifts"
+import { subscribeToGiftSlotsInRegion } from "../services/gifts"
 
-import "./gifts.scss"
 import { getRegionGeoJSON } from "../services/regionLookup"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
 import { useMounted, useGiftState } from "../hooks"
-import { INIT_GIFT } from "../constants"
+import { INIT_GIFT, REGION_BOUNDING_BOX } from "../constants"
+import { GiftSlot } from "../types"
+
+import "./gifts.scss"
 
 const GiftsPage = () => {
   let intl = useIntl()
   let mounted = useMounted()
-  let region = "ETELÄINEN"
   let [slots, setSlots] = useState<GiftSlot[]>([])
   let regions = useMemo(() => getRegionGeoJSON(), [])
+  let [gift, setGift] = useGiftState(INIT_GIFT)
   let { isMoving: isMapMoving } = useMapBackground({
-    bounds: regions[0].bounds,
+    bounds: gift.toLocation
+      ? regions.find(r => r.name === gift.toLocation.region).bounds
+      : REGION_BOUNDING_BOX,
     boundsPadding: 0,
     regions,
   })
-  let [gift, setGift] = useGiftState(INIT_GIFT)
 
   useEffect(() => {
-    let unSub = subscribeToGiftSlotsInRegion(region, setSlots)
+    if (!gift.toLocation) return
+    let unSub = subscribeToGiftSlotsInRegion(gift.toLocation.region, setSlots)
     return () => {
       unSub()
     }
-  }, [region])
+  }, [gift])
 
   return (
     <Layout>
@@ -52,7 +56,7 @@ const GiftsPage = () => {
       >
         <main className="main">
           <h1>
-            {intl.formatMessage({ id: "giftsTitle" })} {region}
+            {intl.formatMessage({ id: "giftsTitle" })} {gift.toLocation?.region}
           </h1>
           <table className="giftsTable">
             <tbody>

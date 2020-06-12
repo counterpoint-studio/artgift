@@ -1,12 +1,5 @@
 import firebase from 'gatsby-plugin-firebase';
-
-export type GiftSlot = {
-    id: string;
-    region: string;
-    date: string;
-    time: string;
-    status: 'available' | 'reserved' | 'onHold'
-}
+import { GiftSlot } from '../types';
 
 export function subscribeToGiftSlotsOverview(callback: (slots: GiftSlot[]) => void) {
     let unSub = firebase.firestore().collection("slots").orderBy("date")
