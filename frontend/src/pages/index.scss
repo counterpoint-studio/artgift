@@ -8,9 +8,9 @@
 
   .pageContent {
     opacity: 0;
-    transition: opacity 1s;
     &.isVisible {
       opacity: 1;
+      transition: opacity 1s;
     }
   }
 }

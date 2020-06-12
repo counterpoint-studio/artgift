@@ -10,9 +10,8 @@ const MapTestPage = () => {
   let [regions, setRegions] = useState<Region[]>([])
   let [focusedRegion, setFocusedRegion] = useState<Region>()
   useMapBackground({
-    bounds: REGION_BOUNDING_BOX,
+    bounds: focusedRegion ? focusedRegion.bounds : REGION_BOUNDING_BOX,
     regions,
-    focusedRegion,
   })
   useEffect(() => {
     setRegions(getRegionGeoJSON())

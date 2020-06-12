@@ -1,17 +1,28 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useMemo } from "react"
 import Helmet from "react-helmet"
 import { useIntl, Link } from "gatsby-plugin-intl"
+import classNames from "classnames"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import { subscribeToGiftSlotsInRegion, GiftSlot } from "../services/gifts"
 
 import "./gifts.scss"
+import { getRegionGeoJSON } from "../services/regionLookup"
+import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
+import { useMounted } from "../hooks"
 
 const GiftsPage = () => {
   let intl = useIntl()
+  let mounted = useMounted()
   let region = "ETELÄINEN"
   let [slots, setSlots] = useState<GiftSlot[]>([])
+  let regions = useMemo(() => getRegionGeoJSON(), [])
+  let { isMoving: isMapMoving } = useMapBackground({
+    bounds: regions[0].bounds,
+    boundsPadding: 0,
+    regions,
+  })
 
   useEffect(() => {
     let unSub = subscribeToGiftSlotsInRegion(region, setSlots)
@@ -32,7 +43,11 @@ const GiftsPage = () => {
         }}
         key="helmet"
       />
-      <div className="pageContent pageContent--gifts">
+      <div
+        className={classNames("pageContent", "pageContent--gifts", {
+          isVisible: mounted && !isMapMoving,
+        })}
+      >
         <main className="main">
           <h1>
             {intl.formatMessage({ id: "giftsTitle" })} {region}

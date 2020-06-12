@@ -7,7 +7,7 @@ import Layout from "../components/layout"
 import SEO from "../components/seo"
 import Language from "../components/language"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
-import { MAP_CENTER, REGION_BOUNDING_BOX } from "../constants"
+import { REGION_BOUNDING_BOX } from "../constants"
 import * as gifts from "../services/gifts"
 import * as regions from "../services/regionLookup"
 import NextButton from "../components/nextButton"
@@ -15,22 +15,24 @@ import NextButton from "../components/nextButton"
 import Logo from "../images/logo.svg"
 
 import "./index.scss"
+import { useMounted } from "../hooks"
 
 const IntroPage = () => {
   let intl = useIntl()
-  let [isVisible, setVisible] = useState(false)
+  let mounted = useMounted()
   let [introPoints, setIntroPoints] = useState<[number, number][]>([])
 
   let { isMoving: isMapMoving } = useMapBackground({
     bounds: REGION_BOUNDING_BOX,
+    boundsPadding: 150,
     points: introPoints,
+    regions: undefined,
   })
 
   useEffect(() => {
     gifts.subscribeToGiftSlotsOverview(giftSlots =>
       setIntroPoints(regions.getRandomLocations(giftSlots))
     )
-    setTimeout(() => setVisible(true), 2000)
   }, [])
 
   return (
@@ -47,7 +49,7 @@ const IntroPage = () => {
       />
       <div
         className={classNames("pageContent", "pageContent--intro", {
-          isVisible: !isMapMoving,
+          isVisible: mounted && !isMapMoving,
         })}
       >
         <header className="header">
