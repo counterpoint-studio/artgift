@@ -1,12 +1,12 @@
 import { Polygon, Feature, FeatureCollection } from "geojson"
-import mapboxgl, { LngLatBoundsLike } from "mapbox-gl"
+import { LngLatBoundsLike } from "mapbox-gl"
 
 import regionData from '../data/region_data.json';
 import { GiftSlot } from './gifts';
 
 export type Region = {
     feature: Feature
-    bounds: mapboxgl.LngLatBoundsLike
+    bounds: LngLatBoundsLike
 };
 
 export function getRegionGeoJSON(): Region[] {
@@ -34,9 +34,12 @@ function getRegionBounds(region: Feature): LngLatBoundsLike {
     return poly.coordinates.reduce(
         (bounds, coords) =>
             coords.reduce(
-                (bounds, coord) => bounds.extend(coord as [number, number]),
+                (bounds, coord) => [
+                    [Math.min(bounds[0][0], coord[0]), Math.min(bounds[0][1], coord[1])],
+                    [Math.max(bounds[1][0], coord[0]), Math.max(bounds[1][1], coord[1])]
+                ],
                 bounds
             ),
-        new mapboxgl.LngLatBounds()
-    ).toArray() as LngLatBoundsLike
+        poly.coordinates[0] as [[number, number], [number, number]]
+    ) as LngLatBoundsLike
 }
