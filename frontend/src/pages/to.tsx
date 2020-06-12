@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react"
 import Helmet from "react-helmet"
 import { useIntl } from "gatsby-plugin-intl"
 import AutoSuggest from "react-autosuggest"
+import { useDebounceCallback } from "@react-hook/debounce"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -22,19 +23,22 @@ const ToPage = () => {
       setSuggestionSelected(false)
     }
   }, [])
-  let onLoadAddressSuggestions = useCallback(
-    (address: string) => {
-      if (
-        address.length > 0 &&
-        !/\d/.test(address) &&
-        (!suggestionSelected || address.length < 4)
-      ) {
-        addresses.findAddresses(address).then(setAddressSuggestions)
-      } else {
-        setAddressSuggestions([])
-      }
-    },
-    [suggestionSelected]
+  let onLoadAddressSuggestions = useDebounceCallback(
+    useCallback(
+      (address: string) => {
+        if (
+          address.length > 0 &&
+          !/\d/.test(address) &&
+          (!suggestionSelected || address.length < 4)
+        ) {
+          addresses.findAddresses(address).then(setAddressSuggestions)
+        } else {
+          setAddressSuggestions([])
+        }
+      },
+      [suggestionSelected]
+    ),
+    300
   )
   let onClearAddressSuggestions = useCallback(() => {
     setAddressSuggestions([])
