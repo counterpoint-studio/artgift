@@ -39,6 +39,7 @@ body {
 
 .pageContent {
   height: 100%;
+  // overflow: auto;
   background: $colorBackground;
   display: grid;
   grid-template-columns: auto;

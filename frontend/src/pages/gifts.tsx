@@ -78,24 +78,26 @@ const GiftsPage = () => {
               </div>
             ))}
           </div>
-          <table className="giftsTable">
-            <tbody>
-              {slotsByDate[selectedDate]?.map(slot => (
-                <tr key={slot.id}>
-                  <td className="giftsTableTime">{formatTime(slot.time)}</td>
-                  <td className="giftsTableBook">
-                    <Link
-                      to="/from"
-                      className="button button--book"
-                      onClick={() => setGift({ ...gift, slotId: slot.id })}
-                    >
-                      {intl.formatMessage({ id: "giftsButtonBook" })}
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="giftsTableWrapper">
+            <table className="giftsTable">
+              <tbody>
+                {slotsByDate[selectedDate]?.map(slot => (
+                  <tr key={slot.id}>
+                    <td className="giftsTableTime">{formatTime(slot.time)}</td>
+                    <td className="giftsTableBook">
+                      <Link
+                        to="/from"
+                        className="button button--book"
+                        onClick={() => setGift({ ...gift, slotId: slot.id })}
+                      >
+                        {intl.formatMessage({ id: "giftsButtonBook" })}
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </main>
       </div>
     </Layout>
