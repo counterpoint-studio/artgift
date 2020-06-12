@@ -12,8 +12,8 @@ import * as addresses from "../services/streetAddressLookup"
 
 import "./to.scss"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
-import { REGION_BOUNDING_BOX } from "../constants"
-import { useMounted } from "../hooks"
+import { REGION_BOUNDING_BOX, INIT_GIFT } from "../constants"
+import { useMounted, useGiftState } from "../hooks"
 import { getRegionGeoJSON } from "../services/regionLookup"
 
 const ToPage = () => {
@@ -25,12 +25,12 @@ const ToPage = () => {
     boundsPadding: 0,
     regions,
   })
-  let [address, setAddress] = useState("")
+  let [gift, setGift] = useGiftState(INIT_GIFT)
   let [addressSuggestions, setAddressSuggestions] = useState<string[]>([])
   let [suggestionSelected, setSuggestionSelected] = useState(false)
 
   let onUpdateAddress = useCallback((address: string) => {
-    setAddress(address)
+    setGift({ ...gift, toAddress: address })
     if (address.trim().length === 0) {
       setSuggestionSelected(false)
     }
@@ -80,7 +80,13 @@ const ToPage = () => {
           <form>
             <div className="inputGroup">
               <label>{intl.formatMessage({ id: "toFormLabelFor" })}:</label>
-              <input type="text" />
+              <input
+                type="text"
+                value={gift.toName}
+                onChange={evt =>
+                  setGift({ ...gift, toName: evt.currentTarget.value })
+                }
+              />
             </div>
             <div className="inputGroup">
               <label>{intl.formatMessage({ id: "toFormLabelAddress" })}:</label>
@@ -89,7 +95,7 @@ const ToPage = () => {
                 getSuggestionValue={v => v}
                 renderSuggestion={v => v}
                 inputProps={{
-                  value: address,
+                  value: gift.toAddress,
                   onChange: (_, { newValue }) => onUpdateAddress(newValue),
                 }}
                 onSuggestionsFetchRequested={evt =>
@@ -103,21 +109,31 @@ const ToPage = () => {
               <label>
                 {intl.formatMessage({ id: "toFormLabelLanguage" })}:
               </label>
-              <select>
-                <option>
+              <select
+                value={gift.toLanguage}
+                onChange={evt =>
+                  setGift({ ...gift, toLanguage: evt.target.value })
+                }
+              >
+                <option value="fi">
                   {intl.formatMessage({ id: "toFormLabelLanguageFi" })}
                 </option>
-                <option>
+                <option value="en">
                   {intl.formatMessage({ id: "toFormLabelLanguageEn" })}
                 </option>
-                <option>
+                <option value="se">
                   {intl.formatMessage({ id: "toFormLabelLanguageSe" })}
                 </option>
               </select>
             </div>
             <div className="inputGroup">
               <label>{intl.formatMessage({ id: "toFormLabelMessage" })}:</label>
-              <textarea></textarea>
+              <textarea
+                value={gift.toSignificance}
+                onChange={evt =>
+                  setGift({ ...gift, toSignificance: evt.currentTarget.value })
+                }
+              ></textarea>
             </div>
             <NextButton
               to="/gifts"
