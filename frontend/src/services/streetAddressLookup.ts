@@ -46,5 +46,5 @@ export async function locateAddress(address: string, fromRegions: Region[]): Pro
 
 function isInGeneralRegion(feature: any) {
     let placeName = feature.context.find(ctx => ctx.id.startsWith('place'));
-    return placeName.text === MAPBOX_REGION_PLACE_NAME;
+    return placeName?.text === MAPBOX_REGION_PLACE_NAME;
 }

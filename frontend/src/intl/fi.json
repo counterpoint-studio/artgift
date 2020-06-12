@@ -44,5 +44,13 @@
 
   "giftSEOTitle": "",
   "giftSEODescription": "",
-  "giftTitle": ""
+  "giftTitle": "",
+
+  "dayOfWeek1": "Ma",
+  "dayOfWeek2": "Ti",
+  "dayOfWeek3": "Ke",
+  "dayOfWeek4": "To",
+  "dayOfWeek5": "Pe",
+  "dayOfWeek6": "La",
+  "dayOfWeek7": "Su"
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react"
 import Helmet from "react-helmet"
-import { useIntl, Link } from "gatsby-plugin-intl"
+import { useIntl, Link, IntlShape } from "gatsby-plugin-intl"
 import classNames from "classnames"
 
 import Layout from "../components/layout"
@@ -18,7 +18,10 @@ import "./gifts.scss"
 const GiftsPage = () => {
   let intl = useIntl()
   let mounted = useMounted()
-  let [slots, setSlots] = useState<GiftSlot[]>([])
+  let [slotsByDate, setSlotsByDate] = useState<{ [date: string]: GiftSlot[] }>(
+    {}
+  )
+  let [selectedDate, setSelectedDate] = useState<string>()
   let regions = useMemo(() => getRegionGeoJSON(), [])
   let [gift, setGift] = useGiftState(INIT_GIFT)
   let { isMoving: isMapMoving } = useMapBackground({
@@ -31,7 +34,10 @@ const GiftsPage = () => {
 
   useEffect(() => {
     if (!gift.toLocation) return
-    let unSub = subscribeToGiftSlotsInRegion(gift.toLocation.region, setSlots)
+    let unSub = subscribeToGiftSlotsInRegion(gift.toLocation.region, slots => {
+      setSelectedDate(sel => sel || Object.keys(slots)[0])
+      setSlotsByDate(slots)
+    })
     return () => {
       unSub()
     }
@@ -58,9 +64,22 @@ const GiftsPage = () => {
           <h1>
             {intl.formatMessage({ id: "giftsTitle" })} {gift.toLocation?.region}
           </h1>
+          <div className="giftDates">
+            {Object.keys(slotsByDate).map(date => (
+              <div
+                key={date}
+                className={classNames("giftDate", {
+                  isSelected: date === selectedDate,
+                })}
+                onClick={() => setSelectedDate(date)}
+              >
+                {formatDate(date, intl)}
+              </div>
+            ))}
+          </div>
           <table className="giftsTable">
             <tbody>
-              {slots.map(slot => (
+              {slotsByDate[selectedDate]?.map(slot => (
                 <tr key={slot.id}>
                   <td className="giftsTableTime">{formatTime(slot.time)}</td>
                   <td className="giftsTableBook">
@@ -80,6 +99,15 @@ const GiftsPage = () => {
       </div>
     </Layout>
   )
+}
+
+function formatDate(dateS: string, intl: IntlShape) {
+  let y = +dateS.substring(0, 4)
+  let m = +dateS.substring(4, 6)
+  let d = +dateS.substring(6, 8)
+  let date = new Date(y, m - 1, d)
+  let dayOfWeek = intl.formatMessage({ id: `dayOfWeek${date.getDay()}` })
+  return `${dayOfWeek} ${d}.${m}.`
 }
 
 function formatTime(time: string) {

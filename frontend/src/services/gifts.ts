@@ -14,13 +14,19 @@ export function subscribeToGiftSlotsOverview(callback: (slots: GiftSlot[]) => vo
 
 }
 
-export function subscribeToGiftSlotsInRegion(region: string, callback: (slots: GiftSlot[]) => void) {
+export function subscribeToGiftSlotsInRegion(region: string, callback: (slots: { [day: string]: GiftSlot[] }) => void) {
     let unSub = firebase.firestore().collection("slots").where('region', '==', region).orderBy("date")
         .orderBy("time")
         .onSnapshot((slotsSnapshot) => {
-            callback(
-                slotsSnapshot.docs.map((d) => ({ id: d.id, ...d.data() } as GiftSlot))
-            );
+            let byDate = {};
+            for (let slot of slotsSnapshot.docs) {
+                let slotData = slot.data() as GiftSlot
+                if (!byDate[slotData.date]) {
+                    byDate[slotData.date] = []
+                }
+                byDate[slotData.date].push({ id: slot.id, ...slotData });
+            }
+            callback(byDate);
         });
     return unSub
 

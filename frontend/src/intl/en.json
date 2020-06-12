@@ -44,5 +44,13 @@
 
   "giftSEOTitle": "",
   "giftSEODescription": "",
-  "giftTitle": ""
+  "giftTitle": "",
+
+  "dayOfWeek1": "Mon",
+  "dayOfWeek2": "Tue",
+  "dayOfWeek3": "Wed",
+  "dayOfWeek4": "Thu",
+  "dayOfWeek5": "Fri",
+  "dayOfWeek6": "Sat",
+  "dayOfWeek7": "Sun"
 }
