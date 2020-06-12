@@ -56,50 +56,48 @@ const GiftsPage = () => {
         }}
         key="helmet"
       />
-      <div
-        className={classNames("pageContent", "pageContent--gifts", {
+      <main
+        className={classNames("main", {
           isVisible: mounted && !isMapMoving,
         })}
       >
-        <main className="main">
-          <h1>
-            {intl.formatMessage({ id: "giftsTitle" })} {gift.toLocation?.region}
-          </h1>
-          <div className="giftDates">
-            {Object.keys(slotsByDate).map(date => (
-              <div
-                key={date}
-                className={classNames("giftDate", {
-                  isSelected: date === selectedDate,
-                })}
-                onClick={() => setSelectedDate(date)}
-              >
-                {formatDate(date, intl)}
-              </div>
-            ))}
-          </div>
-          <div className="giftsTableWrapper">
-            <table className="giftsTable">
-              <tbody>
-                {slotsByDate[selectedDate]?.map(slot => (
-                  <tr key={slot.id}>
-                    <td className="giftsTableTime">{formatTime(slot.time)}</td>
-                    <td className="giftsTableBook">
-                      <Link
-                        to="/from"
-                        className="button button--book"
-                        onClick={() => setGift({ ...gift, slotId: slot.id })}
-                      >
-                        {intl.formatMessage({ id: "giftsButtonBook" })}
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </main>
-      </div>
+        <h1>
+          {intl.formatMessage({ id: "giftsTitle" })} {gift.toLocation?.region}
+        </h1>
+        <div className="giftDates">
+          {Object.keys(slotsByDate).map(date => (
+            <div
+              key={date}
+              className={classNames("giftDate", {
+                isSelected: date === selectedDate,
+              })}
+              onClick={() => setSelectedDate(date)}
+            >
+              {formatDate(date, intl)}
+            </div>
+          ))}
+        </div>
+        <div className="giftsTableWrapper">
+          <table className="giftsTable">
+            <tbody>
+              {slotsByDate[selectedDate]?.map(slot => (
+                <tr key={slot.id}>
+                  <td className="giftsTableTime">{formatTime(slot.time)}</td>
+                  <td className="giftsTableBook">
+                    <Link
+                      to="/from"
+                      className="button button--book"
+                      onClick={() => setGift({ ...gift, slotId: slot.id })}
+                    >
+                      {intl.formatMessage({ id: "giftsButtonBook" })}
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </main>
     </Layout>
   )
 }

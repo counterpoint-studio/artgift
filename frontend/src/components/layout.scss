@@ -9,13 +9,13 @@ body {
   background: #222;
 }
 
-.wrapper {
+.content {
   z-index: 1; // everything on top of map
   position: fixed;
-  top: 5vw;
-  bottom: 5vw;
-  left: 5vw;
-  width: 90vw;
+  top: 4vw;
+  bottom: 4vw;
+  left: 4vw;
+  width: 92vw;
 
   @media (min-width: 768px) {
     top: calc(4vw + 5px);
@@ -24,48 +24,46 @@ body {
     width: 500px;
   }
 
+  // HF yellow frame
   &:after {
     content: "";
     display: block;
     position: fixed;
-    top: 2vw;
-    right: 2vw;
-    bottom: 2vw;
-    left: 2vw;
     border: 5px solid $colorHFYellow;
     pointer-events: none;
-  }
-}
+    top: 4vw;
+    right: 4vw;
+    bottom: 4vw;
+    left: 4vw;
 
-.pageContent {
-  height: 100%;
-  // overflow: auto;
-  background: $colorBackground;
-  display: grid;
-  grid-template-columns: auto;
-  grid-template-rows: auto 1fr auto;
-  grid-template-areas:
-    "header"
-    "main"
-    "footer";
-  gap: 20px;
-  padding: 20px 40px;
-
-  @media (min-width: 768px) {
-    gap: 30px;
-    padding: 30px 60px;
+    @media (min-width: 768px) {
+      top: 2vw;
+      right: 2vw;
+      bottom: 2vw;
+      left: 2vw;
+    }
   }
 
   .header {
-    grid-area: header;
+    display: none;
+
+    @media (min-width: 768px) {
+      display: block;
+      position: fixed;
+      top: calc(4vw + 5px);
+      right: calc(4vw + 5px);
+      width: 250px;
+    }
   }
 
   .main {
-    grid-area: main;
-  }
+    height: 100%;
+    background: $colorBackground;
+    padding: 30px;
 
-  .footer {
-    grid-area: footer;
+    @media (min-width: 768px) {
+      padding: 60px;
+    }
   }
 }
 

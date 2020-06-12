@@ -22,12 +22,10 @@ const DeliveryPage = () => {
         }}
         key="helmet"
       />
-      <div className="pageContent pageContent--delivery">
-        <main className="main">
-          <h1>{intl.formatMessage({ id: "deliveryTitle" })}</h1>
-          <p>{intl.formatMessage({ id: "deliveryDescription" })}</p>
-        </main>
-      </div>
+      <main className="main">
+        <h1>{intl.formatMessage({ id: "deliveryTitle" })}</h1>
+        <p>{intl.formatMessage({ id: "deliveryDescription" })}</p>
+      </main>
     </Layout>
   )
 }

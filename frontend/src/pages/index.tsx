@@ -12,8 +12,6 @@ import * as gifts from "../services/gifts"
 import * as regions from "../services/regionLookup"
 import NextButton from "../components/nextButton"
 
-import Logo from "../images/logo.svg"
-
 import "./index.scss"
 import { useMounted } from "../hooks"
 
@@ -48,32 +46,23 @@ const IntroPage = () => {
         }}
         key="helmet"
       />
-      <div
-        className={classNames("pageContent", "pageContent--intro", {
+      <main
+        className={classNames("main", {
           isVisible: mounted && !isMapMoving,
         })}
       >
-        <header className="header">
-          <Language />
-          {/* <img
-            className="introLogo"
-            src={Logo}
-            alt={intl.formatMessage({ id: "title" })}
-          /> */}
-        </header>
-        <main className="main">
-          <h1 className="introTitle">
-            {intl.formatMessage({ id: "introTitle" })}
-          </h1>
-          <div className="introBody">
-            <p>{intl.formatMessage({ id: "introBody" })}</p>
-          </div>
-          <NextButton
-            to="/to"
-            text={intl.formatMessage({ id: "introButtonNext" })}
-          />
-        </main>
-      </div>
+        <Language />
+        <h1 className="introTitle">
+          {intl.formatMessage({ id: "introTitle" })}
+        </h1>
+        <div className="introBody">
+          <p>{intl.formatMessage({ id: "introBody" })}</p>
+        </div>
+        <NextButton
+          to="/to"
+          text={intl.formatMessage({ id: "introButtonNext" })}
+        />
+      </main>
     </Layout>
   )
 }

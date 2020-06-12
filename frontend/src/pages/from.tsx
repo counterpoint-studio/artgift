@@ -46,74 +46,72 @@ const FromPage = () => {
         }}
         key="helmet"
       />
-      <div
-        className={classNames("pageContent", "pageContent--from", {
+      <main
+        className={classNames("main", {
           isVisible: mounted && !isMapMoving,
         })}
       >
-        <main className="main">
-          <h1>{intl.formatMessage({ id: "fromTitle" })}</h1>
-          <p>
-            {intl.formatMessage({ id: "fromReservedTimeStart" })}{" "}
-            {giftSlot && (
-              <>
-                {formatDate(giftSlot.date, intl)} {formatTime(giftSlot.time)}
-              </>
-            )}
-            . {intl.formatMessage({ id: "fromReservedTimeEnd" })}
-          </p>
-          <form>
-            <div className="inputGroup">
-              <label>{intl.formatMessage({ id: "fromFormLabelName" })}:</label>
-              <input
-                type="text"
-                maxLength={50}
-                value={gift.fromName}
-                onChange={evt =>
-                  setGift({ ...gift, fromName: evt.currentTarget.value })
-                }
-              />
-            </div>
-            <div className="inputGroup">
-              <label>{intl.formatMessage({ id: "fromFormLabelPhone" })}:</label>
-              <input
-                type="text"
-                maxLength={25}
-                value={gift.fromPhoneNumber}
-                onChange={evt =>
-                  setGift({ ...gift, fromPhoneNumber: evt.currentTarget.value })
-                }
-              />
-            </div>
-            <div className="inputGroup">
-              <label>{intl.formatMessage({ id: "fromFormLabelEmail" })}:</label>
-              <input
-                type="email"
-                value={gift.fromEmail}
-                onChange={evt =>
-                  setGift({ ...gift, fromEmail: evt.currentTarget.value })
-                }
-              />
-            </div>
-            <div className="inputGroup">
-              <label>
-                {intl.formatMessage({ id: "fromFormLabelSpecialInfo" })}:
-              </label>
-              <textarea
-                maxLength={1000}
-                value={gift.fromMessage}
-                onChange={evt =>
-                  setGift({ ...gift, fromMessage: evt.currentTarget.value })
-                }
-              ></textarea>
-            </div>
-            <NextButton
-              to="/delivery"
-              text={intl.formatMessage({ id: "fromButtonNext" })}
+        <h1>{intl.formatMessage({ id: "fromTitle" })}</h1>
+        <p>
+          {intl.formatMessage({ id: "fromReservedTimeStart" })}{" "}
+          {giftSlot && (
+            <>
+              {formatDate(giftSlot.date, intl)} {formatTime(giftSlot.time)}
+            </>
+          )}
+          . {intl.formatMessage({ id: "fromReservedTimeEnd" })}
+        </p>
+        <form>
+          <div className="inputGroup">
+            <label>{intl.formatMessage({ id: "fromFormLabelName" })}:</label>
+            <input
+              type="text"
+              maxLength={50}
+              value={gift.fromName}
+              onChange={evt =>
+                setGift({ ...gift, fromName: evt.currentTarget.value })
+              }
             />
-          </form>
-        </main>
-      </div>
+          </div>
+          <div className="inputGroup">
+            <label>{intl.formatMessage({ id: "fromFormLabelPhone" })}:</label>
+            <input
+              type="text"
+              maxLength={25}
+              value={gift.fromPhoneNumber}
+              onChange={evt =>
+                setGift({ ...gift, fromPhoneNumber: evt.currentTarget.value })
+              }
+            />
+          </div>
+          <div className="inputGroup">
+            <label>{intl.formatMessage({ id: "fromFormLabelEmail" })}:</label>
+            <input
+              type="email"
+              value={gift.fromEmail}
+              onChange={evt =>
+                setGift({ ...gift, fromEmail: evt.currentTarget.value })
+              }
+            />
+          </div>
+          <div className="inputGroup">
+            <label>
+              {intl.formatMessage({ id: "fromFormLabelSpecialInfo" })}:
+            </label>
+            <textarea
+              maxLength={1000}
+              value={gift.fromMessage}
+              onChange={evt =>
+                setGift({ ...gift, fromMessage: evt.currentTarget.value })
+              }
+            ></textarea>
+          </div>
+          <NextButton
+            to="/delivery"
+            text={intl.formatMessage({ id: "fromButtonNext" })}
+          />
+        </form>
+      </main>
     </Layout>
   )
 }
