@@ -1,13 +1,12 @@
 import React, { useRef, useEffect, useState } from "react"
 import mapboxgl from "mapbox-gl"
-import { Polygon } from "geojson"
 
 import "./mapBackground.scss"
 
 mapboxgl.accessToken = process.env.GATSBY_MAPBOX_ACCESS_TOKEN
 
 export interface MapBackgroundProps {
-  center?: [number, number]
+  bounds?: [[number, number], [number, number]]
   regions?: { feature: GeoJSON.Feature; bounds: mapboxgl.LngLatBoundsLike }[]
   focusedRegion?: {
     feature: GeoJSON.Feature
@@ -18,7 +17,7 @@ export interface MapBackgroundProps {
 }
 
 const MapBackground: React.FC<MapBackgroundProps> = ({
-  center,
+  bounds,
   regions,
   focusedRegion,
   points,
@@ -65,8 +64,9 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
   }, [map, onSetMoving])
 
   useEffect(() => {
-    map?.setCenter(center)
-  }, [map, center])
+    if (!bounds) return
+    map?.fitBounds(bounds)
+  }, [map, bounds])
 
   useEffect(
     function updateRegions() {
