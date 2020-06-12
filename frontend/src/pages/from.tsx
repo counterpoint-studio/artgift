@@ -8,9 +8,10 @@ import SEO from "../components/seo"
 import NextButton from "../components/nextButton"
 
 import "./from.scss"
-import { useMounted } from "../hooks"
+import { useMounted, useGiftState } from "../hooks"
 import { getRegionGeoJSON } from "../services/regionLookup"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
+import { INIT_GIFT } from "../constants"
 
 const FromPage = () => {
   let intl = useIntl()
@@ -21,6 +22,7 @@ const FromPage = () => {
     boundsPadding: 0,
     regions,
   })
+  let [gift, setGift] = useGiftState(INIT_GIFT)
 
   return (
     <Layout>
@@ -48,21 +50,44 @@ const FromPage = () => {
           <form>
             <div className="inputGroup">
               <label>{intl.formatMessage({ id: "fromFormLabelName" })}:</label>
-              <input type="text" />
+              <input
+                type="text"
+                value={gift.fromName}
+                onChange={evt =>
+                  setGift({ ...gift, fromName: evt.currentTarget.value })
+                }
+              />
             </div>
             <div className="inputGroup">
               <label>{intl.formatMessage({ id: "fromFormLabelPhone" })}:</label>
-              <input type="text" />
+              <input
+                type="text"
+                value={gift.fromPhoneNumber}
+                onChange={evt =>
+                  setGift({ ...gift, fromPhoneNumber: evt.currentTarget.value })
+                }
+              />
             </div>
             <div className="inputGroup">
               <label>{intl.formatMessage({ id: "fromFormLabelEmail" })}:</label>
-              <input type="text" />
+              <input
+                type="text"
+                value={gift.fromEmail}
+                onChange={evt =>
+                  setGift({ ...gift, fromEmail: evt.currentTarget.value })
+                }
+              />
             </div>
             <div className="inputGroup">
               <label>
                 {intl.formatMessage({ id: "fromFormLabelSpecialInfo" })}:
               </label>
-              <textarea></textarea>
+              <textarea
+                value={gift.fromMessage}
+                onChange={evt =>
+                  setGift({ ...gift, fromMessage: evt.currentTarget.value })
+                }
+              ></textarea>
             </div>
             <NextButton
               to="/delivery"

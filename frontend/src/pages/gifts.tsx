@@ -10,7 +10,8 @@ import { subscribeToGiftSlotsInRegion, GiftSlot } from "../services/gifts"
 import "./gifts.scss"
 import { getRegionGeoJSON } from "../services/regionLookup"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
-import { useMounted } from "../hooks"
+import { useMounted, useGiftState } from "../hooks"
+import { INIT_GIFT } from "../constants"
 
 const GiftsPage = () => {
   let intl = useIntl()
@@ -23,6 +24,7 @@ const GiftsPage = () => {
     boundsPadding: 0,
     regions,
   })
+  let [gift, setGift] = useGiftState(INIT_GIFT)
 
   useEffect(() => {
     let unSub = subscribeToGiftSlotsInRegion(region, setSlots)
@@ -58,7 +60,11 @@ const GiftsPage = () => {
                 <tr key={slot.id}>
                   <td className="giftsTableTime">{formatTime(slot.time)}</td>
                   <td className="giftsTableBook">
-                    <Link to="/from" className="button button--book">
+                    <Link
+                      to="/from"
+                      className="button button--book"
+                      onClick={() => setGift({ ...gift, slotId: slot.id })}
+                    >
                       {intl.formatMessage({ id: "giftsButtonBook" })}
                     </Link>
                   </td>
