@@ -1,7 +1,9 @@
-import React, { useState, useCallback } from "react"
+import React, { useState, useCallback, useMemo } from "react"
 import Helmet from "react-helmet"
 import { useIntl } from "gatsby-plugin-intl"
 import AutoSuggest from "react-autosuggest"
+import { useDebounceCallback } from "@react-hook/debounce"
+import classNames from "classnames"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -9,23 +11,53 @@ import NextButton from "../components/nextButton"
 import * as addresses from "../services/streetAddressLookup"
 
 import "./to.scss"
+import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
+import { REGION_BOUNDING_BOX } from "../constants"
+import { useMounted } from "../hooks"
+import { getRegionGeoJSON } from "../services/regionLookup"
 
 const ToPage = () => {
   let intl = useIntl()
-  let [address, setAddress] = useState("f")
+  let mounted = useMounted()
+  let regions = useMemo(() => getRegionGeoJSON(), [])
+  let { isMoving: isMapMoving } = useMapBackground({
+    bounds: REGION_BOUNDING_BOX,
+    boundsPadding: 0,
+    regions,
+  })
+  let [address, setAddress] = useState("")
   let [addressSuggestions, setAddressSuggestions] = useState<string[]>([])
+  let [suggestionSelected, setSuggestionSelected] = useState(false)
 
-  let onLoadAddressSuggestions = useCallback((address: string) => {
-    if (address.length > 0) {
-      addresses.findAddresses(address).then(setAddressSuggestions)
-    } else {
-      setAddressSuggestions([])
+  let onUpdateAddress = useCallback((address: string) => {
+    setAddress(address)
+    if (address.trim().length === 0) {
+      setSuggestionSelected(false)
     }
   }, [])
+  let onLoadAddressSuggestions = useDebounceCallback(
+    useCallback(
+      (address: string) => {
+        if (
+          address.length > 0 &&
+          !/\d/.test(address) &&
+          (!suggestionSelected || address.length < 4)
+        ) {
+          addresses.findAddresses(address).then(setAddressSuggestions)
+        } else {
+          setAddressSuggestions([])
+        }
+      },
+      [suggestionSelected]
+    ),
+    300
+  )
   let onClearAddressSuggestions = useCallback(() => {
     setAddressSuggestions([])
   }, [])
-  console.log(address)
+  let onSelectSuggestion = useCallback(() => {
+    setSuggestionSelected(true)
+  }, [])
 
   return (
     <Layout>
@@ -39,7 +71,11 @@ const ToPage = () => {
         }}
         key="helmet"
       />
-      <div className="pageContent pageContent--to">
+      <div
+        className={classNames("pageContent", "pageContent--to", {
+          isVisible: mounted && !isMapMoving,
+        })}
+      >
         <main className="main">
           <form>
             <div className="inputGroup">
@@ -50,16 +86,17 @@ const ToPage = () => {
               <label>{intl.formatMessage({ id: "toFormLabelAddress" })}:</label>
               <AutoSuggest
                 suggestions={addressSuggestions}
-                onSuggestionsFetchRequested={evt =>
-                  onLoadAddressSuggestions(evt.value)
-                }
-                onSuggestionsClearRequested={onClearAddressSuggestions}
                 getSuggestionValue={v => v}
                 renderSuggestion={v => v}
                 inputProps={{
                   value: address,
-                  onChange: (_, { newValue }) => setAddress(newValue),
+                  onChange: (_, { newValue }) => onUpdateAddress(newValue),
                 }}
+                onSuggestionsFetchRequested={evt =>
+                  onLoadAddressSuggestions(evt.value)
+                }
+                onSuggestionsClearRequested={onClearAddressSuggestions}
+                onSuggestionSelected={onSelectSuggestion}
               />
             </div>
             <div className="inputGroup">

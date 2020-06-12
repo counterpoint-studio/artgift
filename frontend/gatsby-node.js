@@ -4,7 +4,7 @@
  * See: https://www.gatsbyjs.org/docs/node-apis/
  */
 
-exports.onCreateWebpackConfig = ({ stage, loaders, actions }) => {
+exports.onCreateWebpackConfig = ({ stage, loaders, actions, plugins }) => {
   if (stage === "build-html" || stage === "develop-html") {
     actions.setWebpackConfig({
       module: {
@@ -15,6 +15,7 @@ exports.onCreateWebpackConfig = ({ stage, loaders, actions }) => {
           },
         ],
       },
+      plugins: [plugins.ignore(/^electron$/)],
     })
   }
 }

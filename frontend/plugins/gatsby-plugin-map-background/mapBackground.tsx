@@ -1,31 +1,28 @@
 import React, { useRef, useEffect, useState } from "react"
-import mapboxgl from "mapbox-gl"
-import { Polygon } from "geojson"
+import mapboxgl, { LngLatBoundsLike } from "mapbox-gl"
 
 import "./mapBackground.scss"
 
 mapboxgl.accessToken = process.env.GATSBY_MAPBOX_ACCESS_TOKEN
 
 export interface MapBackgroundProps {
-  center?: [number, number]
+  bounds?: LngLatBoundsLike
+  boundsPadding?: number
   regions?: { feature: GeoJSON.Feature; bounds: mapboxgl.LngLatBoundsLike }[]
-  focusedRegion?: {
-    feature: GeoJSON.Feature
-    bounds: mapboxgl.LngLatBoundsLike
-  }
   points?: [number, number][]
   onSetMoving: (moving: boolean) => void
 }
 
 const MapBackground: React.FC<MapBackgroundProps> = ({
-  center,
+  bounds,
+  boundsPadding,
   regions,
-  focusedRegion,
   points,
   onSetMoving,
 }) => {
   let mapEl = useRef<HTMLDivElement>()
   let [map, setMap] = useState<mapboxgl.Map>()
+  let firstTransition = useRef(true)
 
   useEffect(function initMap() {
     let map = new mapboxgl.Map({
@@ -35,23 +32,21 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
       pitch: 45,
       attributionControl: false,
     }).addControl(new mapboxgl.AttributionControl({ compact: false }))
-    map.once("load", () => {
-      map.easeTo({ zoom: 9, pitch: 0, duration: 5000 })
-    })
     setMap(map)
   }, [])
 
   useEffect(() => {
     if (!map) return
-    let onMoveStart = () => {
-      console.log("s"), onSetMoving(true)
-    }
-    let onMoveEnd = () => {
-      console.log("e"), onSetMoving(false)
-    }
+    let onMoveStart = () => onSetMoving(true)
+    let onMoveEnd = () => onSetMoving(false)
     let attach = () => {
       map.on("movestart", onMoveStart)
       map.on("moveend", onMoveEnd)
+      if (map.isMoving()) {
+        onSetMoving(true)
+      } else {
+        onSetMoving(false)
+      }
     }
     if (map.loaded()) {
       attach()
@@ -65,8 +60,14 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
   }, [map, onSetMoving])
 
   useEffect(() => {
-    map?.setCenter(center)
-  }, [map, center])
+    if (!bounds) return
+    map?.fitBounds(bounds, {
+      pitch: 0,
+      padding: boundsPadding ?? 0,
+      duration: firstTransition.current ? 5000 : 2000,
+    })
+    firstTransition.current = false
+  }, [map, bounds, boundsPadding])
 
   useEffect(
     function updateRegions() {
@@ -103,22 +104,14 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
 
       return () => {
         if (added) {
-          map.off("style.load", add)
-        } else {
           map.removeLayer("regions")
           map.removeSource("regions")
+        } else {
+          map.off("style.load", add)
         }
       }
     },
     [map, regions]
-  )
-
-  useEffect(
-    function focusOnRegion() {
-      if (!focusedRegion || !map) return
-      map.fitBounds(focusedRegion.bounds)
-    },
-    [focusedRegion, map]
   )
 
   useEffect(() => {

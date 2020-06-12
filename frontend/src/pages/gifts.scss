@@ -20,4 +20,12 @@
       text-align: right;
     }
   }
+
+  .pageContent {
+    opacity: 0;
+    &.isVisible {
+      opacity: 1;
+      transition: opacity 1s;
+    }
+  }
 }

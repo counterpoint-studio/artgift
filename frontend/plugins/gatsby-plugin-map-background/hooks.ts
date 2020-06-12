@@ -8,7 +8,15 @@ export function useMapBackground(props: Partial<MapBackgroundProps>) {
 
     useEffect(() => {
         ctx.update(props);
-    }, [props?.center[0], props?.center[1], props?.regions, props?.focusedRegion, props?.points])
+    }, [
+        props?.bounds?.[0][0],
+        props?.bounds?.[0][1],
+        props?.bounds?.[1][0],
+        props?.bounds?.[1][1],
+        props?.regions,
+        props?.focusedRegion,
+        props?.points
+    ])
 
     return ctx;
 }

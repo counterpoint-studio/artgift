@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from "react"
-import { Feature } from "geojson"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
-import { MAP_CENTER } from "../constants"
+import { REGION_BOUNDING_BOX } from "../constants"
 import { Region, getRegionGeoJSON } from "../services/regionLookup"
 
 const MapTestPage = () => {
   let [regions, setRegions] = useState<Region[]>([])
   let [focusedRegion, setFocusedRegion] = useState<Region>()
   useMapBackground({
-    center: MAP_CENTER,
+    bounds: focusedRegion ? focusedRegion.bounds : REGION_BOUNDING_BOX,
     regions,
-    focusedRegion,
   })
   useEffect(() => {
     setRegions(getRegionGeoJSON())

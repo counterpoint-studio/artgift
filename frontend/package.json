@@ -6,6 +6,7 @@
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
     "@mapbox/mapbox-sdk": "^0.10.0",
+    "@react-hook/debounce": "^3.0.0",
     "@types/classnames": "^2.2.10",
     "@types/mapbox__mapbox-sdk": "^0.6.2",
     "classnames": "^2.2.6",

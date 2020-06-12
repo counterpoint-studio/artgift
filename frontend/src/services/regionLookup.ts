@@ -1,12 +1,12 @@
 import { Polygon, Feature, FeatureCollection } from "geojson"
-import mapboxgl from "mapbox-gl"
+import { LngLatBoundsLike } from "mapbox-gl"
 
 import regionData from '../data/region_data.json';
 import { GiftSlot } from './gifts';
 
 export type Region = {
     feature: Feature
-    bounds: mapboxgl.LngLatBounds
+    bounds: LngLatBoundsLike
 };
 
 export function getRegionGeoJSON(): Region[] {
@@ -22,21 +22,24 @@ export function getRandomLocations(giftSlots: GiftSlot[]): [number, number][] {
     return giftSlots.map(slot => {
         let region = regionData.find(r => r.feature.properties.nimi_fi === slot.region);
         for (let i = 0; i < 10; i++) {
-            let lng = region.bounds.getWest() + Math.random() * (region.bounds.getEast() - region.bounds.getWest());
-            let lat = region.bounds.getSouth() + Math.random() * (region.bounds.getNorth() - region.bounds.getSouth());
+            let lng = region.bounds[0][0] + Math.random() * (region.bounds[1][0] - region.bounds[0][0]);
+            let lat = region.bounds[0][1] + Math.random() * (region.bounds[1][1] - region.bounds[0][1]);
             return [lng, lat];
         }
     })
 }
 
-function getRegionBounds(region: Feature) {
+function getRegionBounds(region: Feature): LngLatBoundsLike {
     let poly = region.geometry as Polygon
     return poly.coordinates.reduce(
         (bounds, coords) =>
             coords.reduce(
-                (bounds, coord) => bounds.extend(coord as [number, number]),
+                (bounds, coord) => [
+                    [Math.min(bounds[0][0], coord[0]), Math.min(bounds[0][1], coord[1])],
+                    [Math.max(bounds[1][0], coord[0]), Math.max(bounds[1][1], coord[1])]
+                ],
                 bounds
             ),
-        new mapboxgl.LngLatBounds()
-    )
+        poly.coordinates[0] as [[number, number], [number, number]]
+    ) as LngLatBoundsLike
 }
