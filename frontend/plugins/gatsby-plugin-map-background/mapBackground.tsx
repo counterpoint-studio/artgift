@@ -1,11 +1,22 @@
 import React, { useRef, useEffect, useState } from "react"
-import mapboxgl, { LngLatBoundsLike } from "mapbox-gl"
+import mapboxgl, { LngLatBoundsLike, LngLatLike } from "mapbox-gl"
 
 import "./mapBackground.scss"
 
 mapboxgl.accessToken = process.env.GATSBY_MAPBOX_ACCESS_TOKEN
 
+const INITIAL_ZOOM_LEVEL = 4
+const INITIAL_PITCH_ANGLE = 45
+const FINAL_PITCH_ANGLE = 0
+const FIRST_ZOOM_DURATION_MS = 5_000
+const SUBSEQUENT_ZOOM_DURATION_MS = 2_000
+const FIRST_POINT_ENTER_DELAY_MS = 3_000
+const MIN_POINT_ENTER_DELAY_MS = 0
+const MAX_POINT_ENTER_INTERVAL_MS = 30
+const LAST_POINT_ENTER_DELAY_MS = 1_000
+
 export interface MapBackgroundProps {
+  initPoint?: LngLatLike
   bounds?: LngLatBoundsLike
   boundsPadding?: number
   regions?: { feature: GeoJSON.Feature; bounds: mapboxgl.LngLatBoundsLike }[]
@@ -14,6 +25,7 @@ export interface MapBackgroundProps {
 }
 
 const MapBackground: React.FC<MapBackgroundProps> = ({
+  initPoint,
   bounds,
   boundsPadding,
   regions,
@@ -22,30 +34,39 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
 }) => {
   let mapEl = useRef<HTMLDivElement>()
   let [map, setMap] = useState<mapboxgl.Map>()
+  let [addingPoints, setAddingPoints] = useState(false)
+  let [moving, setMoving] = useState(false)
   let firstTransition = useRef(true)
 
   useEffect(function initMap() {
     let map = new mapboxgl.Map({
       container: mapEl.current,
       style: "mapbox://styles/teropa/ckbc1rriu0mcx1inu9wlkna38",
-      zoom: 7,
-      pitch: 45,
+      zoom: INITIAL_ZOOM_LEVEL,
+      pitch: INITIAL_PITCH_ANGLE,
       attributionControl: false,
     }).addControl(new mapboxgl.AttributionControl({ compact: false }))
     setMap(map)
   }, [])
+  useEffect(
+    function centerMap() {
+      if (!map || !initPoint) return
+      map.jumpTo({ center: initPoint })
+    },
+    [map, initPoint]
+  )
 
   useEffect(() => {
     if (!map) return
-    let onMoveStart = () => onSetMoving(true)
-    let onMoveEnd = () => onSetMoving(false)
+    let onMoveStart = () => setMoving(true)
+    let onMoveEnd = () => setMoving(false)
     let attach = () => {
       map.on("movestart", onMoveStart)
       map.on("moveend", onMoveEnd)
       if (map.isMoving()) {
-        onSetMoving(true)
+        setMoving(true)
       } else {
-        onSetMoving(false)
+        setMoving(false)
       }
     }
     if (map.loaded()) {
@@ -57,14 +78,16 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
       map.off("movestart", onMoveStart)
       map.off("moveend", onMoveEnd)
     }
-  }, [map, onSetMoving])
+  }, [map])
 
   useEffect(() => {
     if (!bounds) return
     map?.fitBounds(bounds, {
-      pitch: 0,
+      pitch: FINAL_PITCH_ANGLE,
       padding: boundsPadding ?? 0,
-      duration: firstTransition.current ? 5000 : 2000,
+      duration: firstTransition.current
+        ? FIRST_ZOOM_DURATION_MS
+        : SUBSEQUENT_ZOOM_DURATION_MS,
     })
     firstTransition.current = false
   }, [map, bounds, boundsPadding])
@@ -117,26 +140,48 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
   useEffect(() => {
     if (!points || !map) return
 
+    setAddingPoints(true)
     let running = true,
       markers: mapboxgl.Marker[] = [],
       pts = points.slice()
     function addNext() {
-      if (!running || pts.length === 0) return
+      if (!running || pts.length === 0) {
+        return
+      }
       let markerEl = document.createElement("div")
       markerEl.classList.add("pointMarker")
       markers.push(
         new mapboxgl.Marker(markerEl).setLngLat(pts.shift()).addTo(map)
       )
-      setTimeout(() => markerEl.classList.add("isAdded"))
-      setTimeout(addNext, Math.random() * 30)
+      let isLast = pts.length === 0
+      setTimeout(() => {
+        markerEl.classList.add("isAdded")
+        if (isLast) {
+          setTimeout(() => setAddingPoints(false), LAST_POINT_ENTER_DELAY_MS)
+        }
+      })
+      setTimeout(
+        addNext,
+        MIN_POINT_ENTER_DELAY_MS +
+          Math.random() *
+            (MAX_POINT_ENTER_INTERVAL_MS - MIN_POINT_ENTER_DELAY_MS)
+      )
     }
-    setTimeout(addNext, 2000)
+    setTimeout(addNext, FIRST_POINT_ENTER_DELAY_MS)
 
     return () => {
       running = false
       markers.forEach(m => m.remove())
     }
   }, [points, map])
+
+  useEffect(
+    function notifyMovement() {
+      console.log("m", moving, addingPoints)
+      onSetMoving(moving || addingPoints)
+    },
+    [moving, addingPoints, onSetMoving]
+  )
 
   return <div ref={mapEl} className="mapBackground"></div>
 }

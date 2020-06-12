@@ -7,7 +7,7 @@ import Layout from "../components/layout"
 import SEO from "../components/seo"
 import Language from "../components/language"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
-import { REGION_BOUNDING_BOX } from "../constants"
+import { REGION_BOUNDING_BOX, MAP_INIT_CENTER } from "../constants"
 import * as gifts from "../services/gifts"
 import * as regions from "../services/regionLookup"
 import NextButton from "../components/nextButton"
@@ -23,6 +23,7 @@ const IntroPage = () => {
   let [introPoints, setIntroPoints] = useState<[number, number][]>([])
 
   let { isMoving: isMapMoving } = useMapBackground({
+    initPoint: MAP_INIT_CENTER,
     bounds: REGION_BOUNDING_BOX,
     boundsPadding: 150,
     points: introPoints,
