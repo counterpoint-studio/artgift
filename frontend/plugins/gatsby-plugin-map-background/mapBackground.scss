@@ -15,9 +15,13 @@
   border-radius: 50%;
   width: 5px;
   height: 5px;
-  background-color: $colorHFYellow;
+  background-image: url(../../src/images/icon.svg);
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+
   opacity: 0;
   transition: opacity 0.5s;
+
   &.isAdded {
     opacity: 1;
   }
