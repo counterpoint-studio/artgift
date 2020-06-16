@@ -116,6 +116,10 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
             id: "regions",
             type: "line",
             source: "regions",
+            paint: {
+              "line-width": 3,
+              "line-color": "#ffffff",
+            },
           })
         }
       }
