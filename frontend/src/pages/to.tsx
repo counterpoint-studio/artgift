@@ -1,9 +1,11 @@
 import React, { useState, useCallback, useMemo } from "react"
 import Helmet from "react-helmet"
 import { useIntl } from "gatsby-plugin-intl"
+import { Textbox, Textarea } from "react-inputs-validation"
 import AutoSuggest from "react-autosuggest"
 import { useDebounceCallback } from "@react-hook/debounce"
 import classNames from "classnames"
+import { omit } from "lodash"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -29,12 +31,28 @@ const ToPage = () => {
   let [gift, setGift] = useGiftState(INIT_GIFT)
   let [addressSuggestions, setAddressSuggestions] = useState<string[]>([])
   let [suggestionSelected, setSuggestionSelected] = useState(false)
+  let [addressValidationResult, setAddressValidationResult] = useState({
+    error: false,
+    message: "",
+  })
+  let isValid =
+    gift.toName.trim().length > 0 &&
+    gift.toSignificance.trim().length > 0 &&
+    !addressValidationResult.error
 
   let onUpdateAddressLocation = useDebounceCallback(
     useCallback(
       async (address: string) => {
         let addressLoc = await addresses.locateAddress(address, regions)
-        setGift(gift => ({ ...gift, toLocation: addressLoc }))
+        if (addressLoc) {
+          setGift(gift => ({ ...gift, toLocation: addressLoc }))
+        } else {
+          setAddressValidationResult({
+            error: true,
+            message: intl.formatMessage({ id: "validationErrorNotInRegion" }),
+          })
+          setGift(gift => ({ ...gift, toLocation: undefined }))
+        }
       },
       [regions]
     ),
@@ -43,10 +61,22 @@ const ToPage = () => {
 
   let onUpdateAddress = useCallback(
     async (address: string) => {
-      setGift({ ...gift, toAddress: address })
+      setGift(gift => ({ ...gift, toAddress: address }))
       if (address.trim().length === 0) {
         setSuggestionSelected(false)
+        setAddressValidationResult({
+          error: true,
+          message: intl.formatMessage({ id: "validationErrorEmpty" }),
+        })
+      } else if (!/\d/.test(address)) {
+        setAddressValidationResult({
+          error: true,
+          message: intl.formatMessage({
+            id: "validationErrorMissingBuildingNumber",
+          }),
+        })
       } else {
+        setAddressValidationResult({ error: false, message: "" })
         onUpdateAddressLocation(address)
       }
     },
@@ -97,13 +127,23 @@ const ToPage = () => {
           <form>
             <div className="inputGroup">
               <label>{intl.formatMessage({ id: "toFormLabelFor" })}:</label>
-              <input
-                type="text"
+              <Textbox
                 maxLength={50}
                 value={gift.toName}
-                onChange={evt =>
-                  setGift({ ...gift, toName: evt.currentTarget.value })
-                }
+                onBlur={() => {}}
+                onChange={name => {
+                  setGift({ ...gift, toName: name })
+                }}
+                validationOption={{
+                  required: false,
+                  customFunc: v => {
+                    if (v.trim().length === 0) {
+                      return intl.formatMessage({ id: "validationErrorEmpty" })
+                    } else {
+                      return true
+                    }
+                  },
+                }}
               />
             </div>
             <div className="inputGroup">
@@ -115,7 +155,20 @@ const ToPage = () => {
                 inputProps={{
                   value: gift.toAddress,
                   onChange: (_, { newValue }) => onUpdateAddress(newValue),
+                  asyncMsgObj: addressValidationResult,
                 }}
+                renderInputComponent={inputProps => (
+                  <Textbox
+                    {...omit(inputProps, "ref")}
+                    value={inputProps.value}
+                    onChange={(v, evt) => inputProps.onChange(evt)}
+                    onBlur={evt => onUpdateAddress(evt.currentTarget.value)}
+                    validationOption={{
+                      required: false,
+                    }}
+                    asyncMsgObj={inputProps.asyncMsgObj}
+                  />
+                )}
                 onSuggestionsFetchRequested={evt =>
                   onLoadAddressSuggestions(evt.value)
                 }
@@ -146,17 +199,29 @@ const ToPage = () => {
             </div>
             <div className="inputGroup">
               <label>{intl.formatMessage({ id: "toFormLabelMessage" })}:</label>
-              <textarea
+              <Textarea
                 maxLength={1000}
                 value={gift.toSignificance}
-                onChange={evt =>
-                  setGift({ ...gift, toSignificance: evt.currentTarget.value })
+                onBlur={() => {}}
+                onChange={significance =>
+                  setGift({ ...gift, toSignificance: significance })
                 }
-              ></textarea>
+                validationOption={{
+                  required: false,
+                  customFunc: v => {
+                    if (v.trim().length === 0) {
+                      return intl.formatMessage({ id: "validationErrorEmpty" })
+                    } else {
+                      return true
+                    }
+                  },
+                }}
+              />
             </div>
             <NextButton
               to="/gifts"
               text={intl.formatMessage({ id: "toButtonNext" })}
+              disabled={!isValid}
             />
             <BackButton
               to="/"

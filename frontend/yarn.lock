@@ -12917,6 +12917,11 @@ react-icons@^3.10.0:
   dependencies:
     camelcase "^5.0.0"
 
+react-inputs-validation@^4.4.5:
+  version "4.4.5"
+  resolved "https://registry.yarnpkg.com/react-inputs-validation/-/react-inputs-validation-4.4.5.tgz#d9e31439c73055718d8f4400f459090b003ca1d3"
+  integrity sha512-o7AAom5Kt/aZRFXrB04VowDXrJIjXgG2xd+gzyhoEyA9kllY6uLmj/oo0ZzNjCtlM28AI5CFoDFKaY9TKZyzpA==
+
 react-intl@^3.12.0:
   version "3.12.1"
   resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-3.12.1.tgz#e9a783ea20302e9da25e4eda59e5593a43d2ec80"

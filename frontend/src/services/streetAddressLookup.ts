@@ -34,7 +34,6 @@ export async function locateAddress(address: string, fromRegions: Region[]): Pro
         let containingFeatures = lookup.getContainers({ type: 'Point', coordinates: point });
         if (containingFeatures.features.length > 0) {
             let region = fromRegions.find(r => r.feature.properties.id === containingFeatures.features[0].properties.id);
-            console.log('c', point, region, containingFeatures)
             return {
                 region: region.name,
                 point

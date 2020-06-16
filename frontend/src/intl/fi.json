@@ -47,6 +47,10 @@
   "giftSEODescription": "",
   "giftTitle": "",
 
+  "validationErrorEmpty": "ei voi olla tyhjä",
+  "validationErrorMissingBuildingNumber": "täytäthän myös osoitenumeron",
+  "validationErrorNotInRegion": "osoitetta ei löydy Helsingistä",
+
   "dayOfWeek1": "Ma",
   "dayOfWeek2": "Ti",
   "dayOfWeek3": "Ke",
