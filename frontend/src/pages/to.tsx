@@ -126,7 +126,10 @@ const ToPage = () => {
         <div className="scroll">
           <form>
             <div className="inputGroup">
-              <label>{intl.formatMessage({ id: "toFormLabelFor" })}:</label>
+              <label>
+                {intl.formatMessage({ id: "toFormLabelFor" })}
+                <span className="requiredField">*</span>:
+              </label>
               <Textbox
                 maxLength={50}
                 value={gift.toName}
@@ -147,7 +150,10 @@ const ToPage = () => {
               />
             </div>
             <div className="inputGroup">
-              <label>{intl.formatMessage({ id: "toFormLabelAddress" })}:</label>
+              <label>
+                {intl.formatMessage({ id: "toFormLabelAddress" })}
+                <span className="requiredField">*</span>:
+              </label>
               <AutoSuggest
                 suggestions={addressSuggestions}
                 getSuggestionValue={v => v}
@@ -178,7 +184,8 @@ const ToPage = () => {
             </div>
             <div className="inputGroup">
               <label>
-                {intl.formatMessage({ id: "toFormLabelLanguage" })}:
+                {intl.formatMessage({ id: "toFormLabelLanguage" })}
+                <span className="requiredField">*</span>:
               </label>
               <select
                 value={gift.toLanguage}
@@ -198,7 +205,10 @@ const ToPage = () => {
               </select>
             </div>
             <div className="inputGroup">
-              <label>{intl.formatMessage({ id: "toFormLabelMessage" })}:</label>
+              <label>
+                {intl.formatMessage({ id: "toFormLabelMessage" })}
+                <span className="requiredField">*</span>:
+              </label>
               <Textarea
                 maxLength={1000}
                 value={gift.toSignificance}
