@@ -67,7 +67,7 @@ const FromPage = () => {
             <div className="inputGroup">
               <label>
                 {intl.formatMessage({ id: "fromFormLabelName" })}
-                <span className="requiredField">*</span>:
+                <span className="requiredField">*</span>
               </label>
               <input
                 type="text"
@@ -81,7 +81,7 @@ const FromPage = () => {
             <div className="inputGroup">
               <label>
                 {intl.formatMessage({ id: "fromFormLabelPhone" })}
-                <span className="requiredField">*</span>:
+                <span className="requiredField">*</span>
               </label>
               <input
                 type="text"
@@ -95,7 +95,7 @@ const FromPage = () => {
             <div className="inputGroup">
               <label>
                 {intl.formatMessage({ id: "fromFormLabelEmail" })}
-                <span className="requiredField">*</span>:
+                <span className="requiredField">*</span>
               </label>
               <input
                 type="email"
@@ -108,7 +108,7 @@ const FromPage = () => {
             <div className="inputGroup">
               <label>
                 {intl.formatMessage({ id: "fromFormLabelSpecialInfo" })}
-                <span className="requiredField">*</span>:
+                <span className="requiredField">*</span>
               </label>
               <textarea
                 maxLength={1000}
