@@ -57,5 +57,13 @@
   "dayOfWeek4": "Thu",
   "dayOfWeek5": "Fri",
   "dayOfWeek6": "Sat",
-  "dayOfWeek7": "Sun"
+  "dayOfWeek7": "Sun",
+
+  "privacyLink": "Privacy",
+  "privacyTitle": "Privacy",
+  "privacyContent": "Lorem ipsum dolor sit amet.",
+
+  "termsLink": "Terms",
+  "termsTitle": "Terms",
+  "termsContent": "Lorem ipsum dolor sit amet."
 }
