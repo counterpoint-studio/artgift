@@ -46,6 +46,10 @@
   "giftSEODescription": "",
   "giftTitle": "",
 
+  "validationErrorEmpty": "cannot be empty",
+  "validationErrorMissingBuildingNumber": "please provide the building number",
+  "validationErrorNotInRegion": "does not seem to be in Helsinki",
+
   "dayOfWeek1": "Mon",
   "dayOfWeek2": "Tue",
   "dayOfWeek3": "Wed",

@@ -15,6 +15,9 @@
   &:focus {
     outline: none;
   }
+  &.disabled {
+    pointer-events: none;
+  }
 
   svg {
     display: block;

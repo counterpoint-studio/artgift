@@ -1,10 +1,16 @@
 import React from "react"
 import { Link } from "gatsby-plugin-intl"
+import classNames from "classnames"
 
 import "./nextButton.scss"
 
-const NextButton = ({ text, to }) => (
-  <Link to={to} className="button button--next">
+interface NextButtonProps {
+  text: string
+  to: string
+  disabled?: boolean
+}
+const NextButton: React.FC<NextButtonProps> = ({ text, to, disabled }) => (
+  <Link to={to} className={classNames("button", "button--next", { disabled })}>
     {text}
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23.96 14">
       <path
