@@ -8,6 +8,7 @@ import classNames from "classnames"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import NextButton from "../components/nextButton"
+import BackButton from "../components/backButton"
 import * as addresses from "../services/streetAddressLookup"
 
 import "./to.scss"
@@ -156,6 +157,10 @@ const ToPage = () => {
             <NextButton
               to="/gifts"
               text={intl.formatMessage({ id: "toButtonNext" })}
+            />
+            <BackButton
+              to="/"
+              text={intl.formatMessage({ id: "backButton" })}
             />
           </form>
         </div>

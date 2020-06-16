@@ -5,6 +5,7 @@ import classNames from "classnames"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
+import BackButton from "../components/backButton"
 import { subscribeToGiftSlotsInRegion } from "../services/gifts"
 
 import { getRegionGeoJSON } from "../services/regionLookup"
@@ -97,6 +98,7 @@ const GiftsPage = () => {
             </tbody>
           </table>
         </div>
+        <BackButton to="/to" text={intl.formatMessage({ id: "backButton" })} />
       </main>
     </Layout>
   )

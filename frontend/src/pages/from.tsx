@@ -6,6 +6,7 @@ import classNames from "classnames"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import NextButton from "../components/nextButton"
+import BackButton from "../components/backButton"
 
 import "./from.scss"
 import { useMounted, useGiftState } from "../hooks"
@@ -110,6 +111,10 @@ const FromPage = () => {
             <NextButton
               to="/delivery"
               text={intl.formatMessage({ id: "fromButtonNext" })}
+            />
+            <BackButton
+              to="/gifts"
+              text={intl.formatMessage({ id: "backButton" })}
             />
           </form>
         </div>

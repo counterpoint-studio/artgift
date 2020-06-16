@@ -1,0 +1,37 @@
+.button--back {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 50px;
+  padding: 10px 10px 11px 10px;
+  margin: 10px auto 0 auto;
+  background: transparent;
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: rgba(black, 0.5);
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: rgba(black, 1);
+
+    svg {
+      fill: rgba(black, 1);
+    }
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  svg {
+    display: block;
+    height: 12px;
+    margin: 2px 16px 0 0;
+    transform: rotate(180deg);
+    fill: rgba(black, 0.5);
+    transition: fill 0.15s ease;
+  }
+}
