@@ -8,6 +8,11 @@
     grid-auto-flow: row;
     grid-template-rows: auto auto 1fr;
     opacity: 0;
+    padding: 30px;
+
+    @media (min-width: 768px) {
+      padding: 60px;
+    }
 
     &.isVisible {
       opacity: 1;

@@ -51,17 +51,19 @@ const IntroPage = () => {
           isVisible: mounted && !isMapMoving,
         })}
       >
-        <Language />
-        <h1 className="introTitle">
-          {intl.formatMessage({ id: "introTitle" })}
-        </h1>
-        <div className="introBody">
-          <p>{intl.formatMessage({ id: "introBody" })}</p>
+        <div className="scroll">
+          <Language />
+          <h1 className="introTitle">
+            {intl.formatMessage({ id: "introTitle" })}
+          </h1>
+          <div className="introBody">
+            <p>{intl.formatMessage({ id: "introBody" })}</p>
+          </div>
+          <NextButton
+            to="/to"
+            text={intl.formatMessage({ id: "introButtonNext" })}
+          />
         </div>
-        <NextButton
-          to="/to"
-          text={intl.formatMessage({ id: "introButtonNext" })}
-        />
       </main>
     </Layout>
   )

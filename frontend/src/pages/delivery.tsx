@@ -23,8 +23,10 @@ const DeliveryPage = () => {
         key="helmet"
       />
       <main className="main">
-        <h1>{intl.formatMessage({ id: "deliveryTitle" })}</h1>
-        <p>{intl.formatMessage({ id: "deliveryDescription" })}</p>
+        <div className="scroll">
+          <h1>{intl.formatMessage({ id: "deliveryTitle" })}</h1>
+          <p>{intl.formatMessage({ id: "deliveryDescription" })}</p>
+        </div>
       </main>
     </Layout>
   )

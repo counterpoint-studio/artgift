@@ -92,69 +92,73 @@ const ToPage = () => {
           isVisible: mounted && !isMapMoving,
         })}
       >
-        <form>
-          <div className="inputGroup">
-            <label>{intl.formatMessage({ id: "toFormLabelFor" })}:</label>
-            <input
-              type="text"
-              maxLength={50}
-              value={gift.toName}
-              onChange={evt =>
-                setGift({ ...gift, toName: evt.currentTarget.value })
-              }
+        <div className="scroll">
+          <form>
+            <div className="inputGroup">
+              <label>{intl.formatMessage({ id: "toFormLabelFor" })}:</label>
+              <input
+                type="text"
+                maxLength={50}
+                value={gift.toName}
+                onChange={evt =>
+                  setGift({ ...gift, toName: evt.currentTarget.value })
+                }
+              />
+            </div>
+            <div className="inputGroup">
+              <label>{intl.formatMessage({ id: "toFormLabelAddress" })}:</label>
+              <AutoSuggest
+                suggestions={addressSuggestions}
+                getSuggestionValue={v => v}
+                renderSuggestion={v => v}
+                inputProps={{
+                  value: gift.toAddress,
+                  onChange: (_, { newValue }) => onUpdateAddress(newValue),
+                }}
+                onSuggestionsFetchRequested={evt =>
+                  onLoadAddressSuggestions(evt.value)
+                }
+                onSuggestionsClearRequested={onClearAddressSuggestions}
+                onSuggestionSelected={onSelectSuggestion}
+              />
+            </div>
+            <div className="inputGroup">
+              <label>
+                {intl.formatMessage({ id: "toFormLabelLanguage" })}:
+              </label>
+              <select
+                value={gift.toLanguage}
+                onChange={evt =>
+                  setGift({ ...gift, toLanguage: evt.target.value })
+                }
+              >
+                <option value="fi">
+                  {intl.formatMessage({ id: "toFormLabelLanguageFi" })}
+                </option>
+                <option value="en">
+                  {intl.formatMessage({ id: "toFormLabelLanguageEn" })}
+                </option>
+                <option value="se">
+                  {intl.formatMessage({ id: "toFormLabelLanguageSe" })}
+                </option>
+              </select>
+            </div>
+            <div className="inputGroup">
+              <label>{intl.formatMessage({ id: "toFormLabelMessage" })}:</label>
+              <textarea
+                maxLength={1000}
+                value={gift.toSignificance}
+                onChange={evt =>
+                  setGift({ ...gift, toSignificance: evt.currentTarget.value })
+                }
+              ></textarea>
+            </div>
+            <NextButton
+              to="/gifts"
+              text={intl.formatMessage({ id: "toButtonNext" })}
             />
-          </div>
-          <div className="inputGroup">
-            <label>{intl.formatMessage({ id: "toFormLabelAddress" })}:</label>
-            <AutoSuggest
-              suggestions={addressSuggestions}
-              getSuggestionValue={v => v}
-              renderSuggestion={v => v}
-              inputProps={{
-                value: gift.toAddress,
-                onChange: (_, { newValue }) => onUpdateAddress(newValue),
-              }}
-              onSuggestionsFetchRequested={evt =>
-                onLoadAddressSuggestions(evt.value)
-              }
-              onSuggestionsClearRequested={onClearAddressSuggestions}
-              onSuggestionSelected={onSelectSuggestion}
-            />
-          </div>
-          <div className="inputGroup">
-            <label>{intl.formatMessage({ id: "toFormLabelLanguage" })}:</label>
-            <select
-              value={gift.toLanguage}
-              onChange={evt =>
-                setGift({ ...gift, toLanguage: evt.target.value })
-              }
-            >
-              <option value="fi">
-                {intl.formatMessage({ id: "toFormLabelLanguageFi" })}
-              </option>
-              <option value="en">
-                {intl.formatMessage({ id: "toFormLabelLanguageEn" })}
-              </option>
-              <option value="se">
-                {intl.formatMessage({ id: "toFormLabelLanguageSe" })}
-              </option>
-            </select>
-          </div>
-          <div className="inputGroup">
-            <label>{intl.formatMessage({ id: "toFormLabelMessage" })}:</label>
-            <textarea
-              maxLength={1000}
-              value={gift.toSignificance}
-              onChange={evt =>
-                setGift({ ...gift, toSignificance: evt.currentTarget.value })
-              }
-            ></textarea>
-          </div>
-          <NextButton
-            to="/gifts"
-            text={intl.formatMessage({ id: "toButtonNext" })}
-          />
-        </form>
+          </form>
+        </div>
       </main>
     </Layout>
   )
