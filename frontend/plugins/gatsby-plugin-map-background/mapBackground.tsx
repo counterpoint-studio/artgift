@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from "react"
 import mapboxgl, { LngLatBoundsLike, LngLatLike } from "mapbox-gl"
+import { isEqual } from "lodash"
 
 import "./mapBackground.scss"
 
@@ -20,7 +21,7 @@ export interface MapBackgroundProps {
   bounds?: LngLatBoundsLike
   boundsPadding?: number
   regions?: { feature: GeoJSON.Feature; bounds: mapboxgl.LngLatBoundsLike }[]
-  points?: [number, number][]
+  points?: { id: string; location: [number, number] }[]
   onSetMoving: (moving: boolean) => void
 }
 
@@ -37,6 +38,7 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
   let [addingPoints, setAddingPoints] = useState(false)
   let [moving, setMoving] = useState(false)
   let firstTransition = useRef(true)
+  let pointMarkers = useRef<{ id: string; marker: mapboxgl.Marker }[]>([])
 
   useEffect(function initMap() {
     let map = new mapboxgl.Map({
@@ -144,20 +146,30 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
   useEffect(() => {
     if (!points || !map) return
 
-    setAddingPoints(true)
-    let running = true,
-      markers: mapboxgl.Marker[] = [],
-      pts = points.slice()
+    let newPoints = points.filter(
+        pt => !pointMarkers.current.find(m => m.id === pt.id)
+      ),
+      removedPointMarkers = pointMarkers.current.filter(
+        m => !points.find(p => p.id === m.id)
+      )
+
+    for (let removed of removedPointMarkers) {
+      removed.marker.remove()
+      pointMarkers.current.splice(pointMarkers.current.indexOf(removed), 1)
+    }
+
     function addNext() {
-      if (!running || pts.length === 0) {
+      if (newPoints.length === 0) {
         return
       }
+      let point = newPoints.shift()
       let markerEl = document.createElement("div")
       markerEl.classList.add("pointMarker")
-      markers.push(
-        new mapboxgl.Marker(markerEl).setLngLat(pts.shift()).addTo(map)
-      )
-      let isLast = pts.length === 0
+      let marker = new mapboxgl.Marker(markerEl)
+        .setLngLat(point.location)
+        .addTo(map)
+      pointMarkers.current.push({ id: point.id, marker })
+      let isLast = newPoints.length === 0
       setTimeout(() => {
         markerEl.classList.add("isAdded")
         if (isLast) {
@@ -171,11 +183,9 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
             (MAX_POINT_ENTER_INTERVAL_MS - MIN_POINT_ENTER_DELAY_MS)
       )
     }
-    setTimeout(addNext, FIRST_POINT_ENTER_DELAY_MS)
-
-    return () => {
-      running = false
-      markers.forEach(m => m.remove())
+    if (newPoints.length > 0) {
+      setAddingPoints(true)
+      setTimeout(addNext, FIRST_POINT_ENTER_DELAY_MS)
     }
   }, [points, map])
 

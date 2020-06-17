@@ -33,6 +33,7 @@ const FromPage = () => {
       : REGION_BOUNDING_BOX,
     boundsPadding: 0,
     regions,
+    points: [],
   })
 
   return (

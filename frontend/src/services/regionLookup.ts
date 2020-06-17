@@ -13,14 +13,14 @@ export function getRegionGeoJSON(): Region[] {
     }));
 }
 
-export function getRandomLocations(giftSlots: GiftSlot[]): [number, number][] {
+export function getRandomLocations(giftSlots: GiftSlot[]): { id: string, location: [number, number] }[] {
     let regionData = getRegionGeoJSON();
     return giftSlots.map(slot => {
         let region = regionData.find(r => r.feature.properties.nimi_fi === slot.region);
         for (let i = 0; i < 10; i++) {
             let lng = region.bounds[0][0] + Math.random() * (region.bounds[1][0] - region.bounds[0][0]);
             let lat = region.bounds[0][1] + Math.random() * (region.bounds[1][1] - region.bounds[0][1]);
-            return [lng, lat];
+            return { id: slot.id, location: [lng, lat] };
         }
     })
 }

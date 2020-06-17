@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
 import Helmet from "react-helmet"
 import { useIntl } from "gatsby-plugin-intl"
 import classNames from "classnames"
@@ -7,6 +7,7 @@ import Layout from "../components/layout"
 import SEO from "../components/seo"
 import Language from "../components/language"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
+import { MapBackgroundContext } from "../../plugins/gatsby-plugin-map-background/mapBackgroundContext"
 import { REGION_BOUNDING_BOX, MAP_INIT_CENTER } from "../constants"
 import * as gifts from "../services/gifts"
 import * as regions from "../services/regionLookup"
@@ -19,20 +20,20 @@ import { useMounted } from "../hooks"
 const IntroPage = () => {
   let intl = useIntl()
   let mounted = useMounted()
-  let [introPoints, setIntroPoints] = useState<[number, number][]>([])
 
+  let mapContext = useContext(MapBackgroundContext)
   let { isMoving: isMapMoving } = useMapBackground({
     initPoint: MAP_INIT_CENTER,
     bounds: REGION_BOUNDING_BOX,
     boundsPadding: 150,
-    points: introPoints,
     regions: undefined,
   })
 
   useEffect(() => {
-    gifts.subscribeToGiftSlotsOverview(giftSlots =>
-      setIntroPoints(regions.getRandomLocations(giftSlots))
+    let unSub = gifts.subscribeToGiftSlotsOverview(giftSlots =>
+      mapContext.update({ points: regions.getRandomLocations(giftSlots) })
     )
+    return unSub
   }, [])
 
   return (
