@@ -190,7 +190,7 @@ const ToPage = () => {
               <select
                 value={gift.toLanguage}
                 onChange={evt =>
-                  setGift({ ...gift, toLanguage: evt.target.value })
+                  setGift(gift => ({ ...gift, toLanguage: evt.target.value }))
                 }
               >
                 <option value="fi">
@@ -214,7 +214,7 @@ const ToPage = () => {
                 value={gift.toSignificance}
                 onBlur={() => {}}
                 onChange={significance =>
-                  setGift({ ...gift, toSignificance: significance })
+                  setGift(gift => ({ ...gift, toSignificance: significance }))
                 }
                 validationOption={{
                   required: false,
