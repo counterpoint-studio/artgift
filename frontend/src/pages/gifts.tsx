@@ -82,12 +82,14 @@ const GiftsPage = () => {
           <table className="giftsTable">
             <tbody>
               {slotsByDate[selectedDate]?.map(slot => (
-                <tr key={slot.id}>
+                <tr key={slot.id} className={slot.status}>
                   <td className="giftsTableTime">{formatTime(slot.time)}</td>
                   <td className="giftsTableBook">
                     <Link
                       to="/from"
-                      className="button button--book"
+                      className={classNames("button", "button--book", {
+                        disabled: slot.status !== "available",
+                      })}
                       onClick={() => setGift({ ...gift, slotId: slot.id })}
                     >
                       {intl.formatMessage({ id: "giftsButtonBook" })}

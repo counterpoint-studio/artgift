@@ -14,11 +14,13 @@ type Slot = {
   date: string;
   time: string;
   region: string;
+  status: "available" | "reserved" | "onHold";
 };
 const INIT_SLOT: Slot = {
   date: DATES[0],
   time: "11:00",
   region: REGIONS[0],
+  status: "available",
 };
 
 export const Slots: React.FC = () => {
