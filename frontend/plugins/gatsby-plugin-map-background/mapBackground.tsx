@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react"
 import mapboxgl, { LngLatBoundsLike, LngLatLike } from "mapbox-gl"
-import { isEqual } from "lodash"
+import { useWindowWidth } from "@react-hook/window-size"
 
 import "./mapBackground.scss"
 
@@ -33,6 +33,7 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
   points,
   onSetMoving,
 }) => {
+  let windowWidth = useWindowWidth()
   let mapEl = useRef<HTMLDivElement>()
   let [map, setMap] = useState<mapboxgl.Map>()
   let [addingPoints, setAddingPoints] = useState(false)
@@ -50,6 +51,18 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
     }).addControl(new mapboxgl.AttributionControl({ compact: false }))
     setMap(map)
   }, [])
+  useEffect(
+    function setPadding() {
+      if (!map) return
+      map.setPadding({
+        left: windowWidth > 768 ? 500 : 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+      })
+    },
+    [map, windowWidth]
+  )
   useEffect(
     function centerMap() {
       if (!map || !initPoint) return
