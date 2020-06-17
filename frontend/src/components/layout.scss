@@ -113,6 +113,11 @@ body {
     outline: none;
   }
 
+  &.disabled {
+    pointer-events: none;
+    background: $colorHFGrey;
+  }
+
   &--next {
     margin-top: $fontSizeBase * 1.5;
   }

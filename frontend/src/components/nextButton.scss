@@ -19,11 +19,6 @@
     outline: none;
   }
 
-  &.disabled {
-    pointer-events: none;
-    background: $colorHFGrey;
-  }
-
   svg {
     display: block;
     height: 12px;
