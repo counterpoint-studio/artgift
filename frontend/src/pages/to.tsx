@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from "react"
 import Helmet from "react-helmet"
-import { useIntl } from "gatsby-plugin-intl"
+import { useIntl, IntlShape } from "gatsby-plugin-intl"
 import { Textbox, Textarea } from "react-inputs-validation"
 import AutoSuggest from "react-autosuggest"
 import { useDebounceCallback } from "@react-hook/debounce"
@@ -139,13 +139,7 @@ const ToPage = () => {
                 }}
                 validationOption={{
                   required: false,
-                  customFunc: v => {
-                    if (v.trim().length === 0) {
-                      return intl.formatMessage({ id: "validationErrorEmpty" })
-                    } else {
-                      return true
-                    }
-                  },
+                  customFunc: v => validateNonEmpty(v, intl),
                 }}
               />
             </div>
@@ -218,13 +212,7 @@ const ToPage = () => {
                 }
                 validationOption={{
                   required: false,
-                  customFunc: v => {
-                    if (v.trim().length === 0) {
-                      return intl.formatMessage({ id: "validationErrorEmpty" })
-                    } else {
-                      return true
-                    }
-                  },
+                  customFunc: v => validateNonEmpty(v, intl),
                 }}
               />
             </div>
@@ -242,6 +230,14 @@ const ToPage = () => {
       </main>
     </Layout>
   )
+}
+
+function validateNonEmpty(v: string, intl: IntlShape) {
+  if (v.trim().length === 0) {
+    return intl.formatMessage({ id: "validationErrorEmpty" })
+  } else {
+    return true
+  }
 }
 
 export default ToPage

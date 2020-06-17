@@ -7,6 +7,8 @@ export const MAPBOX_REGION_PLACE_NAME = 'Helsinki';
 export const MAP_INIT_CENTER: [number, number] = [25.03, 60.192059];
 export const REGION_BOUNDING_BOX: [[number, number], [number, number]] = [[24.810103, 60.140056], [25.264933, 60.299425]]
 
+export const PHONE_NUMBER_REGEX = /\+?(358|0)\d{7,9}/;
+
 export const INIT_GIFT: Gift = {
     toName: "",
     toAddress: "",

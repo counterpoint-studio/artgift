@@ -51,6 +51,8 @@
   "validationErrorEmpty": "Cannot be empty",
   "validationErrorMissingBuildingNumber": "Please provide the building number",
   "validationErrorNotInRegion": "Does not seem to be in Helsinki",
+  "validationErrorInvalidEmail": "Please provide a valid email address",
+  "validationErrorInvalidPhoneNumber": "Please provide a valid Finnish mobile number",
 
   "dayOfWeek1": "Mon",
   "dayOfWeek2": "Tue",

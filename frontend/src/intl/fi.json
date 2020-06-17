@@ -51,6 +51,8 @@
   "validationErrorEmpty": "Ei voi olla tyhjä",
   "validationErrorMissingBuildingNumber": "Täytäthän myös osoitenumeron",
   "validationErrorNotInRegion": "Osoitetta ei löydy Helsingistä",
+  "validationErrorInvalidEmail": "Täytäthän toimivan sähköpostiosoitteen",
+  "validationErrorInvalidPhoneNumber": "Täytäthän toimivan suomalaisen matkapuhelinnumeron",
 
   "dayOfWeek1": "Ma",
   "dayOfWeek2": "Ti",
