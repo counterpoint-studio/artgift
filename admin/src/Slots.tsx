@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import firebase from "firebase/app";
 import { REGIONS, DATES, HOURS, MINUTES } from "./constants";
+import { Link } from "react-router-dom";
 
 type Slot = {
   id?: string;
@@ -59,7 +60,10 @@ export const Slots: React.FC = () => {
 
   return (
     <div className="slots">
-      <h1>Slots</h1>
+      <h1>
+        Slots
+        <Link to="/gifts">Gifts</Link>
+      </h1>
       <div className="slots--list">
         <h2>Slots</h2>
         <ul>

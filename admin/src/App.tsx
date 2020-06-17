@@ -15,6 +15,7 @@ import { SignIn } from "./SignIn";
 import { SignOut } from "./SignOut";
 
 import "./App.scss";
+import { Gifts } from "./Gifts";
 
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -33,9 +34,15 @@ function App() {
         <Route path="/signin">
           <SignIn />
         </Route>
-        <PrivateRoute exact={true} path="/">
+        <PrivateRoute exact path="/slots">
           <Slots />
         </PrivateRoute>
+        <PrivateRoute exact path="/gifts">
+          <Gifts />
+        </PrivateRoute>
+        <Route exact path="/">
+          <Redirect to="/slots" />
+        </Route>
       </Switch>
       <SignOut />
     </Router>
