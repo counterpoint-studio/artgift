@@ -15,11 +15,10 @@ import NextButton from "../components/nextButton"
 import HeroImage from "../images/heroImage.jpg"
 
 import "./index.scss"
-import { useMounted } from "../hooks"
 
 const IntroPage = () => {
   let intl = useIntl()
-  let mounted = useMounted()
+  let [pointsLoaded, setPointsLoaded] = useState(false)
 
   let mapContext = useContext(MapBackgroundContext)
   let { isMoving: isMapMoving } = useMapBackground({
@@ -30,9 +29,10 @@ const IntroPage = () => {
   })
 
   useEffect(() => {
-    let unSub = gifts.subscribeToGiftSlotsOverview(giftSlots =>
+    let unSub = gifts.subscribeToGiftSlotsOverview(giftSlots => {
       mapContext.update({ points: regions.getRandomLocations(giftSlots) })
-    )
+      setPointsLoaded(true)
+    })
     return unSub
   }, [])
 
@@ -50,7 +50,7 @@ const IntroPage = () => {
       />
       <main
         className={classNames("main", {
-          isVisible: mounted && !isMapMoving,
+          isVisible: pointsLoaded && !isMapMoving,
         })}
       >
         <img
