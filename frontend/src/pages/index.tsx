@@ -11,6 +11,7 @@ import { REGION_BOUNDING_BOX, MAP_INIT_CENTER } from "../constants"
 import * as gifts from "../services/gifts"
 import * as regions from "../services/regionLookup"
 import NextButton from "../components/nextButton"
+import HeroImage from "../images/heroImage.jpg"
 
 import "./index.scss"
 import { useMounted } from "../hooks"
@@ -51,8 +52,14 @@ const IntroPage = () => {
           isVisible: mounted && !isMapMoving,
         })}
       >
+        <img
+          className="heroImage"
+          src={HeroImage}
+          alt={intl.formatMessage({ id: "introTitle" })}
+        />
         <div className="scroll">
           <Language />
+
           <h1 className="introTitle">
             {intl.formatMessage({ id: "introTitle" })}
           </h1>

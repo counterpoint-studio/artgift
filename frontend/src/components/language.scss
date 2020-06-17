@@ -2,29 +2,34 @@
 
 .language {
   width: auto;
-  display: flex;
+  display: inline-flex;
   flex-flow: row nowrap;
   align-items: center;
   justify-content: flex-start;
 
   &Link {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     font-size: 10px;
     text-transform: uppercase;
-    margin-right: 5px;
+    margin-right: 15px;
 
     &:last-child {
       margin-right: 0;
     }
 
-    &.isCurrent {
-      background: $colorHFGrey;
+    &.isCurrent:after {
+      content: "";
+      display: block;
+      position: absolute;
+      bottom: -5px;
+      width: 100%;
+      height: 2px;
+      background: black;
+      border-radius: 2px;
     }
   }
 }

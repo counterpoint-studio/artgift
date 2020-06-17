@@ -1,12 +1,6 @@
 .intro {
-  @media (min-width: 768px) {
-    h1 {
-      font-size: 36px;
-    }
-  }
-
-  .language {
-    margin-bottom: 30px;
+  .heroImage {
+    margin: 0;
   }
 
   .main {
@@ -14,6 +8,22 @@
     &.isVisible {
       opacity: 1;
       transition: opacity 1s;
+    }
+
+    h1 {
+      @media (min-width: 768px) {
+        font-size: 32px;
+      }
+    }
+
+    .scroll {
+      @media (min-width: 768px) {
+        padding-top: 45px;
+      }
+    }
+
+    .language {
+      margin-bottom: 16px;
     }
   }
 }
