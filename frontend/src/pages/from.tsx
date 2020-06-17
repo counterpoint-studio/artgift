@@ -17,6 +17,8 @@ import { getGiftSlot } from "../services/gifts"
 import { GiftSlot } from "../types"
 import { formatTime, formatDate } from "../services/dates"
 
+const emptyPoints = []
+
 const FromPage = () => {
   let intl = useIntl()
   let mounted = useMounted()
@@ -33,7 +35,7 @@ const FromPage = () => {
       : REGION_BOUNDING_BOX,
     boundsPadding: 0,
     regions,
-    points: [],
+    points: emptyPoints,
   })
 
   return (
