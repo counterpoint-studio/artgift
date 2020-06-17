@@ -58,6 +58,16 @@ const IntroPage = () => {
           </h1>
           <div className="introBody">
             <p>{intl.formatMessage({ id: "introBody" })}</p>
+            <p>
+              {intl.formatMessage({ id: "introMoreInfo" })}:{" "}
+              <a
+                href="https://helsinkifest.fi"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                helsinkifest.fi
+              </a>
+            </p>
           </div>
           <NextButton
             to="/to"

@@ -91,9 +91,11 @@ body {
   }
 
   .footer {
-    position: fixed;
-    right: 4vw;
-    bottom: 4vw;
+    @media (min-width: 768px) {
+      position: fixed;
+      right: 4vw;
+      bottom: 4vw;
+    }
   }
 }
 

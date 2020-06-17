@@ -1,4 +1,10 @@
 .intro {
+  @media (min-width: 768px) {
+    h1 {
+      font-size: 36px;
+    }
+  }
+
   .language {
     margin-bottom: 30px;
   }
