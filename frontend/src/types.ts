@@ -10,6 +10,7 @@ export type GiftSlot = {
 }
 
 export type Gift = {
+    id?: string;
     slotId?: string;
     toName: string;
     toAddress: string;

@@ -1,6 +1,6 @@
-import React, { useMemo, useState, useEffect } from "react"
+import React, { useMemo, useState, useEffect, useCallback } from "react"
 import Helmet from "react-helmet"
-import { useIntl, IntlShape } from "gatsby-plugin-intl"
+import { useIntl, IntlShape, navigate } from "gatsby-plugin-intl"
 import classNames from "classnames"
 import { Textbox } from "react-inputs-validation"
 import emailValidator from "email-validator"
@@ -19,7 +19,7 @@ import {
   REGION_BOUNDING_BOX,
   PHONE_NUMBER_REGEX,
 } from "../constants"
-import { getGiftSlot } from "../services/gifts"
+import { getGiftSlot, reserveGift } from "../services/gifts"
 import { GiftSlot } from "../types"
 import { formatTime, formatDate } from "../services/dates"
 
@@ -47,6 +47,11 @@ const FromPage = () => {
     regions,
     points: emptyPoints,
   })
+
+  let doReserveGift = useCallback(async () => {
+    await reserveGift(gift)
+    navigate("/delivery")
+  }, [gift])
 
   return (
     <Layout>
@@ -143,6 +148,11 @@ const FromPage = () => {
               to="/delivery"
               text={intl.formatMessage({ id: "fromButtonNext" })}
               disabled={!isValid}
+              onClick={evt => {
+                evt.preventDefault()
+                evt.stopPropagation()
+                doReserveGift()
+              }}
             />
             <BackButton
               to="/gifts"
