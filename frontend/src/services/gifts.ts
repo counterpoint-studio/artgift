@@ -1,5 +1,5 @@
 import firebase from 'gatsby-plugin-firebase';
-import { GiftSlot } from '../types';
+import { GiftSlot, Gift } from '../types';
 
 export function subscribeToGiftSlotsOverview(callback: (slots: GiftSlot[]) => void) {
     let unSub = firebase.firestore().collection("slots").orderBy("date")
@@ -33,5 +33,15 @@ export function subscribeToGiftSlotsInRegion(region: string, callback: (slots: {
 }
 
 export function getGiftSlot(id: string): Promise<GiftSlot> {
-    return firebase.firestore().collection("slots").doc(id).get().then(d => ({ id: d.id, ...d.data() } as GiftSlot))
+    return firebase.firestore().collection("slots")
+        .doc(id)
+        .get()
+        .then(d => ({ id: d.id, ...d.data() } as GiftSlot))
+}
+
+export function reserveGift(gift: Gift) {
+    return firebase.firestore().collection("gifts")
+        .add(gift)
+        .then(d => d.get())
+        .then(d => ({ id: d.id, ...d.data() } as Gift));
 }

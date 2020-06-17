@@ -7,17 +7,20 @@ import React, {
 } from "react";
 import firebase from "firebase/app";
 import { REGIONS, DATES, HOURS, MINUTES } from "./constants";
+import { Link } from "react-router-dom";
 
 type Slot = {
   id?: string;
   date: string;
   time: string;
   region: string;
+  status: "available" | "reserved" | "onHold";
 };
 const INIT_SLOT: Slot = {
   date: DATES[0],
   time: "11:00",
   region: REGIONS[0],
+  status: "available",
 };
 
 export const Slots: React.FC = () => {
@@ -59,7 +62,10 @@ export const Slots: React.FC = () => {
 
   return (
     <div className="slots">
-      <h1>Slots</h1>
+      <h1>
+        Slots
+        <Link to="/gifts">Gifts</Link>
+      </h1>
       <div className="slots--list">
         <h2>Slots</h2>
         <ul>

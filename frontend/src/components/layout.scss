@@ -127,6 +127,10 @@ body {
     font-size: 10px;
     padding: 0px 10px;
   }
+
+  &.disabled {
+    pointer-events: none;
+  }
 }
 
 .inputGroup {

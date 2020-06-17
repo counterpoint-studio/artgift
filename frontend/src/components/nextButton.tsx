@@ -8,9 +8,19 @@ interface NextButtonProps {
   text: string
   to: string
   disabled?: boolean
+  onClick?: (evt: React.MouseEvent) => void
 }
-const NextButton: React.FC<NextButtonProps> = ({ text, to, disabled }) => (
-  <Link to={to} className={classNames("button", "button--next", { disabled })}>
+const NextButton: React.FC<NextButtonProps> = ({
+  text,
+  to,
+  disabled,
+  onClick,
+}) => (
+  <Link
+    to={to}
+    className={classNames("button", "button--next", { disabled })}
+    onClick={onClick}
+  >
     {text}
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23.96 14">
       <path

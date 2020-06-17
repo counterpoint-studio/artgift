@@ -1,7 +1,9 @@
-import React, { useMemo, useState, useEffect } from "react"
+import React, { useMemo, useState, useEffect, useCallback } from "react"
 import Helmet from "react-helmet"
-import { useIntl } from "gatsby-plugin-intl"
+import { useIntl, IntlShape, navigate } from "gatsby-plugin-intl"
 import classNames from "classnames"
+import { Textbox } from "react-inputs-validation"
+import emailValidator from "email-validator"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -12,10 +14,16 @@ import "./from.scss"
 import { useMounted, useGiftState } from "../hooks"
 import { getRegionGeoJSON } from "../services/regionLookup"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
-import { INIT_GIFT, REGION_BOUNDING_BOX } from "../constants"
-import { getGiftSlot } from "../services/gifts"
+import {
+  INIT_GIFT,
+  REGION_BOUNDING_BOX,
+  PHONE_NUMBER_REGEX,
+} from "../constants"
+import { getGiftSlot, reserveGift } from "../services/gifts"
 import { GiftSlot } from "../types"
 import { formatTime, formatDate } from "../services/dates"
+
+const emptyPoints = []
 
 const FromPage = () => {
   let intl = useIntl()
@@ -23,8 +31,12 @@ const FromPage = () => {
   let regions = useMemo(() => getRegionGeoJSON(), [])
   let [gift, setGift] = useGiftState(INIT_GIFT)
   let [giftSlot, setGiftSlot] = useState<GiftSlot>()
+  let isValid =
+    validateName(gift.fromName, intl) === true &&
+    validateEmail(gift.fromEmail, intl) === true &&
+    validatePhoneNumber(gift.fromPhoneNumber, intl) === true
+
   useEffect(() => {
-    console.log("load slot")
     getGiftSlot(gift.slotId).then(setGiftSlot)
   }, [gift?.slotId])
   let { isMoving: isMapMoving } = useMapBackground({
@@ -33,7 +45,13 @@ const FromPage = () => {
       : REGION_BOUNDING_BOX,
     boundsPadding: 0,
     regions,
+    points: emptyPoints,
   })
+
+  let doReserveGift = useCallback(async () => {
+    await reserveGift(gift)
+    navigate("/delivery")
+  }, [gift])
 
   return (
     <Layout>
@@ -69,13 +87,15 @@ const FromPage = () => {
                 {intl.formatMessage({ id: "fromFormLabelName" })}
                 <span className="requiredField">*</span>
               </label>
-              <input
-                type="text"
+              <Textbox
                 maxLength={50}
                 value={gift.fromName}
-                onChange={evt =>
-                  setGift({ ...gift, fromName: evt.currentTarget.value })
-                }
+                onChange={name => setGift({ ...gift, fromName: name })}
+                onBlur={() => {}}
+                validationOption={{
+                  required: false,
+                  customFunc: v => validateName(v, intl),
+                }}
               />
             </div>
             <div className="inputGroup">
@@ -83,13 +103,15 @@ const FromPage = () => {
                 {intl.formatMessage({ id: "fromFormLabelPhone" })}
                 <span className="requiredField">*</span>
               </label>
-              <input
-                type="text"
+              <Textbox
                 maxLength={25}
                 value={gift.fromPhoneNumber}
-                onChange={evt =>
-                  setGift({ ...gift, fromPhoneNumber: evt.currentTarget.value })
-                }
+                onChange={phone => setGift({ ...gift, fromPhoneNumber: phone })}
+                onBlur={() => {}}
+                validationOption={{
+                  required: false,
+                  customFunc: v => validatePhoneNumber(v, intl),
+                }}
               />
             </div>
             <div className="inputGroup">
@@ -97,18 +119,22 @@ const FromPage = () => {
                 {intl.formatMessage({ id: "fromFormLabelEmail" })}
                 <span className="requiredField">*</span>
               </label>
-              <input
-                type="email"
+              <Textbox
+                attributesInput={{
+                  type: "email",
+                }}
                 value={gift.fromEmail}
-                onChange={evt =>
-                  setGift({ ...gift, fromEmail: evt.currentTarget.value })
-                }
+                onChange={email => setGift({ ...gift, fromEmail: email })}
+                onBlur={() => {}}
+                validationOption={{
+                  required: false,
+                  customFunc: v => validateEmail(v, intl),
+                }}
               />
             </div>
             <div className="inputGroup">
               <label>
                 {intl.formatMessage({ id: "fromFormLabelSpecialInfo" })}
-                <span className="requiredField">*</span>
               </label>
               <textarea
                 maxLength={1000}
@@ -121,6 +147,12 @@ const FromPage = () => {
             <NextButton
               to="/delivery"
               text={intl.formatMessage({ id: "fromButtonNext" })}
+              disabled={!isValid}
+              onClick={evt => {
+                evt.preventDefault()
+                evt.stopPropagation()
+                doReserveGift()
+              }}
             />
             <BackButton
               to="/gifts"
@@ -131,6 +163,38 @@ const FromPage = () => {
       </main>
     </Layout>
   )
+}
+
+function validateName(name: string, intl: IntlShape) {
+  if (name.trim().length === 0) {
+    return intl.formatMessage({ id: "validationErrorEmpty" })
+  } else {
+    return true
+  }
+}
+
+function validatePhoneNumber(phone: string, intl: IntlShape) {
+  if (phone.trim().length === 0) {
+    return intl.formatMessage({ id: "validationErrorEmpty" })
+  } else if (!PHONE_NUMBER_REGEX.test(phone)) {
+    return intl.formatMessage({
+      id: "validationErrorInvalidPhoneNumber",
+    })
+  } else {
+    return true
+  }
+}
+
+function validateEmail(email: string, intl: IntlShape) {
+  if (email.trim().length === 0) {
+    return intl.formatMessage({ id: "validationErrorEmpty" })
+  } else if (!emailValidator.validate(email)) {
+    return intl.formatMessage({
+      id: "validationErrorInvalidEmail",
+    })
+  } else {
+    return true
+  }
 }
 
 function boundsAround([lng, lat]: [number, number]) {
