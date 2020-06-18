@@ -184,7 +184,7 @@ function validateName(name: string, intl: IntlShape) {
 function validatePhoneNumber(phone: string, intl: IntlShape) {
   if (phone.trim().length === 0) {
     return intl.formatMessage({ id: "validationErrorEmpty" })
-  } else if (!PHONE_NUMBER_REGEX.test(phone)) {
+  } else if (!PHONE_NUMBER_REGEX.test(phone.replace(/\s/g, ""))) {
     return intl.formatMessage({
       id: "validationErrorInvalidPhoneNumber",
     })
