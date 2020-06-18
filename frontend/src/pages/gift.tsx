@@ -24,10 +24,14 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
   useEffect(() => {
     let queryParams = qs.parse(location.search, { ignoreQueryPrefix: true })
     if (queryParams.id) {
-      gifts.getGiftWithSlot(queryParams.id as string).then(({ gift, slot }) => {
-        setGift(gift)
-        setSlot(slot)
-      })
+      let unSub = gifts.subscribeToGiftWithSlot(
+        queryParams.id as string,
+        ({ gift, slot }) => {
+          setGift(gift)
+          setSlot(slot)
+        }
+      )
+      return unSub
     } else {
       setGift(undefined)
       setSlot(undefined)
@@ -65,7 +69,9 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
             <h1>{intl.formatMessage({ id: "giftTitle" })}</h1>
             <p>
               {intl.formatMessage({ id: "giftStatus" })}:
-              {intl.formatMessage({ id: "giftStatusWaitingApproval" })}
+              {intl.formatMessage({
+                id: "giftStatus" + (gift.status || "pending"),
+              })}
             </p>
             <p>
               {intl.formatMessage({ id: "giftTime" })}:

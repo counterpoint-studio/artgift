@@ -1,0 +1,12 @@
+.gifts {
+  .giftStatus.pending {
+    background-color: lightyellow;
+  }
+  .giftStatus.confirmed {
+    background-color: lightgreen;
+  }
+  .giftStatus.rejected,
+  .gifStatus.cancelled {
+    background-color: pink;
+  }
+}
