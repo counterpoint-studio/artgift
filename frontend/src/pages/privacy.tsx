@@ -4,6 +4,7 @@ import { useIntl } from "gatsby-plugin-intl"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
+import BackButton from "../components/backButton"
 
 import "./privacy.scss"
 
@@ -27,6 +28,7 @@ const PrivacyPage = () => {
           <h1>{intl.formatMessage({ id: "privacyTitle" })}</h1>
           <p>{intl.formatMessage({ id: "privacyContent" })}</p>
         </div>
+        <BackButton to="/" text={intl.formatMessage({ id: "homeButton" })} />
       </main>
     </Layout>
   )

@@ -4,6 +4,7 @@ import { useIntl } from "gatsby-plugin-intl"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
+import BackButton from "../components/backButton"
 
 import "./terms.scss"
 
@@ -27,6 +28,7 @@ const TermsPage = () => {
           <h1>{intl.formatMessage({ id: "termsTitle" })}</h1>
           <p>{intl.formatMessage({ id: "termsContent" })}</p>
         </div>
+        <BackButton to="/" text={intl.formatMessage({ id: "homeButton" })} />
       </main>
     </Layout>
   )
