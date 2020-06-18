@@ -65,7 +65,9 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
             <h1>{intl.formatMessage({ id: "giftTitle" })}</h1>
             <p>
               {intl.formatMessage({ id: "giftStatus" })}:
-              {intl.formatMessage({ id: "giftStatusWaitingApproval" })}
+              {intl.formatMessage({
+                id: "giftStatus" + (gift.status || "pending"),
+              })}
             </p>
             <p>
               {intl.formatMessage({ id: "giftTime" })}:

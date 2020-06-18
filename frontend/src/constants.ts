@@ -10,6 +10,7 @@ export const REGION_BOUNDING_BOX: [[number, number], [number, number]] = [[24.81
 export const PHONE_NUMBER_REGEX = /\+?(358|0)\d{7,9}/;
 
 export const INIT_GIFT: Gift = {
+    status: "pending",
     toName: "",
     toAddress: "",
     toLanguage: "fi",
