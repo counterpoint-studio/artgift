@@ -44,9 +44,15 @@
   "deliveryTitle": "Lahjasi on varattu!",
   "deliveryDescription": "Odotathan viestiä tiimiltämme. Lähetämme tekstiviestin kun olemme varmistaneet lahjan saatavuuden.",
 
-  "giftSEOTitle": "",
-  "giftSEODescription": "",
-  "giftTitle": "",
+  "giftSEOTitle": "Taidelahjani",
+  "giftSEODescription": "Taidelahjani",
+  "giftTitle": "Taidelahjani",
+  "giftStatus": "Tila",
+  "giftStatusWaitingApproval": "Odottaa vahvistusta",
+  "giftTime": "Aika",
+  "giftPlace": "Paikka",
+  "giftFrom": "Keneltä",
+  "giftTo": "Kenelle",
 
   "validationErrorEmpty": "Ei voi olla tyhjä",
   "validationErrorMissingBuildingNumber": "Täytäthän myös osoitenumeron",

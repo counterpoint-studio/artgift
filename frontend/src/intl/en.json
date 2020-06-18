@@ -44,9 +44,15 @@
   "deliveryTitle": "Your gift was delivered!",
   "deliveryDescription": "Please await approval of your gift order by our team, which you will receive confirmation of via text message.",
 
-  "giftSEOTitle": "",
-  "giftSEODescription": "",
-  "giftTitle": "",
+  "giftSEOTitle": "My Art Gift",
+  "giftSEODescription": "My Art Gift",
+  "giftTitle": "My Art Gift",
+  "giftStatus": "Status",
+  "giftStatusWaitingApproval": "Waiting for confirmation",
+  "giftTime": "Time",
+  "giftPlace": "Place",
+  "giftFrom": "From",
+  "giftTo": "To",
 
   "validationErrorEmpty": "Cannot be empty",
   "validationErrorMissingBuildingNumber": "Please provide the building number",

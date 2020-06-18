@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useCallback } from "react"
 import Helmet from "react-helmet"
 import { useIntl } from "gatsby-plugin-intl"
 
@@ -21,6 +21,10 @@ const DeliveryPage = () => {
     },
   })
 
+  let getGiftLink = useCallback(() => {
+    return `/${intl.locale}/gift?id=${gift.id}`
+  }, [gift, intl.locale])
+
   return (
     <Layout>
       <SEO
@@ -37,6 +41,9 @@ const DeliveryPage = () => {
         <div className="scroll">
           <h1>{intl.formatMessage({ id: "deliveryTitle" })}</h1>
           <p>{intl.formatMessage({ id: "deliveryDescription" })}</p>
+          <p>
+            <a href={getGiftLink()}>Näet lahjan tilan myös täältä</a>.
+          </p>
         </div>
       </main>
     </Layout>

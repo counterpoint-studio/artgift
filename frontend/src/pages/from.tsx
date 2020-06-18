@@ -53,7 +53,7 @@ const FromPage = () => {
   })
 
   let doReserveGift = useCallback(async () => {
-    await reserveGift(gift)
+    setGift(await reserveGift(gift))
     navigate("/delivery")
   }, [gift])
 

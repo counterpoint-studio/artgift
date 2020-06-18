@@ -45,3 +45,13 @@ export function reserveGift(gift: Gift) {
         .then(d => d.get())
         .then(d => ({ id: d.id, ...d.data() } as Gift));
 }
+
+export function getGiftWithSlot(id: string): Promise<{ gift: Gift, slot: GiftSlot }> {
+    return firebase.firestore().collection("gifts")
+        .doc(id)
+        .get()
+        .then(async (d) => ({
+            gift: { id: d.id, ...d.data() } as Gift,
+            slot: await getGiftSlot(d.data().slotId)
+        }))
+}
