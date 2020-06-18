@@ -61,13 +61,13 @@
   "validationErrorInvalidEmail": "Täytäthän toimivan sähköpostiosoitteen",
   "validationErrorInvalidPhoneNumber": "Täytäthän toimivan suomalaisen matkapuhelinnumeron",
 
+  "dayOfWeek0": "Su",
   "dayOfWeek1": "Ma",
   "dayOfWeek2": "Ti",
   "dayOfWeek3": "Ke",
   "dayOfWeek4": "To",
   "dayOfWeek5": "Pe",
   "dayOfWeek6": "La",
-  "dayOfWeek7": "Su",
 
   "privacyLink": "Privacy",
   "privacyTitle": "Privacy",

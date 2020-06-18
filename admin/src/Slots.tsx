@@ -6,16 +6,15 @@ import React, {
   FormEvent,
 } from "react";
 import firebase from "firebase/app";
+import classNames from "classnames";
+
 import { REGIONS, DATES, HOURS, MINUTES } from "./constants";
 import { Navigation } from "./Navigation";
+import { formatDate, formatTime } from "./util/dateUtils";
 
-type Slot = {
-  id?: string;
-  date: string;
-  time: string;
-  region: string;
-  status: "available" | "reserved" | "onHold";
-};
+import "./Slots.scss";
+import { Slot } from "./types";
+
 const INIT_SLOT: Slot = {
   date: DATES[0],
   time: "11:00",
@@ -63,23 +62,37 @@ export const Slots: React.FC = () => {
   return (
     <div className="slots">
       <Navigation currentPage="slots" />
-      <div className="slots--list">
-        <ul>
+      <table className="slots--list">
+        <thead></thead>
+        <tbody>
           {slots.map((slot, idx) => (
-            <li key={idx}>
-              {slot.date} {slot.time} {slot.region}
-              <button onClick={() => onDeleteSlot(slot)}>Delete</button>
-            </li>
+            <tr key={idx}>
+              <td>{formatDate(slot.date)}</td> <td>{formatTime(slot.time)}</td>{" "}
+              <td>{slot.region}</td>
+              <td>
+                <span className={classNames("slotStatus", slot.status)}>
+                  {slot.status}
+                </span>
+              </td>
+              <td>
+                <button
+                  onClick={() => onDeleteSlot(slot)}
+                  disabled={slot.status !== "available"}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
           ))}
-        </ul>
-      </div>
+        </tbody>
+      </table>
       <form className="slots--newSlot" onSubmit={onAddNewSlot}>
-        <h2>Add a slot</h2>
+        <h1>Add Slots</h1>
         <div className="slots--field">
           <div className="slots--fieldLabel">Region</div>
           <div className="slots--fieldInput">
             {REGIONS.map((r) => (
-              <label key={r}>
+              <label key={r} className="slots--radioLabel">
                 <input
                   type="radio"
                   value={r}
@@ -94,10 +107,10 @@ export const Slots: React.FC = () => {
           </div>
         </div>
         <div className="slots--field">
-          <label className="slots--fieldLabel">Date</label>
+          <div className="slots--fieldLabel">Date</div>
           <div className="slots--fieldInput">
             {DATES.map((d) => (
-              <label key={d}>
+              <label key={d} className="slots--radioLabel">
                 <input
                   type="radio"
                   value={d}
@@ -106,7 +119,7 @@ export const Slots: React.FC = () => {
                     setNewSlot({ ...newSlot, date: evt.currentTarget.value })
                   }
                 />
-                {d}
+                {formatDate(d)}
               </label>
             ))}
           </div>
