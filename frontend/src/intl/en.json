@@ -60,13 +60,13 @@
   "validationErrorInvalidEmail": "Please provide a valid email address",
   "validationErrorInvalidPhoneNumber": "Please provide a valid Finnish mobile number",
 
+  "dayOfWeek0": "Sun",
   "dayOfWeek1": "Mon",
   "dayOfWeek2": "Tue",
   "dayOfWeek3": "Wed",
   "dayOfWeek4": "Thu",
   "dayOfWeek5": "Fri",
   "dayOfWeek6": "Sat",
-  "dayOfWeek7": "Sun",
 
   "privacyLink": "Privacy",
   "privacyTitle": "Privacy",
