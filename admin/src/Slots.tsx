@@ -8,6 +8,7 @@ import React, {
 import firebase from "firebase/app";
 import { REGIONS, DATES, HOURS, MINUTES } from "./constants";
 import { Link } from "react-router-dom";
+import { Navigation } from "./Navigation";
 
 type Slot = {
   id?: string;
@@ -62,12 +63,8 @@ export const Slots: React.FC = () => {
 
   return (
     <div className="slots">
-      <h1>
-        Slots
-        <Link to="/gifts">Gifts</Link>
-      </h1>
+      <Navigation currentPage="slots" />
       <div className="slots--list">
-        <h2>Slots</h2>
         <ul>
           {slots.map((slot, idx) => (
             <li key={idx}>

@@ -1,6 +1,7 @@
 import React, { useMemo, useEffect, useState, useCallback } from "react";
 import firebase from "firebase/app";
 import { Link } from "react-router-dom";
+import { Navigation } from "./Navigation";
 
 export type Gift = {
   id?: string;
@@ -45,12 +46,8 @@ export const Gifts: React.FC = () => {
 
   return (
     <div className="slots">
-      <h1>
-        <Link to="/slots">Slots</Link>
-        Gifts
-      </h1>
+      <Navigation currentPage="gifts" />
       <div className="slots--list">
-        <h2>gifts</h2>
         <ul>
           {gifts.map((gift, idx) => (
             <li key={idx}>
