@@ -105,6 +105,7 @@ export const Gifts: React.FC = () => {
                             <a
                               href={`https://www.google.com/maps/search/?api=1&query=${gift.toLocation?.point[1]},${gift.toLocation?.point[0]}`}
                               target="_blank"
+                              rel="noopener noreferrer"
                             >
                               {gift.toAddress}
                             </a>
