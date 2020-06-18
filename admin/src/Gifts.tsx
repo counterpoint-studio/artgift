@@ -1,11 +1,14 @@
 import React, { useMemo, useEffect, useState, useCallback } from "react";
 import firebase from "firebase/app";
 import { groupBy } from "lodash";
+import classNames from "classnames";
 
 import { Navigation } from "./Navigation";
 import { Gift, Slot } from "./types";
 import { formatDate, formatTime } from "./util/dateUtils";
 import { MAIN_APP_HOST } from "./constants";
+
+import "./Gifts.scss";
 
 export const Gifts: React.FC = () => {
   let giftColl = useMemo(() => firebase.firestore().collection("gifts"), []);
@@ -51,6 +54,18 @@ export const Gifts: React.FC = () => {
     setShowingDetails((d) => ({ ...d, [gift.id!]: !d[gift.id!] }));
   }, []);
 
+  let onUpdateGiftStatus = useCallback(
+    (
+      gift: Gift,
+      toStatus: "confirmed" | "rejected",
+      event: React.MouseEvent
+    ) => {
+      giftColl.doc(gift.id).set({ status: toStatus }, { merge: true });
+      event.stopPropagation();
+    },
+    [giftColl]
+  );
+
   let onDeleteGift = useCallback(
     (gift: Gift) => {
       if (window.confirm("Are you sure you want to delete this gift?")) {
@@ -61,7 +76,7 @@ export const Gifts: React.FC = () => {
   );
 
   return (
-    <div className="slots">
+    <div className="gifts">
       <Navigation currentPage="gifts" />
       <table className="slots--list">
         <thead></thead>
@@ -73,6 +88,36 @@ export const Gifts: React.FC = () => {
                 <td>{formatTime(slot.time)}</td> <td>{slot.region}</td>
                 <td>{gift.toAddress}</td>
                 <td>{gift.fromEmail}</td>
+                <td style={{ whiteSpace: "nowrap" }}>
+                  <span
+                    className={classNames(
+                      "giftStatus",
+                      gift.status || "pending"
+                    )}
+                  >
+                    {gift.status || "pending"}
+                  </span>
+                </td>
+                <td>
+                  {gift.status !== "confirmed" && (
+                    <button
+                      onClick={(evt) =>
+                        onUpdateGiftStatus(gift, "confirmed", evt)
+                      }
+                    >
+                      Confirm
+                    </button>
+                  )}
+                  {gift.status !== "rejected" && (
+                    <button
+                      onClick={(evt) =>
+                        onUpdateGiftStatus(gift, "rejected", evt)
+                      }
+                    >
+                      Reject
+                    </button>
+                  )}
+                </td>
                 <td>
                   <button onClick={() => onDeleteGift(gift)}>Delete</button>
                 </td>

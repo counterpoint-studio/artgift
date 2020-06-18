@@ -22,3 +22,11 @@ export const updateSlotReservedStatus = functions
             return Promise.resolve();
         }
     });
+
+export const ensureGiftPendingStatusWhenCreated = functions
+    .region('europe-west1')
+    .firestore
+    .document("gifts/{giftId}")
+    .onCreate((snap) => {
+        return snap.ref.set({ status: 'pending' }, { merge: true })
+    });

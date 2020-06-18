@@ -46,11 +46,10 @@ export function reserveGift(gift: Gift) {
         .then(d => ({ id: d.id, ...d.data() } as Gift));
 }
 
-export function getGiftWithSlot(id: string): Promise<{ gift: Gift, slot: GiftSlot }> {
+export function subscribeToGiftWithSlot(id: string, callback: ({ gift: Gift, slot: GiftSlot }) => void) {
     return firebase.firestore().collection("gifts")
         .doc(id)
-        .get()
-        .then(async (d) => ({
+        .onSnapshot(async (d) => callback({
             gift: { id: d.id, ...d.data() } as Gift,
             slot: await getGiftSlot(d.data().slotId)
         }))
