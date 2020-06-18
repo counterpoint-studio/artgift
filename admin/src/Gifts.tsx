@@ -5,6 +5,7 @@ import { groupBy } from "lodash";
 import { Navigation } from "./Navigation";
 import { Gift, Slot } from "./types";
 import { formatDate, formatTime } from "./util/dateUtils";
+import { MAIN_APP_HOST } from "./constants";
 
 export const Gifts: React.FC = () => {
   let giftColl = useMemo(() => firebase.firestore().collection("gifts"), []);
@@ -118,6 +119,18 @@ export const Gifts: React.FC = () => {
                         <tr>
                           <td>Notes:</td>
                           <td>{gift.fromMessage}</td>
+                        </tr>
+                        <tr>
+                          <td>App link:</td>
+                          <td>
+                            <a
+                              href={`${MAIN_APP_HOST}/gift?id=${gift.id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {`${MAIN_APP_HOST}/gift?id=${gift.id}`}
+                            </a>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
