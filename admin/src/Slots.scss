@@ -1,0 +1,24 @@
+.slots {
+  .slotStatus.available {
+    background-color: lightgreen;
+  }
+  .slotStatus.reserved {
+    background-color: pink;
+  }
+
+  &--field {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: row;
+
+    input[type="radio"] {
+      margin-right: 5px;
+    }
+  }
+  &--fieldLabel {
+    width: 100px;
+  }
+  &--radioLabel {
+    margin-right: 20px;
+  }
+}
