@@ -46,7 +46,10 @@ const FromPage = () => {
     boundsPadding: 0,
     regions,
     points: emptyPoints,
-    focusPoint: { className: "fromPage", location: gift.toLocation.point },
+    focusPoint: gift.toLocation && {
+      className: "fromPage",
+      location: gift.toLocation.point,
+    },
   })
 
   let doReserveGift = useCallback(async () => {

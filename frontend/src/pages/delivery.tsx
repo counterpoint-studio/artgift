@@ -15,7 +15,10 @@ const DeliveryPage = () => {
 
   let [gift] = useGiftState(INIT_GIFT)
   useMapBackground({
-    focusPoint: { className: "deliveryPage", location: gift.toLocation.point },
+    focusPoint: gift.toLocation && {
+      className: "deliveryPage",
+      location: gift.toLocation.point,
+    },
   })
 
   return (
