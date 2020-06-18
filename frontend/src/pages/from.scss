@@ -5,5 +5,17 @@
       opacity: 1;
       transition: opacity 1s;
     }
+
+    .countdownTimer {
+      background-color: red;
+      padding: 1px 7px 3px 7px;
+      text-align: left;
+      color: white;
+      border-radius: 15px;
+    }
+
+    textarea {
+      min-height: 75px;
+    }
   }
 }

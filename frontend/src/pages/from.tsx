@@ -77,14 +77,18 @@ const FromPage = () => {
         <div className="scroll">
           <h1>{intl.formatMessage({ id: "fromTitle" })}</h1>
           <p>
-            {intl.formatMessage({ id: "fromReservedTimeStart" })}{" "}
+            {intl.formatMessage({ id: "fromGiftDate" })}{" "}
             {giftSlot && (
               <>
-                {formatDate(giftSlot.date, intl)} {formatTime(giftSlot.time)}
+                {formatDate(giftSlot.date, intl)}{" "}
+                {intl.formatMessage({ id: "fromGiftTime" })}{" "}
+                {formatTime(giftSlot.time)}
               </>
-            )}
-            . {intl.formatMessage({ id: "fromReservedTimeEnd" })}
+            )}{" "}
+            {intl.formatMessage({ id: "fromReservedTimeStart" })}{" "}
+            <span className="countdownTimer">14:59</span>
           </p>
+          <p>{intl.formatMessage({ id: "fromReservedTimeEnd" })}</p>
           <form>
             <div className="inputGroup">
               <label>

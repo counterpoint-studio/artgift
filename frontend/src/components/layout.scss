@@ -146,7 +146,7 @@ body {
   }
 
   .requiredField {
-    color: $colorHFBeige;
+    color: red;
   }
 
   input[type="text"],
@@ -209,7 +209,6 @@ body {
     margin-top: $fontSizeBase;
     border-radius: 0;
     border: 1px solid black;
-    min-height: 100px;
     padding: (0.5 * $fontSizeBase);
     line-height: 1.25;
 
