@@ -1,6 +1,5 @@
 import React, { useMemo, useEffect, useState, useCallback } from "react";
 import firebase from "firebase/app";
-import { Link } from "react-router-dom";
 import { Navigation } from "./Navigation";
 
 export type Gift = {

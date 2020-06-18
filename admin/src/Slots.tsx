@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import firebase from "firebase/app";
 import { REGIONS, DATES, HOURS, MINUTES } from "./constants";
-import { Link } from "react-router-dom";
 import { Navigation } from "./Navigation";
 
 type Slot = {
