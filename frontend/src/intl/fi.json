@@ -46,6 +46,7 @@
 
   "deliveryTitle": "Lahjasi on varattu!",
   "deliveryDescription": "Odotathan viestiä tiimiltämme. Lähetämme tekstiviestin kun olemme varmistaneet lahjan saatavuuden.",
+  "deliveryGiftPageLink": "Näet lahjan tilan myös täältä",
 
   "giftSEOTitle": "Taidelahjani",
   "giftSEODescription": "Taidelahjani",
@@ -73,6 +74,12 @@
   "dayOfWeek4": "To",
   "dayOfWeek5": "Pe",
   "dayOfWeek6": "La",
+
+  "regionetelainen": "Eteläinen",
+  "regionlantinen": "Läntinen",
+  "regionkeskinen": "Keskinen",
+  "regionkoillinen": "Koillinen",
+  "regionitainenOstersundom": "Itäinen & Östersundom",
 
   "privacyLink": "Privacy",
   "privacyTitle": "Privacy",

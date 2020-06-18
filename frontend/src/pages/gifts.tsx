@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react"
 import Helmet from "react-helmet"
 import { useIntl, Link } from "gatsby-plugin-intl"
 import classNames from "classnames"
+import { camelCase } from "lodash"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -63,7 +64,10 @@ const GiftsPage = () => {
         })}
       >
         <h1>
-          {intl.formatMessage({ id: "giftsTitle" })} {gift.toLocation?.region}
+          {intl.formatMessage({ id: "giftsTitle" })}{" "}
+          {intl.formatMessage({
+            id: `region${camelCase(gift.toLocation?.region.toLowerCase())}`,
+          })}
         </h1>
         <div className="giftDates">
           {Object.keys(slotsByDate).map(date => (

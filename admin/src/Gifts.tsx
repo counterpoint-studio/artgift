@@ -85,7 +85,8 @@ export const Gifts: React.FC = () => {
             <React.Fragment key={gift.id}>
               <tr onClick={() => onToggleDetails(gift)}>
                 <td>{formatDate(slot.date)}</td>{" "}
-                <td>{formatTime(slot.time)}</td> <td>{slot.region}</td>
+                <td>{formatTime(slot.time)}</td>
+                <td>{slot.region}</td>
                 <td>{gift.toAddress}</td>
                 <td>{gift.fromEmail}</td>
                 <td style={{ whiteSpace: "nowrap" }}>

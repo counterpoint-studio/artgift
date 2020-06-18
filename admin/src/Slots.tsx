@@ -18,7 +18,7 @@ import { Slot } from "./types";
 const INIT_SLOT: Slot = {
   date: DATES[0],
   time: "11:00",
-  region: REGIONS[0],
+  region: REGIONS[0].id,
   status: "available",
 };
 
@@ -92,16 +92,16 @@ export const Slots: React.FC = () => {
           <div className="slots--fieldLabel">Region</div>
           <div className="slots--fieldInput">
             {REGIONS.map((r) => (
-              <label key={r} className="slots--radioLabel">
+              <label key={r.id} className="slots--radioLabel">
                 <input
                   type="radio"
-                  value={r}
-                  checked={newSlot.region === r}
+                  value={r.id}
+                  checked={newSlot.region === r.id}
                   onChange={(evt: React.FormEvent<HTMLInputElement>) =>
                     setNewSlot({ ...newSlot, region: evt.currentTarget.value })
                   }
                 />
-                {r}
+                {r.id}
               </label>
             ))}
           </div>

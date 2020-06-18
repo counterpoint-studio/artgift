@@ -42,7 +42,10 @@ const DeliveryPage = () => {
           <h1>{intl.formatMessage({ id: "deliveryTitle" })}</h1>
           <p>{intl.formatMessage({ id: "deliveryDescription" })}</p>
           <p>
-            <a href={getGiftLink()}>Näet lahjan tilan myös täältä</a>.
+            <a href={getGiftLink()}>
+              {intl.formatMessage({ id: "deliveryGiftPageLink" })}
+            </a>
+            .
           </p>
         </div>
       </main>
