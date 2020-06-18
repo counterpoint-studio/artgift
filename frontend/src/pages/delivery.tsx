@@ -6,9 +6,17 @@ import Layout from "../components/layout"
 import SEO from "../components/seo"
 
 import "./delivery.scss"
+import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
+import { useGiftState } from "../hooks"
+import { INIT_GIFT } from "../constants"
 
 const DeliveryPage = () => {
   let intl = useIntl()
+
+  let [gift] = useGiftState(INIT_GIFT)
+  useMapBackground({
+    focusPoint: { className: "deliveryPage", location: gift.toLocation.point },
+  })
 
   return (
     <Layout>

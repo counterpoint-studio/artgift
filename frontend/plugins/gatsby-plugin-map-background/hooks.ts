@@ -15,7 +15,9 @@ export function useMapBackground(props: Partial<MapBackgroundProps>) {
         props?.bounds?.[1][1],
         props?.regions,
         props?.focusedRegion,
-        props?.points
+        props?.points,
+        props?.focusPoint?.location,
+        props?.focusPoint?.className
     ])
 
     return ctx;

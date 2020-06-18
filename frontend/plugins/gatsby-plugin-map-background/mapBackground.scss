@@ -26,3 +26,11 @@
     opacity: 1;
   }
 }
+
+.focusPointMarker {
+  display: block;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  border: 4px solid yellow;
+}

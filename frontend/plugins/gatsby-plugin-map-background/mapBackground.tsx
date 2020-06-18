@@ -22,6 +22,7 @@ export interface MapBackgroundProps {
   boundsPadding?: number
   regions?: { feature: GeoJSON.Feature; bounds: mapboxgl.LngLatBoundsLike }[]
   points?: { id: string; location: [number, number] }[]
+  focusPoint?: { className: string; location: [number, number] }
   onSetMoving: (moving: boolean) => void
 }
 
@@ -31,6 +32,7 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
   boundsPadding,
   regions,
   points,
+  focusPoint,
   onSetMoving,
 }) => {
   let windowWidth = useWindowWidth()
@@ -40,6 +42,7 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
   let [moving, setMoving] = useState(false)
   let firstTransition = useRef(true)
   let pointMarkers = useRef<{ id: string; marker: mapboxgl.Marker }[]>([])
+  let focusPointMarker = useRef<mapboxgl.Marker>()
 
   useEffect(function initMap() {
     let map = new mapboxgl.Map({
@@ -156,51 +159,82 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
     [map, regions]
   )
 
-  useEffect(() => {
-    if (!points || !map) return
+  useEffect(
+    function updatePoints() {
+      if (!points || !map) return
 
-    let newPoints = points.filter(
-        pt => !pointMarkers.current.find(m => m.id === pt.id)
-      ),
-      removedPointMarkers = pointMarkers.current.filter(
-        m => !points.find(p => p.id === m.id)
-      )
+      let newPoints = points.filter(
+          pt => !pointMarkers.current.find(m => m.id === pt.id)
+        ),
+        removedPointMarkers = pointMarkers.current.filter(
+          m => !points.find(p => p.id === m.id)
+        )
 
-    for (let removed of removedPointMarkers) {
-      removed.marker.remove()
-      pointMarkers.current.splice(pointMarkers.current.indexOf(removed), 1)
-    }
-
-    function addNext() {
-      if (newPoints.length === 0) {
-        return
+      for (let removed of removedPointMarkers) {
+        removed.marker.remove()
+        pointMarkers.current.splice(pointMarkers.current.indexOf(removed), 1)
       }
-      let point = newPoints.shift()
-      let markerEl = document.createElement("div")
-      markerEl.classList.add("pointMarker")
-      let marker = new mapboxgl.Marker(markerEl)
-        .setLngLat(point.location)
-        .addTo(map)
-      pointMarkers.current.push({ id: point.id, marker })
-      let isLast = newPoints.length === 0
-      setTimeout(() => {
-        markerEl.classList.add("isAdded")
-        if (isLast) {
-          setTimeout(() => setAddingPoints(false), LAST_POINT_ENTER_DELAY_MS)
+
+      function addNext() {
+        if (newPoints.length === 0) {
+          return
         }
-      })
-      setTimeout(
-        addNext,
-        MIN_POINT_ENTER_DELAY_MS +
-          Math.random() *
-            (MAX_POINT_ENTER_INTERVAL_MS - MIN_POINT_ENTER_DELAY_MS)
-      )
-    }
-    if (newPoints.length > 0) {
-      setAddingPoints(true)
-      setTimeout(addNext, FIRST_POINT_ENTER_DELAY_MS)
-    }
-  }, [points, map])
+        let point = newPoints.shift()
+        let markerEl = document.createElement("div")
+        markerEl.classList.add("pointMarker")
+        let marker = new mapboxgl.Marker(markerEl)
+          .setLngLat(point.location)
+          .addTo(map)
+        pointMarkers.current.push({ id: point.id, marker })
+        let isLast = newPoints.length === 0
+        setTimeout(() => {
+          markerEl.classList.add("isAdded")
+          if (isLast) {
+            setTimeout(() => setAddingPoints(false), LAST_POINT_ENTER_DELAY_MS)
+          }
+        })
+        setTimeout(
+          addNext,
+          MIN_POINT_ENTER_DELAY_MS +
+            Math.random() *
+              (MAX_POINT_ENTER_INTERVAL_MS - MIN_POINT_ENTER_DELAY_MS)
+        )
+      }
+      if (newPoints.length > 0) {
+        setAddingPoints(true)
+        setTimeout(addNext, FIRST_POINT_ENTER_DELAY_MS)
+      }
+    },
+    [points, map]
+  )
+
+  useEffect(
+    function updateFocusPoint() {
+      if (!map) return
+
+      if (focusPoint) {
+        if (!focusPointMarker.current) {
+          let markerEl = document.createElement("div")
+          focusPointMarker.current = new mapboxgl.Marker(markerEl)
+            .setLngLat(focusPoint.location)
+            .addTo(map)
+        }
+        focusPointMarker.current.setLngLat(focusPoint.location)
+        let markerEl = focusPointMarker.current.getElement()
+        for (let cls of Array.from(markerEl.classList)) {
+          markerEl.classList.remove(cls)
+        }
+        markerEl.classList.add("focusPointMarker")
+        markerEl.classList.add(focusPoint.className)
+      } else {
+        if (focusPointMarker.current) {
+          focusPointMarker.current.remove()
+          focusPointMarker.current = undefined
+        }
+      }
+    },
+    [focusPoint, map]
+  )
 
   useEffect(
     function notifyMovement() {
