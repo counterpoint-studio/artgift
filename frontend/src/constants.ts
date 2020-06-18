@@ -12,7 +12,7 @@ export const PHONE_NUMBER_REGEX = /\+?(358|0)\d{7,9}/;
 export const INIT_GIFT: Gift = {
     toName: "",
     toAddress: "",
-    toLanguage: "",
+    toLanguage: "fi",
     toSignificance: "",
     fromName: "",
     fromPhoneNumber: "",
