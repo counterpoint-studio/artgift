@@ -67,7 +67,8 @@ export const Slots: React.FC = () => {
         <tbody>
           {slots.map((slot, idx) => (
             <tr key={idx}>
-              <td>{formatDate(slot.date)}</td> <td>{formatTime(slot.time)}</td>{" "}
+              <td>{formatDate(slot.date)}</td>
+              <td>{formatTime(slot.time)}</td>
               <td>{slot.region}</td>
               <td>
                 <span className={classNames("slotStatus", slot.status)}>

@@ -84,7 +84,7 @@ export const Gifts: React.FC = () => {
           {getTableData().map(({ gift, slot }) => (
             <React.Fragment key={gift.id}>
               <tr onClick={() => onToggleDetails(gift)}>
-                <td>{formatDate(slot.date)}</td>{" "}
+                <td>{formatDate(slot.date)}</td>
                 <td>{formatTime(slot.time)}</td>
                 <td>{slot.region}</td>
                 <td>{gift.toAddress}</td>

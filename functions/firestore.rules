@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdminUser() {
+      return request.auth != null && exists(/databases/$(database)/documents/admins/$(request.auth.token.email))
+    }
+
+    match /slots/{slot} {
+      allow read;
+      allow write: if isAdminUser()
+    }
+    match /gifts/{gift} {
+      allow get;
+      allow create;
+      allow list, update, delete: if isAdminUser()
+    }
+    match /admins/{admin} {
+      allow read, write: if isAdminUser()
+    }
+  }
+}
