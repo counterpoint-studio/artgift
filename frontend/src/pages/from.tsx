@@ -112,6 +112,9 @@ const FromPage = () => {
                 <span className="requiredField">*</span>
               </label>
               <Textbox
+                attributesInput={{
+                  type: "tel",
+                }}
                 maxLength={25}
                 value={gift.fromPhoneNumber}
                 onChange={phone => setGift({ ...gift, fromPhoneNumber: phone })}

@@ -87,5 +87,7 @@
 
   "termsLink": "Terms",
   "termsTitle": "Terms",
-  "termsContent": "Lorem ipsum dolor sit amet."
+  "termsContent": "Lorem ipsum dolor sit amet.",
+
+  "bookingMessage": "Taidelahjasi [date] [address] on varattu. Saat varmistusviestin kun olemme tarkistaneet lahjan saatavuuden. Katso lahjan tiedot osoitteessa [url]"
 }

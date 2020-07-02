@@ -30,3 +30,33 @@ export const ensureGiftPendingStatusWhenCreated = functions
     .onCreate((snap) => {
         return snap.ref.set({ status: 'pending' }, { merge: true })
     });
+
+export const sendGiftSMS = functions
+    .region('europe-west1')
+    .firestore
+    .document("gifts/{giftId}")
+    .onWrite(async (change, context) => {
+        let document = change.after.exists ? change.after.data() : null;
+        let previousDocument = change.before.exists ? change.before.data() : null;
+        let eventId = context.eventId;
+        let messageRef = db.collection('sentMessages').doc(eventId);
+        if (!previousDocument) {
+            // New gift, send message
+            if (await shouldSend(messageRef)) {
+
+            }
+        } else if (document) {
+            // Update messages
+        }
+        return Promise.resolve()
+    });
+
+function shouldSend(messageRef: FirebaseFirestore.DocumentReference) {
+    return messageRef.get().then(emailDoc => {
+        return !emailDoc.exists || !emailDoc.data()!.sent;
+    });
+}
+
+function markSent(messageRef: FirebaseFirestore.DocumentReference) {
+    return messageRef.set({ sent: true });
+}
