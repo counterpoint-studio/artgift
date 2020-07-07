@@ -62,7 +62,7 @@ export const sendGiftSMS = functions
                 let message = template({
                     date: `${formatDate(slot!.date)} ${formatTime(slot!.time)}`,
                     address: document.toAddress,
-                    url: `${baseUrl}/gift?id=${change.after.id}`
+                    url: new Handlebars.SafeString(`${baseUrl}/gift?id=${change.after.id}`)
                 });
                 await sendMessage(message, document.fromPhoneNumber);
                 await markSent(messageRef);
