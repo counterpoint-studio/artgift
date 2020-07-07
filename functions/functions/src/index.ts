@@ -1,9 +1,22 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import Handlebars from 'handlebars';
+import fetch from 'node-fetch';
+import { URLSearchParams } from 'url';
+
+let smsTemplateSources = require('./messages.json');
 
 admin.initializeApp();
 
 let db = admin.firestore();
+
+let smsTemplates: { [locale: string]: { [key: string]: Handlebars.TemplateDelegate } } = {};
+for (let locale of Object.keys(smsTemplateSources)) {
+    smsTemplates[locale] = {};
+    for (let msg of Object.keys(smsTemplateSources[locale])) {
+        smsTemplates[locale][msg] = Handlebars.compile(smsTemplateSources[locale][msg]);
+    }
+}
 
 export const updateSlotReservedStatus = functions
     .region('europe-west1')
@@ -40,10 +53,19 @@ export const sendGiftSMS = functions
         let previousDocument = change.before.exists ? change.before.data() : null;
         let eventId = context.eventId;
         let messageRef = db.collection('sentMessages').doc(eventId);
-        if (!previousDocument) {
+        if (document && !previousDocument) {
             // New gift, send message
             if (await shouldSend(messageRef)) {
-
+                let slot = await (await db.collection('slots').doc(document.slotId).get()).data();
+                let template = smsTemplates[document.fromLanguage || 'en'].giftCreated;
+                let baseUrl = functions.config().artgift.baseurl;
+                let message = template({
+                    date: `${formatDate(slot!.date)} ${formatTime(slot!.time)}`,
+                    address: document.toAddress,
+                    url: `${baseUrl}/gift?id=${change.after.id}`
+                });
+                await sendMessage(message, document.fromPhoneNumber);
+                await markSent(messageRef);
             }
         } else if (document) {
             // Update messages
@@ -52,11 +74,66 @@ export const sendGiftSMS = functions
     });
 
 function shouldSend(messageRef: FirebaseFirestore.DocumentReference) {
-    return messageRef.get().then(emailDoc => {
-        return !emailDoc.exists || !emailDoc.data()!.sent;
+    return messageRef.get().then(smsDoc => {
+        return !smsDoc.exists || !smsDoc.data()!.sent;
     });
 }
 
 function markSent(messageRef: FirebaseFirestore.DocumentReference) {
     return messageRef.set({ sent: true });
+}
+
+function sendMessage(message: string, toNumber: string) {
+    let cfg = functions.config();
+    let smsApiUrl = cfg.artgift.smsapi.url;
+    let smsApiUsername = cfg.artgift.smsapi.username;
+    let smsApiPassword = cfg.artgift.smsapi.password;
+    let params = new URLSearchParams();
+    params.append('sms_username', smsApiUsername);
+    params.append('sms_password', smsApiPassword);
+    params.append('sms_dest', normalisePhoneNumber(toNumber));
+    params.append('sms_unicode', hexEncode(message));
+    return fetch(smsApiUrl, {
+        method: 'POST',
+        body: params
+    }).then(res => res.text()).then(resText => {
+        let [status, message] = resText.split('\n');
+        if (status === 'OK') {
+            return true;
+        } else {
+            throw new Error('SMS API error: ' + message);
+        }
+    })
+}
+
+function normalisePhoneNumber(number: string) {
+    if (number.startsWith('0')) {
+        return '+358' + number.substring(1);
+    } else if (number.startsWith('358')) {
+        return '+' + number;
+    } else {
+        return number;
+    }
+}
+
+function hexEncode(str: string) {
+    let result = "";
+    for (let i = 0; i < str.length; i++) {
+        let hex = str.charCodeAt(i).toString(16);
+        result += ("000" + hex).slice(-4);
+    }
+    return result
+}
+
+function formatDate(dateS: string) {
+    let m = +dateS.substring(4, 6)
+    let d = +dateS.substring(6, 8)
+    return `${d}.${m}.`
+}
+
+function formatTime(time: string) {
+    let [hours, minutes] = time.split(":").map(t => +t)
+    let h = hours < 10 ? `0${hours}` : `${hours}`
+    let m = minutes < 10 ? `0${minutes}` : `${minutes}`
+    return `${h}:${m}`
 }

@@ -22,6 +22,7 @@ export type Gift = {
     fromPhoneNumber: string;
     fromEmail: string;
     fromMessage: string;
+    fromLanguage: string;
 }
 
 export type GiftLocation = {

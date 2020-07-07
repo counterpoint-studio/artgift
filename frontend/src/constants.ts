@@ -20,5 +20,6 @@ export const INIT_GIFT: Gift = {
     fromName: "",
     fromPhoneNumber: "",
     fromEmail: "",
-    fromMessage: ""
+    fromMessage: "",
+    fromLanguage: "fi"
 }

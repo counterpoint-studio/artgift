@@ -29,7 +29,10 @@ const FromPage = () => {
   let intl = useIntl()
   let mounted = useMounted()
   let regions = useMemo(() => getRegionGeoJSON(), [])
-  let [gift, setGift] = useGiftState(INIT_GIFT)
+  let [gift, setGift] = useGiftState({
+    ...INIT_GIFT,
+    fromLanguage: intl.locale,
+  })
   let [giftSlot, setGiftSlot] = useState<GiftSlot>()
   let isValid =
     validateName(gift.fromName, intl) === true &&

@@ -87,7 +87,5 @@
 
   "termsLink": "Terms",
   "termsTitle": "Terms",
-  "termsContent": "Lorem ipsum dolor sit amet.",
-
-  "bookingMessage": "Your Art Gift [date] [address] is reserved. You will receive a confirmation once we've ensured availability. Find gift details at [url]"
+  "termsContent": "Lorem ipsum dolor sit amet."
 }
