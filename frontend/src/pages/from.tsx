@@ -16,7 +16,7 @@ import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hoo
 import { REGION_BOUNDING_BOX, PHONE_NUMBER_REGEX } from "../constants"
 import { getGiftSlot, initGift, saveGift } from "../services/gifts"
 import { GiftSlot } from "../types"
-import { formatTime, formatDate } from "../services/dates"
+import { formatTime, formatDate, formatDuration } from "../services/dates"
 
 import "./from.scss"
 
@@ -28,18 +28,35 @@ const FromPage = () => {
   let regions = useMemo(() => getRegionGeoJSON(), [])
   let [gift, setGift] = useGiftState(initGift(intl.locale))
   let [giftSlot, setGiftSlot] = useState<GiftSlot>()
+  let [reservedFor, setReservedFor] = useState<number>()
+
   let isValid =
     validateName(gift.fromName, intl) === true &&
     validateEmail(gift.fromEmail, intl) === true &&
     validatePhoneNumber(gift.fromPhoneNumber, intl) === true
 
   useEffect(() => {
-    if (gift.toName === "") navigate("/")
+    if (!gift.slotId) navigate("/")
   }, [gift])
 
   useEffect(() => {
-    gift.slotId && getGiftSlot(gift.slotId).then(setGiftSlot)
+    if (gift.slotId) {
+      getGiftSlot(gift.slotId).then(setGiftSlot)
+
+      let intv = setInterval(() => {
+        if (gift.reservedUntil && gift.reservedUntil > Date.now()) {
+          setReservedFor(gift.reservedUntil - Date.now())
+        } else {
+          navigate("/gifts")
+        }
+      }, 100)
+
+      return () => {
+        clearInterval(intv)
+      }
+    }
   }, [gift?.slotId])
+
   let { isMoving: isMapMoving } = useMapBackground({
     bounds: gift.toLocation
       ? boundsAround(gift.toLocation.point)
@@ -87,7 +104,9 @@ const FromPage = () => {
               </>
             )}{" "}
             {intl.formatMessage({ id: "fromReservedTimeStart" })}{" "}
-            <span className="countdownTimer">14:59</span>
+            <span className="countdownTimer">
+              {formatDuration(reservedFor)}
+            </span>
           </p>
           <p>{intl.formatMessage({ id: "fromReservedTimeEnd" })}</p>
           <form>

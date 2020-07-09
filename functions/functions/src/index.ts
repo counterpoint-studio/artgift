@@ -4,6 +4,8 @@ import Handlebars from 'handlebars';
 import fetch from 'node-fetch';
 import { URLSearchParams } from 'url';
 
+const RESERVATION_PERIOD = 15 * 60 * 1000;
+
 let smsTemplateSources = require('./messages.json');
 
 admin.initializeApp();
@@ -34,7 +36,11 @@ export const processSlotReservation = functions
             // Slot is available if its status is available or if it was already reserved for this gift.
             let slotAvailable = slot.exists && (slot.data()!.status === 'available' || !slotChanged);
             if (slotAvailable) {
-                await tx.set(giftRef, { slotId, reservationId: document.id }, { merge: true });
+                await tx.set(giftRef, {
+                    slotId,
+                    reservationId: document.id,
+                    reservedUntil: Date.now() + RESERVATION_PERIOD
+                }, { merge: true });
                 // Set slot as reserved.
                 await tx.set(slotRef, { status: 'reserved' }, { merge: true });
                 // Set previous slot as available again.
@@ -46,6 +52,21 @@ export const processSlotReservation = functions
             }
         });
     });
+
+export const expireUnfinishedGifts = functions.region('europe-west1').pubsub.schedule('every 1 minutes').onRun(async () => {
+    let creatingGifts = await db.collection('gifts').where('status', '==', 'creating').get();
+    creatingGifts.forEach(doc => {
+        let data = doc.data();
+        if (data.slotId && data.reservedUntil < Date.now()) {
+            db.runTransaction(async tx => {
+                let giftRef = db.collection('gifts').doc(doc.id);
+                let slotRef = db.collection('slots').doc(data.slotId);
+                await tx.set(giftRef, { slotId: admin.firestore.FieldValue.delete() }, { merge: true });
+                await tx.set(slotRef, { status: 'available' }, { merge: true });
+            });
+        }
+    });
+});
 
 export const ensureGiftCreatingStatus = functions
     .region('europe-west1')
