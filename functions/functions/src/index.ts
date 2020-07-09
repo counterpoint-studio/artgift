@@ -36,12 +36,12 @@ export const updateSlotReservedStatus = functions
         }
     });
 
-export const ensureGiftPendingStatusWhenCreated = functions
+export const ensureGiftCreatingStatus = functions
     .region('europe-west1')
     .firestore
     .document("gifts/{giftId}")
     .onCreate((snap) => {
-        return snap.ref.set({ status: 'pending' }, { merge: true })
+        return snap.ref.set({ status: 'creating' }, { merge: true })
     });
 
 export const sendGiftSMS = functions
@@ -53,7 +53,7 @@ export const sendGiftSMS = functions
         let previousDocument = change.before.exists ? change.before.data() : null;
         let eventId = context.eventId;
         let messageRef = db.collection('sentMessages').doc(eventId);
-        if (document && !previousDocument) {
+        if (document && previousDocument && document.status === 'pending' && previousDocument.status === 'creating') {
             // New gift, send message
             if (await shouldSend(messageRef)) {
                 let slot = await (await db.collection('slots').doc(document.slotId).get()).data();

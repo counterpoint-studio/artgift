@@ -6,6 +6,11 @@ service cloud.firestore {
       return request.auth != null && exists(/databases/$(database)/documents/admins/$(request.auth.token.email))
     }
 
+    function isAllowedGiftUpdate() {
+      // Only allowed to set the gift status to pending
+      return request.resource.data.status == resource.data.status || request.resource.data.status == 'pending';
+    }
+
     match /slots/{slot} {
       allow read;
       allow write: if isAdminUser()
@@ -13,7 +18,8 @@ service cloud.firestore {
     match /gifts/{gift} {
       allow get;
       allow create;
-      allow list, update, delete: if isAdminUser()
+      allow update: if isAdminUser() || isAllowedGiftUpdate();
+      allow list, delete: if isAdminUser()
     }
     match /admins/{admin} {
       allow read, write: if isAdminUser()

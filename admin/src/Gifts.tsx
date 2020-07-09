@@ -21,11 +21,13 @@ export const Gifts: React.FC = () => {
   }>({});
 
   useEffect(() => {
-    let unSub = giftColl.onSnapshot((giftsSnapshot) => {
-      setGifts(
-        giftsSnapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Gift))
-      );
-    });
+    let unSub = giftColl
+      .where("status", "in", ["pending", "confirmed", "rejected", "cancelled"])
+      .onSnapshot((giftsSnapshot) => {
+        setGifts(
+          giftsSnapshot.docs.map((d) => ({ ...d.data(), id: d.id } as Gift))
+        );
+      });
     return () => {
       unSub();
     };
@@ -33,7 +35,7 @@ export const Gifts: React.FC = () => {
   useEffect(() => {
     let unSub = slotColl.onSnapshot((slotsSnapshot) => {
       setSlots(
-        slotsSnapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Slot))
+        slotsSnapshot.docs.map((d) => ({ ...d.data(), id: d.id } as Slot))
       );
     });
     return () => {

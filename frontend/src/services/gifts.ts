@@ -1,5 +1,23 @@
 import firebase from 'gatsby-plugin-firebase';
+import { nanoid } from 'nanoid';
+
 import { GiftSlot, Gift } from '../types';
+
+export function initGift(fromLanguage = 'fi'): Gift {
+    return {
+        id: nanoid(),
+        status: "creating",
+        toName: "",
+        toAddress: "",
+        toLanguage: "fi",
+        toSignificance: "",
+        fromName: "",
+        fromPhoneNumber: "",
+        fromEmail: "",
+        fromMessage: "",
+        fromLanguage
+    }
+};
 
 export function subscribeToGiftSlotsOverview(callback: (slots: GiftSlot[]) => void) {
     let unSub = firebase.firestore().collection("slots").orderBy("date")
@@ -7,7 +25,7 @@ export function subscribeToGiftSlotsOverview(callback: (slots: GiftSlot[]) => vo
         .orderBy("region")
         .onSnapshot((slotsSnapshot) => {
             callback(
-                slotsSnapshot.docs.map((d) => ({ id: d.id, ...d.data() } as GiftSlot))
+                slotsSnapshot.docs.map((d) => ({ ...d.data(), id: d.id } as GiftSlot))
             );
         });
     return unSub
@@ -24,7 +42,7 @@ export function subscribeToGiftSlotsInRegion(region: string, callback: (slots: {
                 if (!byDate[slotData.date]) {
                     byDate[slotData.date] = []
                 }
-                byDate[slotData.date].push({ id: slot.id, ...slotData });
+                byDate[slotData.date].push({ ...slotData, id: slot.id });
             }
             callback(byDate);
         });
@@ -36,21 +54,30 @@ export function getGiftSlot(id: string): Promise<GiftSlot> {
     return firebase.firestore().collection("slots")
         .doc(id)
         .get()
-        .then(d => ({ id: d.id, ...d.data() } as GiftSlot))
+        .then(d => ({ ...d.data(), id: d.id } as GiftSlot))
 }
 
-export function reserveGift(gift: Gift) {
+
+export function saveGift(gift: Gift) {
     return firebase.firestore().collection("gifts")
-        .add(gift)
-        .then(d => d.get())
-        .then(d => ({ id: d.id, ...d.data() } as Gift));
+        .doc(gift.id)
+        .set(gift)
+        .then(() => getGift(gift.id));
+}
+
+
+export function getGift(id: string): Promise<Gift> {
+    return firebase.firestore().collection("gifts")
+        .doc(id)
+        .get()
+        .then(d => ({ ...d.data(), id: d.id } as Gift))
 }
 
 export function subscribeToGiftWithSlot(id: string, callback: ({ gift: Gift, slot: GiftSlot }) => void) {
     return firebase.firestore().collection("gifts")
         .doc(id)
         .onSnapshot(async (d) => callback({
-            gift: { id: d.id, ...d.data() } as Gift,
+            gift: { ...d.data(), id: d.id } as Gift,
             slot: await getGiftSlot(d.data().slotId)
         }))
 }

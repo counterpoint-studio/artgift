@@ -10,18 +10,15 @@ import SEO from "../components/seo"
 import NextButton from "../components/nextButton"
 import BackButton from "../components/backButton"
 
-import "./from.scss"
 import { useMounted, useGiftState } from "../hooks"
 import { getRegionGeoJSON } from "../services/regionLookup"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
-import {
-  INIT_GIFT,
-  REGION_BOUNDING_BOX,
-  PHONE_NUMBER_REGEX,
-} from "../constants"
-import { getGiftSlot, reserveGift } from "../services/gifts"
+import { REGION_BOUNDING_BOX, PHONE_NUMBER_REGEX } from "../constants"
+import { getGiftSlot, initGift, saveGift } from "../services/gifts"
 import { GiftSlot } from "../types"
 import { formatTime, formatDate } from "../services/dates"
+
+import "./from.scss"
 
 const emptyPoints = []
 
@@ -29,10 +26,7 @@ const FromPage = () => {
   let intl = useIntl()
   let mounted = useMounted()
   let regions = useMemo(() => getRegionGeoJSON(), [])
-  let [gift, setGift] = useGiftState({
-    ...INIT_GIFT,
-    fromLanguage: intl.locale,
-  })
+  let [gift, setGift] = useGiftState(initGift(intl.locale))
   let [giftSlot, setGiftSlot] = useState<GiftSlot>()
   let isValid =
     validateName(gift.fromName, intl) === true &&
@@ -56,7 +50,7 @@ const FromPage = () => {
   })
 
   let doReserveGift = useCallback(async () => {
-    setGift(await reserveGift(gift))
+    setGift(await saveGift({ ...gift, status: "pending" }))
     navigate("/delivery")
   }, [gift])
 
