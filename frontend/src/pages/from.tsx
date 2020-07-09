@@ -34,7 +34,11 @@ const FromPage = () => {
     validatePhoneNumber(gift.fromPhoneNumber, intl) === true
 
   useEffect(() => {
-    getGiftSlot(gift.slotId).then(setGiftSlot)
+    if (gift.toName === "") navigate("/")
+  }, [gift])
+
+  useEffect(() => {
+    gift.slotId && getGiftSlot(gift.slotId).then(setGiftSlot)
   }, [gift?.slotId])
   let { isMoving: isMapMoving } = useMapBackground({
     bounds: gift.toLocation

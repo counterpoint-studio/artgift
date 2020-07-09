@@ -1,6 +1,6 @@
-import React, { useCallback } from "react"
+import React, { useCallback, useEffect } from "react"
 import Helmet from "react-helmet"
-import { useIntl } from "gatsby-plugin-intl"
+import { useIntl, navigate } from "gatsby-plugin-intl"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -15,6 +15,11 @@ const DeliveryPage = () => {
   let intl = useIntl()
 
   let [gift] = useGiftState(initGift(intl.locale))
+
+  useEffect(() => {
+    if (gift.toName === "") navigate("/")
+  }, [gift])
+
   useMapBackground({
     focusPoint: gift.toLocation && {
       className: "deliveryPage",

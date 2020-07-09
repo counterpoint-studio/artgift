@@ -9,9 +9,9 @@ import SEO from "../components/seo"
 import BackButton from "../components/backButton"
 import {
   subscribeToGiftSlotsInRegion,
-  initGift,
   reserveSlot,
   saveGift,
+  initGift,
 } from "../services/gifts"
 
 import { getRegionGeoJSON } from "../services/regionLookup"
@@ -35,7 +35,7 @@ const GiftsPage = () => {
   let [reservingSlotId, setReservingSlotId] = useState<string>()
 
   let { isMoving: isMapMoving } = useMapBackground({
-    bounds: gift.toLocation
+    bounds: gift?.toLocation
       ? regions.find(r => r.name === gift.toLocation.region).bounds
       : REGION_BOUNDING_BOX,
     boundsPadding: 0,
@@ -43,13 +43,20 @@ const GiftsPage = () => {
   })
 
   useEffect(() => {
-    if (!gift.toLocation) return
-    let unSub = subscribeToGiftSlotsInRegion(gift.toLocation.region, slots => {
-      setSelectedDate(sel => sel || Object.keys(slots)[0])
-      setSlotsByDate(slots)
-    })
-    return () => {
-      unSub()
+    if (gift.toName === "") {
+      navigate("/")
+    } else {
+      if (!gift.toLocation) return
+      let unSub = subscribeToGiftSlotsInRegion(
+        gift.toLocation.region,
+        slots => {
+          setSelectedDate(sel => sel || Object.keys(slots)[0])
+          setSlotsByDate(slots)
+        }
+      )
+      return () => {
+        unSub()
+      }
     }
   }, [gift])
 
