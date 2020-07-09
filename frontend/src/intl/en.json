@@ -41,7 +41,7 @@
   "fromFormLabelName": "My name",
   "fromFormLabelPhone": "My mobile phone number",
   "fromFormLabelEmail": "My email",
-  "fromFormLabelSpecialInfo": "Special requirements of your gift recipient",
+  "fromFormLabelSpecialInfo": "Special requirements of recipient",
   "fromButtonNext": "Send gift",
 
   "deliveryTitle": "Your gift was delivered!",

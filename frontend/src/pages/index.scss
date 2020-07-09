@@ -1,5 +1,9 @@
 .intro {
   .heroImage {
+    width: 100%;
+    height: 25vh;
+    object-fit: cover;
+    object-position: 0 5%;
     margin: 0;
   }
 
