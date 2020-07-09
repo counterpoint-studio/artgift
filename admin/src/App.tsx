@@ -18,6 +18,7 @@ import "./App.scss";
 import { Gifts } from "./Gifts";
 import { Artists } from "./Artists";
 import { Itineraries } from "./Itineraries";
+import { Admins } from "./Admins";
 
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -47,6 +48,9 @@ function App() {
         </PrivateRoute>
         <PrivateRoute exact path="/itineraries">
           <Itineraries />
+        </PrivateRoute>
+        <PrivateRoute exact path="/admins">
+          <Admins />
         </PrivateRoute>
         <Route exact path="/">
           <Redirect to="/slots" />

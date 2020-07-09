@@ -15,9 +15,10 @@ import * as addresses from "../services/streetAddressLookup"
 
 import "./to.scss"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
-import { REGION_BOUNDING_BOX, INIT_GIFT } from "../constants"
+import { REGION_BOUNDING_BOX } from "../constants"
 import { useMounted, useGiftState } from "../hooks"
 import { getRegionGeoJSON } from "../services/regionLookup"
+import { initGift } from "../services/gifts"
 
 const ToPage = () => {
   let intl = useIntl()
@@ -28,7 +29,7 @@ const ToPage = () => {
     boundsPadding: 0,
     regions,
   })
-  let [gift, setGift] = useGiftState(INIT_GIFT)
+  let [gift, setGift] = useGiftState(initGift(intl.locale))
   let [addressSuggestions, setAddressSuggestions] = useState<string[]>([])
   let [suggestionSelected, setSuggestionSelected] = useState(false)
   let [addressValidationResult, setAddressValidationResult] = useState({

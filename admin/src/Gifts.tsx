@@ -21,11 +21,13 @@ export const Gifts: React.FC = () => {
   }>({});
 
   useEffect(() => {
-    let unSub = giftColl.onSnapshot((giftsSnapshot) => {
-      setGifts(
-        giftsSnapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Gift))
-      );
-    });
+    let unSub = giftColl
+      .where("status", "in", ["pending", "confirmed", "rejected", "cancelled"])
+      .onSnapshot((giftsSnapshot) => {
+        setGifts(
+          giftsSnapshot.docs.map((d) => ({ ...d.data(), id: d.id } as Gift))
+        );
+      });
     return () => {
       unSub();
     };
@@ -33,7 +35,7 @@ export const Gifts: React.FC = () => {
   useEffect(() => {
     let unSub = slotColl.onSnapshot((slotsSnapshot) => {
       setSlots(
-        slotsSnapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Slot))
+        slotsSnapshot.docs.map((d) => ({ ...d.data(), id: d.id } as Slot))
       );
     });
     return () => {
@@ -84,8 +86,9 @@ export const Gifts: React.FC = () => {
           {getTableData().map(({ gift, slot }) => (
             <React.Fragment key={gift.id}>
               <tr onClick={() => onToggleDetails(gift)}>
-                <td>{formatDate(slot.date)}</td>{" "}
-                <td>{formatTime(slot.time)}</td> <td>{slot.region}</td>
+                <td>{formatDate(slot.date)}</td>
+                <td>{formatTime(slot.time)}</td>
+                <td>{slot.region}</td>
                 <td>{gift.toAddress}</td>
                 <td>{gift.fromEmail}</td>
                 <td style={{ whiteSpace: "nowrap" }}>

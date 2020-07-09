@@ -1,0 +1,8 @@
+{
+  "fi": {
+    "giftCreated": "Taidelahjasi {{date}} {{address}} on varattu. Saat varmistusviestin kun olemme tarkistaneet lahjan saatavuuden. Katso lahjan tiedot osoitteessa {{url}}"
+  },
+  "en": {
+    "giftCreated": "Your Art Gift {{date}} {{address}} is reserved. You will receive a confirmation once we've ensured availability. Find gift details at {{url}}"
+  }
+}

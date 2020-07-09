@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import Helmet from "react-helmet"
-import { useIntl } from "gatsby-plugin-intl"
+import { useIntl, navigate } from "gatsby-plugin-intl"
 import { PageProps } from "gatsby"
 import qs from "qs"
 
@@ -35,6 +35,7 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
     } else {
       setGift(undefined)
       setSlot(undefined)
+      navigate("/")
     }
   }, [location.search])
 

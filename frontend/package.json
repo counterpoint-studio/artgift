@@ -29,6 +29,7 @@
     "gatsby-transformer-sharp": "^2.5.3",
     "geojson-geometries-lookup": "^0.3.1",
     "mapbox-gl": "^1.10.1",
+    "nanoid": "^3.1.10",
     "node-sass": "^4.14.1",
     "prop-types": "^15.7.2",
     "qs": "^6.9.4",

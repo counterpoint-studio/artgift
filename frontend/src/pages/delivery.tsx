@@ -1,19 +1,25 @@
-import React, { useCallback } from "react"
+import React, { useCallback, useEffect } from "react"
 import Helmet from "react-helmet"
-import { useIntl } from "gatsby-plugin-intl"
+import { useIntl, navigate } from "gatsby-plugin-intl"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 
-import "./delivery.scss"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
 import { useGiftState } from "../hooks"
-import { INIT_GIFT } from "../constants"
+import { initGift } from "../services/gifts"
+
+import "./delivery.scss"
 
 const DeliveryPage = () => {
   let intl = useIntl()
 
-  let [gift] = useGiftState(INIT_GIFT)
+  let [gift] = useGiftState(initGift(intl.locale))
+
+  useEffect(() => {
+    if (gift.toName === "") navigate("/")
+  }, [gift])
+
   useMapBackground({
     focusPoint: gift.toLocation && {
       className: "deliveryPage",
@@ -42,7 +48,10 @@ const DeliveryPage = () => {
           <h1>{intl.formatMessage({ id: "deliveryTitle" })}</h1>
           <p>{intl.formatMessage({ id: "deliveryDescription" })}</p>
           <p>
-            <a href={getGiftLink()}>Näet lahjan tilan myös täältä</a>.
+            <a href={getGiftLink()}>
+              {intl.formatMessage({ id: "deliveryGiftPageLink" })}
+            </a>
+            .
           </p>
         </div>
       </main>

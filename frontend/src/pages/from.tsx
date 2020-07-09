@@ -10,18 +10,15 @@ import SEO from "../components/seo"
 import NextButton from "../components/nextButton"
 import BackButton from "../components/backButton"
 
-import "./from.scss"
 import { useMounted, useGiftState } from "../hooks"
 import { getRegionGeoJSON } from "../services/regionLookup"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
-import {
-  INIT_GIFT,
-  REGION_BOUNDING_BOX,
-  PHONE_NUMBER_REGEX,
-} from "../constants"
-import { getGiftSlot, reserveGift } from "../services/gifts"
+import { REGION_BOUNDING_BOX, PHONE_NUMBER_REGEX } from "../constants"
+import { getGiftSlot, initGift, saveGift } from "../services/gifts"
 import { GiftSlot } from "../types"
-import { formatTime, formatDate } from "../services/dates"
+import { formatTime, formatDate, formatDuration } from "../services/dates"
+
+import "./from.scss"
 
 const emptyPoints = []
 
@@ -29,16 +26,37 @@ const FromPage = () => {
   let intl = useIntl()
   let mounted = useMounted()
   let regions = useMemo(() => getRegionGeoJSON(), [])
-  let [gift, setGift] = useGiftState(INIT_GIFT)
+  let [gift, setGift] = useGiftState(initGift(intl.locale))
   let [giftSlot, setGiftSlot] = useState<GiftSlot>()
+  let [reservedFor, setReservedFor] = useState<number>()
+
   let isValid =
     validateName(gift.fromName, intl) === true &&
     validateEmail(gift.fromEmail, intl) === true &&
     validatePhoneNumber(gift.fromPhoneNumber, intl) === true
 
   useEffect(() => {
-    getGiftSlot(gift.slotId).then(setGiftSlot)
+    if (!gift.slotId) navigate("/")
+  }, [gift])
+
+  useEffect(() => {
+    if (gift.slotId) {
+      getGiftSlot(gift.slotId).then(setGiftSlot)
+
+      let intv = setInterval(() => {
+        if (gift.reservedUntil && gift.reservedUntil > Date.now()) {
+          setReservedFor(gift.reservedUntil - Date.now())
+        } else {
+          navigate("/gifts")
+        }
+      }, 100)
+
+      return () => {
+        clearInterval(intv)
+      }
+    }
   }, [gift?.slotId])
+
   let { isMoving: isMapMoving } = useMapBackground({
     bounds: gift.toLocation
       ? boundsAround(gift.toLocation.point)
@@ -53,7 +71,7 @@ const FromPage = () => {
   })
 
   let doReserveGift = useCallback(async () => {
-    setGift(await reserveGift(gift))
+    setGift(await saveGift({ ...gift, status: "pending" }))
     navigate("/delivery")
   }, [gift])
 
@@ -86,7 +104,9 @@ const FromPage = () => {
               </>
             )}{" "}
             {intl.formatMessage({ id: "fromReservedTimeStart" })}{" "}
-            <span className="countdownTimer">14:59</span>
+            <span className="countdownTimer">
+              {formatDuration(reservedFor)}
+            </span>
           </p>
           <p>{intl.formatMessage({ id: "fromReservedTimeEnd" })}</p>
           <form>
@@ -112,6 +132,9 @@ const FromPage = () => {
                 <span className="requiredField">*</span>
               </label>
               <Textbox
+                attributesInput={{
+                  type: "tel",
+                }}
                 maxLength={25}
                 value={gift.fromPhoneNumber}
                 onChange={phone => setGift({ ...gift, fromPhoneNumber: phone })}
@@ -184,7 +207,7 @@ function validateName(name: string, intl: IntlShape) {
 function validatePhoneNumber(phone: string, intl: IntlShape) {
   if (phone.trim().length === 0) {
     return intl.formatMessage({ id: "validationErrorEmpty" })
-  } else if (!PHONE_NUMBER_REGEX.test(phone)) {
+  } else if (!PHONE_NUMBER_REGEX.test(phone.replace(/\s/g, ""))) {
     return intl.formatMessage({
       id: "validationErrorInvalidPhoneNumber",
     })

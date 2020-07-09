@@ -1,17 +1,23 @@
-import React, { useState, useEffect, useMemo } from "react"
+import React, { useState, useEffect, useMemo, useCallback } from "react"
 import Helmet from "react-helmet"
-import { useIntl, Link } from "gatsby-plugin-intl"
+import { useIntl, navigate } from "gatsby-plugin-intl"
 import classNames from "classnames"
+import { camelCase } from "lodash"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import BackButton from "../components/backButton"
-import { subscribeToGiftSlotsInRegion } from "../services/gifts"
+import {
+  subscribeToGiftSlotsInRegion,
+  reserveSlot,
+  saveGift,
+  initGift,
+} from "../services/gifts"
 
 import { getRegionGeoJSON } from "../services/regionLookup"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
 import { useMounted, useGiftState } from "../hooks"
-import { INIT_GIFT, REGION_BOUNDING_BOX } from "../constants"
+import { REGION_BOUNDING_BOX } from "../constants"
 import { GiftSlot } from "../types"
 
 import "./gifts.scss"
@@ -25,9 +31,11 @@ const GiftsPage = () => {
   )
   let [selectedDate, setSelectedDate] = useState<string>()
   let regions = useMemo(() => getRegionGeoJSON(), [])
-  let [gift, setGift] = useGiftState(INIT_GIFT)
+  let [gift, setGift] = useGiftState(initGift(intl.locale))
+  let [reservingSlotId, setReservingSlotId] = useState<string>()
+
   let { isMoving: isMapMoving } = useMapBackground({
-    bounds: gift.toLocation
+    bounds: gift?.toLocation
       ? regions.find(r => r.name === gift.toLocation.region).bounds
       : REGION_BOUNDING_BOX,
     boundsPadding: 0,
@@ -35,15 +43,43 @@ const GiftsPage = () => {
   })
 
   useEffect(() => {
-    if (!gift.toLocation) return
-    let unSub = subscribeToGiftSlotsInRegion(gift.toLocation.region, slots => {
-      setSelectedDate(sel => sel || Object.keys(slots)[0])
-      setSlotsByDate(slots)
-    })
-    return () => {
-      unSub()
+    if (gift.toName === "") {
+      navigate("/")
+    } else {
+      if (!gift.toLocation) return
+      let unSub = subscribeToGiftSlotsInRegion(
+        gift.toLocation.region,
+        slots => {
+          setSelectedDate(sel => sel || Object.keys(slots)[0])
+          setSlotsByDate(slots)
+        }
+      )
+      return () => {
+        unSub()
+      }
     }
   }, [gift])
+
+  let onPickSlot = useCallback(
+    async (slot: GiftSlot) => {
+      setReservingSlotId(slot.id)
+      let savedGift = await saveGift(gift)
+      let reserved = await reserveSlot(savedGift, slot.id)
+      setGift(reserved)
+      setReservingSlotId(undefined)
+      if (reserved.slotId === slot.id) {
+        navigate("/from") // Successful reservation
+      }
+    },
+    [gift]
+  )
+
+  let isAvailable = useCallback(
+    (slot: GiftSlot) => {
+      return slot.status === "available" || gift.slotId === slot.id
+    },
+    [gift]
+  )
 
   return (
     <Layout>
@@ -63,7 +99,10 @@ const GiftsPage = () => {
         })}
       >
         <h1>
-          {intl.formatMessage({ id: "giftsTitle" })} {gift.toLocation?.region}
+          {intl.formatMessage({ id: "giftsTitle" })}{" "}
+          {intl.formatMessage({
+            id: `region${camelCase(gift.toLocation?.region.toLowerCase())}`,
+          })}
         </h1>
         <div className="giftDates">
           {Object.keys(slotsByDate).map(date => (
@@ -85,15 +124,20 @@ const GiftsPage = () => {
                 <tr key={slot.id} className={slot.status}>
                   <td className="giftsTableTime">{formatTime(slot.time)}</td>
                   <td className="giftsTableBook">
-                    <Link
-                      to="/from"
+                    <button
                       className={classNames("button", "button--book", {
-                        disabled: slot.status !== "available",
+                        disabled: !isAvailable(slot),
                       })}
-                      onClick={() => setGift({ ...gift, slotId: slot.id })}
+                      onClick={() => onPickSlot(slot)}
+                      disabled={!isAvailable(slot) || !!reservingSlotId}
                     >
-                      {intl.formatMessage({ id: "giftsButtonBook" })}
-                    </Link>
+                      {intl.formatMessage({
+                        id:
+                          reservingSlotId === slot.id
+                            ? "giftsButtonBooking"
+                            : "giftsButtonBook",
+                      })}
+                    </button>
                   </td>
                 </tr>
               ))}

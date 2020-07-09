@@ -5,7 +5,7 @@ import classNames from "classnames";
 import "./Navigation.scss";
 
 interface NavigationProps {
-  currentPage: "slots" | "gifts" | "artists" | "itineraries";
+  currentPage: "slots" | "gifts" | "artists" | "itineraries" | "admins";
 }
 export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => (
   <h1 className="navigation">
@@ -32,6 +32,12 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => (
       className={classNames({ isCurrent: currentPage === "itineraries" })}
     >
       itineraries
+    </Link>
+    <Link
+      to="/admins"
+      className={classNames({ isCurrent: currentPage === "admins" })}
+    >
+      admins
     </Link>
   </h1>
 );

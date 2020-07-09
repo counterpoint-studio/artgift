@@ -10,9 +10,10 @@ export type GiftSlot = {
 }
 
 export type Gift = {
-    id?: string;
+    id: string;
     slotId?: string;
-    status: 'pending' | 'confirmed' | 'rejected' | 'cancelled';
+    status: 'creating' | 'pending' | 'confirmed' | 'rejected' | 'cancelled';
+    reservedUntil?: number;
     toName: string;
     toAddress: string;
     toLocation?: GiftLocation;
@@ -22,6 +23,7 @@ export type Gift = {
     fromPhoneNumber: string;
     fromEmail: string;
     fromMessage: string;
+    fromLanguage: string;
 }
 
 export type GiftLocation = {
