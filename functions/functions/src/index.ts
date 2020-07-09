@@ -18,22 +18,33 @@ for (let locale of Object.keys(smsTemplateSources)) {
     }
 }
 
-export const updateSlotReservedStatus = functions
+export const processSlotReservation = functions
     .region('europe-west1')
     .firestore
-    .document("gifts/{giftId}")
-    .onWrite((change) => {
-        let document = change.after.exists ? change.after.data() : null;
-        let previousDocument = change.before.exists ? change.before.data() : null;
-        if (document) {
-            let slotDoc = db.collection("slots").doc(document.slotId);
-            return slotDoc.set({ status: "reserved" }, { merge: true });
-        } else if (previousDocument) {
-            let slotDoc = db.collection("slots").doc(previousDocument.slotId);
-            return slotDoc.set({ status: "available" }, { merge: true });
-        } else {
-            return Promise.resolve();
-        }
+    .document("reservations/{reservationId}")
+    .onCreate((document) => {
+        let { giftId, slotId } = document.data();
+        return db.runTransaction(async tx => {
+            let giftRef = db.collection('gifts').doc(giftId);
+            let slotRef = db.collection('slots').doc(slotId);
+            let [slot, prevGift] = await Promise.all([tx.get(slotRef), tx.get(giftRef)]);
+            let slotChanged = prevGift.exists && prevGift.data()!.slotId && slotId !== prevGift.data()!.slotId;
+            let prevSlotRef = slotChanged ? db.collection('slots').doc(prevGift.data()!.slotId) : undefined;
+            let prevSlot = prevSlotRef && await tx.get(prevSlotRef);
+            // Slot is available if its status is available or if it was already reserved for this gift.
+            let slotAvailable = slot.exists && (slot.data()!.status === 'available' || !slotChanged);
+            if (slotAvailable) {
+                await tx.set(giftRef, { slotId, reservationId: document.id }, { merge: true });
+                // Set slot as reserved.
+                await tx.set(slotRef, { status: 'reserved' }, { merge: true });
+                // Set previous slot as available again.
+                if (prevSlot) {
+                    await tx.set(prevSlotRef!, { status: 'available' }, { merge: true });
+                }
+            } else {
+                await tx.set(giftRef, { slotId: admin.firestore.FieldValue.delete(), reservationId: document.id }, { merge: true });
+            }
+        });
     });
 
 export const ensureGiftCreatingStatus = functions

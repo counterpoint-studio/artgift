@@ -57,25 +57,31 @@ export function getGiftSlot(id: string): Promise<GiftSlot> {
         .then(d => ({ ...d.data(), id: d.id } as GiftSlot))
 }
 
+export async function reserveSlot(gift: Gift, slotId: string): Promise<Gift> {
+    let db = firebase.firestore();
+    let giftRef = db.collection('gifts').doc(gift.id);
+    let reservationId = nanoid();
+    console.log('making reservation', reservationId, gift.id, slotId);
+    db.collection('reservations').doc(reservationId).set({ giftId: gift.id, slotId: slotId });
+    let giftWithReservation = await new Promise<Gift>(res => {
+        let unSub = giftRef.onSnapshot(g => {
+            console.log('snap', g.exists, g.data());
+            if (g.exists && g.data().reservationId === reservationId) {
+                console.log('got res status')
+                unSub();
+                res({ ...g.data() as Gift, id: gift.id });
+            }
+        })
+    });
+    return giftWithReservation;
+}
 
 export async function saveGift(gift: Gift) {
     let db = firebase.firestore();
     let giftRef = db.collection('gifts').doc(gift.id);
-    if (gift.slotId) {
-        await db.runTransaction(async tx => {
-            let slotRef = db.collection('slots').doc(gift.slotId);
-            let [slot, prevGift] = await Promise.all([tx.get(slotRef), tx.get(giftRef)]);
-            // Slot is available if its status is available or if it was already reserved for this gift
-            let slotAvailable = slot.exists && (slot.data().status === 'available' || prevGift.data().slotId === gift.slotId);
-            if (slotAvailable) {
-                await tx.update(giftRef, gift);
-            } else {
-                await tx.update(giftRef, { ...gift, slotId: undefined });
-            }
-        });
-    } else {
-        await giftRef.set(gift);
-    }
+    console.log('attempgint to save', gift);
+    await giftRef.set(gift);
+    console.log('saveds', gift);
     return getGift(gift.id);
 }
 

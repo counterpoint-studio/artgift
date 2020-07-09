@@ -6,9 +6,14 @@ service cloud.firestore {
       return request.auth != null && exists(/databases/$(database)/documents/admins/$(request.auth.token.email))
     }
 
+    function isAllowedGiftCreate() {
+      // Only allowed to set the gift status to pending, and not allowed to directly change slotId
+      return (request.resource.data.status == 'creating') && !('slotId' in request.resource.data)
+    }
+
     function isAllowedGiftUpdate() {
-      // Only allowed to set the gift status to pending
-      return request.resource.data.status == resource.data.status || request.resource.data.status == 'pending';
+      // Only allowed to set the gift status to pending, and not allowed to directly change slotId
+      return (request.resource.data.status == resource.data.status || request.resource.data.status == 'pending') && (!('slotId' in request.resource.data) || request.resource.data.slotId == resource.data.slotId);
     }
 
     match /slots/{slot} {
@@ -17,9 +22,13 @@ service cloud.firestore {
     }
     match /gifts/{gift} {
       allow get;
-      allow create;
+      allow create: if isAdminUser() || isAllowedGiftCreate();
       allow update: if isAdminUser() || isAllowedGiftUpdate();
       allow list, delete: if isAdminUser()
+    }
+    match /reservations/{reservation} {
+      allow get;
+      allow create;
     }
     match /admins/{admin} {
       allow read, write: if isAdminUser()

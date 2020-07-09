@@ -10,6 +10,7 @@ import BackButton from "../components/backButton"
 import {
   subscribeToGiftSlotsInRegion,
   initGift,
+  reserveSlot,
   saveGift,
 } from "../services/gifts"
 
@@ -31,6 +32,7 @@ const GiftsPage = () => {
   let [selectedDate, setSelectedDate] = useState<string>()
   let regions = useMemo(() => getRegionGeoJSON(), [])
   let [gift, setGift] = useGiftState(initGift(intl.locale))
+  let [reservingSlotId, setReservingSlotId] = useState<string>()
 
   let { isMoving: isMapMoving } = useMapBackground({
     bounds: gift.toLocation
@@ -53,8 +55,11 @@ const GiftsPage = () => {
 
   let onPickSlot = useCallback(
     async (slot: GiftSlot) => {
-      let reserved = await saveGift({ ...gift, slotId: slot.id })
+      setReservingSlotId(slot.id)
+      let savedGift = await saveGift(gift)
+      let reserved = await reserveSlot(savedGift, slot.id)
       setGift(reserved)
+      setReservingSlotId(undefined)
       if (reserved.slotId === slot.id) {
         navigate("/from") // Successful reservation
       }
@@ -117,9 +122,14 @@ const GiftsPage = () => {
                         disabled: !isAvailable(slot),
                       })}
                       onClick={() => onPickSlot(slot)}
-                      disabled={!isAvailable(slot)}
+                      disabled={!isAvailable(slot) || !!reservingSlotId}
                     >
-                      {intl.formatMessage({ id: "giftsButtonBook" })}
+                      {intl.formatMessage({
+                        id:
+                          reservingSlotId === slot.id
+                            ? "giftsButtonBooking"
+                            : "giftsButtonBook",
+                      })}
                     </button>
                   </td>
                 </tr>
