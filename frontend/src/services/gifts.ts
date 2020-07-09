@@ -58,11 +58,25 @@ export function getGiftSlot(id: string): Promise<GiftSlot> {
 }
 
 
-export function saveGift(gift: Gift) {
-    return firebase.firestore().collection("gifts")
-        .doc(gift.id)
-        .set(gift)
-        .then(() => getGift(gift.id));
+export async function saveGift(gift: Gift) {
+    let db = firebase.firestore();
+    let giftRef = db.collection('gifts').doc(gift.id);
+    if (gift.slotId) {
+        await db.runTransaction(async tx => {
+            let slotRef = db.collection('slots').doc(gift.slotId);
+            let [slot, prevGift] = await Promise.all([tx.get(slotRef), tx.get(giftRef)]);
+            // Slot is available if its status is available or if it was already reserved for this gift
+            let slotAvailable = slot.exists && (slot.data().status === 'available' || prevGift.data().slotId === gift.slotId);
+            if (slotAvailable) {
+                await tx.update(giftRef, gift);
+            } else {
+                await tx.update(giftRef, { ...gift, slotId: undefined });
+            }
+        });
+    } else {
+        await giftRef.set(gift);
+    }
+    return getGift(gift.id);
 }
 
 
