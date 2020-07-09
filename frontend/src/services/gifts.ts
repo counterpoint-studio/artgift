@@ -61,13 +61,10 @@ export async function reserveSlot(gift: Gift, slotId: string): Promise<Gift> {
     let db = firebase.firestore();
     let giftRef = db.collection('gifts').doc(gift.id);
     let reservationId = nanoid();
-    console.log('making reservation', reservationId, gift.id, slotId);
     db.collection('reservations').doc(reservationId).set({ giftId: gift.id, slotId: slotId });
     let giftWithReservation = await new Promise<Gift>(res => {
         let unSub = giftRef.onSnapshot(g => {
-            console.log('snap', g.exists, g.data());
             if (g.exists && g.data().reservationId === reservationId) {
-                console.log('got res status')
                 unSub();
                 res({ ...g.data() as Gift, id: gift.id });
             }
@@ -79,9 +76,7 @@ export async function reserveSlot(gift: Gift, slotId: string): Promise<Gift> {
 export async function saveGift(gift: Gift) {
     let db = firebase.firestore();
     let giftRef = db.collection('gifts').doc(gift.id);
-    console.log('attempgint to save', gift);
     await giftRef.set(gift);
-    console.log('saveds', gift);
     return getGift(gift.id);
 }
 
