@@ -19,9 +19,9 @@ body {
   width: 92vw;
 
   @media (min-width: 768px) {
-    top: calc(4vw + #{$frameWidth});
-    bottom: calc(4vw + #{$frameWidth});
-    left: calc(4vw + #{$frameWidth});
+    top: calc((2 * #{$frameMargin}) + #{$frameWidth});
+    bottom: calc((2 * #{$frameMargin}) + #{$frameWidth});
+    left: calc((2 * #{$frameMargin}) + #{$frameWidth});
     width: 500px;
   }
 
@@ -32,16 +32,16 @@ body {
     position: fixed;
     border: $frameWidth solid $colorHFYellow;
     pointer-events: none;
-    top: 4vw;
-    right: 4vw;
-    bottom: 4vw;
-    left: 4vw;
+    top: $frameMargin * 2;
+    right: $frameMargin * 2;
+    bottom: $frameMargin * 2;
+    left: $frameMargin * 2;
 
     @media (min-width: 768px) {
-      top: 2vw;
-      right: 2vw;
-      bottom: 2vw;
-      left: 2vw;
+      top: $frameMargin;
+      right: $frameMargin;
+      bottom: $frameMargin;
+      left: $frameMargin;
     }
   }
 
@@ -51,8 +51,8 @@ body {
     @media (min-width: 768px) {
       display: block;
       position: fixed;
-      top: calc(4vw + #{$frameWidth});
-      right: calc(4vw + #{$frameWidth});
+      top: calc((2 * #{$frameMargin}) + #{$frameWidth});
+      right: calc((2 * #{$frameMargin}) + #{$frameWidth});
       width: 250px;
     }
   }
@@ -95,8 +95,8 @@ body {
   .footer {
     @media (min-width: 768px) {
       position: fixed;
-      right: 4vw;
-      bottom: 4vw;
+      right: calc((2 * #{$frameMargin}) + #{$frameWidth});
+      bottom: calc((2 * #{$frameMargin}) + #{$frameWidth});
     }
   }
 }
