@@ -51,7 +51,7 @@ const FromPage = () => {
         if (gift.reservedUntil && gift.reservedUntil > Date.now()) {
           setReservedFor(gift.reservedUntil - Date.now())
         } else {
-          navigate("/gifts")
+          navigate("/gifts", { state: { reservationExpired: true } })
         }
       }, 100)
 
