@@ -76,7 +76,7 @@ export const ensureGiftCreatingStatus = functions
         return snap.ref.set({ status: 'creating' }, { merge: true })
     });
 
-export const sendGiftSMS = functions
+export const createGiftSMS = functions
     .region('europe-west1')
     .firestore
     .document("gifts/{giftId}")
@@ -84,36 +84,51 @@ export const sendGiftSMS = functions
         let document = change.after.exists ? change.after.data() : null;
         let previousDocument = change.before.exists ? change.before.data() : null;
         let eventId = context.eventId;
-        let messageRef = db.collection('sentMessages').doc(eventId);
         if (document && previousDocument && document.status === 'pending' && previousDocument.status === 'creating') {
-            // New gift, send message
-            if (await shouldSend(messageRef)) {
-                let slot = await (await db.collection('slots').doc(document.slotId).get()).data();
-                let template = smsTemplates[document.fromLanguage || 'en'].giftCreated;
-                let baseUrl = functions.config().artgift.baseurl;
-                let message = template({
-                    date: `${formatDate(slot!.date)} ${formatTime(slot!.time)}`,
-                    address: document.toAddress,
-                    url: new Handlebars.SafeString(`${baseUrl}/gift?id=${change.after.id}`)
-                });
-                await sendMessage(message, document.fromPhoneNumber);
-                await markSent(messageRef);
-            }
-        } else if (document) {
-            // Update messages
+            await createMessage(change.after.id, document, 'giftCreated', eventId);
+        } else if (document && previousDocument && document.status === 'confirmed' && previousDocument.status === 'pending') {
+            await createMessage(change.after.id, document, 'giftConfirmed', eventId);
         }
         return Promise.resolve()
     });
 
-function shouldSend(messageRef: FirebaseFirestore.DocumentReference) {
+async function createMessage(giftId: string, giftDocument: FirebaseFirestore.DocumentData, messageKey: string, eventId: string) {
+    let messageRef = db.collection('SMSs').doc(eventId);
+    if (await shouldCreate(messageRef)) {
+        let slot = await (await db.collection('slots').doc(giftDocument.slotId).get()).data();
+        let template = smsTemplates[giftDocument.fromLanguage || 'en'][messageKey];
+        let baseUrl = functions.config().artgift.baseurl;
+        let message = template({
+            date: `${formatDate(slot!.date)} ${formatTime(slot!.time)}`,
+            address: giftDocument.toAddress,
+            url: new Handlebars.SafeString(`${baseUrl}/gift?id=${giftId}`)
+        });
+        messageRef.set({
+            message,
+            toNumber: giftDocument.fromPhoneNumber,
+            giftId,
+            sent: false,
+            createdAt: admin.firestore.FieldValue.serverTimestamp()
+        })
+    }
+}
+
+function shouldCreate(messageRef: FirebaseFirestore.DocumentReference) {
     return messageRef.get().then(smsDoc => {
-        return !smsDoc.exists || !smsDoc.data()!.sent;
+        return !smsDoc.exists;
     });
 }
 
-function markSent(messageRef: FirebaseFirestore.DocumentReference) {
-    return messageRef.set({ sent: true });
-}
+export const sendGiftSMSs = functions.region('europe-west1').pubsub.schedule('every 2 minutes').onRun(async () => {
+    let unsentMessages = await db.collection('SMSs').where('sent', '==', false).get();
+    unsentMessages.forEach(async doc => {
+        let { message, toNumber, createdAt } = doc.data()!;
+        if (createdAt.toMillis() < Date.now() - 2 * 60 * 1000) {
+            await sendMessage(message, toNumber);
+            doc.ref.set({ sent: true, sentAt: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
+        }
+    });
+});
 
 function sendMessage(message: string, toNumber: string) {
     let cfg = functions.config();
