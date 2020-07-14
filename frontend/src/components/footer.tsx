@@ -15,11 +15,14 @@ const Footer = () => {
       <Link to="/terms" className="footerLink footerLink--terms">
         {intl.formatMessage({ id: "termsLink" })}
       </Link>
-      <img
-        src={HelsinginSanomatLogo}
-        alt="Helsingin Sanomat"
+      <a
         className="footerLink footerLink--helsingin-sanomat"
-      />
+        href="https://www.hs.fi"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img src={HelsinginSanomatLogo} alt="Helsingin Sanomat" />
+      </a>
     </footer>
   )
 }

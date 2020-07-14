@@ -15,9 +15,15 @@
 
     &--helsingin-sanomat {
       display: inline-block;
-      height: 15px;
       margin: 0 0 0 20px;
       padding: 0;
+
+      img {
+        display: block;
+        height: 15px;
+        margin: 0;
+        padding: 0;
+      }
     }
   }
 }
