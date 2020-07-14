@@ -26,7 +26,11 @@ const PrivacyPage = () => {
       <main className="main">
         <div className="scroll">
           <h1>{intl.formatMessage({ id: "privacyTitle" })}</h1>
-          <p>{intl.formatMessage({ id: "privacyContent" })}</p>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: intl.formatMessage({ id: "privacyContent" }),
+            }}
+          ></div>
         </div>
         <BackButton to="/" text={intl.formatMessage({ id: "homeButton" })} />
       </main>
