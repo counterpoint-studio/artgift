@@ -4,7 +4,7 @@ import Handlebars from 'handlebars';
 import fetch from 'node-fetch';
 import { URLSearchParams } from 'url';
 
-const RESERVATION_PERIOD = 15 * 60 * 1000;
+import { RESERVATION_PERIOD, REMINDER_PERIOD, TIME_ZONE_UTC_OFFSET } from './constants';
 
 let smsTemplateSources = require('./messages.json');
 
@@ -92,6 +92,44 @@ export const createGiftSMS = functions
         return Promise.resolve()
     });
 
+export const createGiftReminderSMSs = functions.region('europe-west1').pubsub.schedule('every 1 hours').onRun(async () => {
+    let confirmedGifts = await db.collection('gifts').where('status', '==', 'confirmed').get();
+    confirmedGifts.forEach(async (gift) => {
+        let giftData = gift.data();
+        let { date, time } = await (await db.collection('slots').doc(giftData.slotId).get()).data()!;
+        let giftDate = new Date(
+            +date.substring(0, 4),
+            +(date.substring(4, 6) - 1),
+            +date.substring(6, 8),
+            +time.substring(0, 2),
+            +time.substring(3, 5)
+        );
+        let giftTimestamp = giftDate.getTime() - TIME_ZONE_UTC_OFFSET * 60 * 60 * 1000;
+        if (giftTimestamp - Date.now() < REMINDER_PERIOD) {
+            let giftMessages = await db.collection('SMSs').where('giftId', '==', gift.id).get();
+            let existingReminder = giftMessages.docs.find(d => d.data().messageKey === 'giftReminder');
+            if (!existingReminder) {
+                let template = smsTemplates[giftData.fromLanguage || 'en'].giftReminder;
+                let baseUrl = functions.config().artgift.baseurl;
+                let message = template({
+                    dateTime: `${formatDate(date)} ${formatTime(time)}`,
+                    address: giftData.toAddress,
+                    url: new Handlebars.SafeString(`${baseUrl}/gift?id=${gift.id}`)
+                });
+                db.collection('SMSs').add({
+                    message,
+                    toNumber: giftData.fromPhoneNumber,
+                    giftId: gift.id,
+                    messageKey: 'giftReminder',
+                    sent: false,
+                    createdAt: admin.firestore.FieldValue.serverTimestamp()
+                })
+            }
+        }
+    })
+});
+
+
 async function createMessage(giftId: string, giftDocument: FirebaseFirestore.DocumentData, messageKey: string, eventId: string) {
     let messageRef = db.collection('SMSs').doc(eventId);
     if (await shouldCreate(messageRef)) {
@@ -99,7 +137,7 @@ async function createMessage(giftId: string, giftDocument: FirebaseFirestore.Doc
         let template = smsTemplates[giftDocument.fromLanguage || 'en'][messageKey];
         let baseUrl = functions.config().artgift.baseurl;
         let message = template({
-            date: `${formatDate(slot!.date)} ${formatTime(slot!.time)}`,
+            dateTime: `${formatDate(slot!.date)} ${formatTime(slot!.time)}`,
             address: giftDocument.toAddress,
             url: new Handlebars.SafeString(`${baseUrl}/gift?id=${giftId}`)
         });
@@ -107,6 +145,7 @@ async function createMessage(giftId: string, giftDocument: FirebaseFirestore.Doc
             message,
             toNumber: giftDocument.fromPhoneNumber,
             giftId,
+            messageKey,
             sent: false,
             createdAt: admin.firestore.FieldValue.serverTimestamp()
         })

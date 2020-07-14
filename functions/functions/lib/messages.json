@@ -1,10 +1,12 @@
 {
   "fi": {
-    "giftCreated": "Taidelahjasi {{date}} {{address}} on varattu. Saat varmistusviestin kun olemme tarkistaneet lahjan saatavuuden. Katso lahjan tiedot osoitteessa {{url}}",
-    "giftConfirmed": "Taidelahjasi {{date}} {{address}} on varmistettu. Saavuthan sovitusti paikalle lahjan saajan kanssa. Katso lahjan tiedot osoitteessa {{url}}"
+    "giftCreated": "Taidelahjasi {{dateTime}} {{address}} on varattu. Saat varmistusviestin kun olemme tarkistaneet lahjan saatavuuden. Katso lahjan tiedot osoitteessa {{url}}",
+    "giftConfirmed": "Taidelahjasi {{dateTime}} {{address}} on varmistettu. Saavuthan sovitusti paikalle lahjan saajan kanssa. Katso lahjan tiedot osoitteessa {{url}}",
+    "giftReminder": "Taidelahjasi {{dateTime}} {{address}} saapuu huomenna! Saavuthan sovitusti paikalle lahjan saajan kanssa. Katso lahjan tiedot osoitteessa {{url}}"
   },
   "en": {
-    "giftCreated": "Your Art Gift {{date}} {{address}} is reserved. You will receive a confirmation once we've ensured availability. Find gift details at {{url}}",
-    "giftConfirmed": "Your Art Gift {{date}} {{address}} has been confirmed. Please be there with the gift recipient at this time. Find gift details at {{url}}"
+    "giftCreated": "Your Art Gift {{dateTime}} {{address}} is reserved. You will receive a confirmation once we've ensured availability. Find gift details at {{url}}",
+    "giftConfirmed": "Your Art Gift {{dateTime}} {{address}} has been confirmed. Please be there with the gift recipient at this time. Find gift details at {{url}}",
+    "giftReminder": "Your Art Gift {{dateTime}} {{address}} will be delivered tomorrow! Please be there with the gift recipient at this time. Find gift details at {{url}}"
   }
 }
