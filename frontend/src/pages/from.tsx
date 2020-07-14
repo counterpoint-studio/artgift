@@ -36,7 +36,11 @@ const FromPage = () => {
     validatePhoneNumber(gift.fromPhoneNumber, intl) === true
 
   useEffect(() => {
-    if (!gift.slotId) navigate("/")
+    if (!gift.slotId) {
+      navigate("/")
+    } else if (gift.status === "pending") {
+      navigate("/delivery")
+    }
   }, [gift])
 
   useEffect(() => {
@@ -72,7 +76,6 @@ const FromPage = () => {
 
   let doReserveGift = useCallback(async () => {
     setGift(await saveGift({ ...gift, status: "pending" }))
-    navigate("/delivery")
   }, [gift])
 
   return (
