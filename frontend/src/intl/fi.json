@@ -7,14 +7,14 @@
   "homeButton": "Alkuun",
 
   "introSEOTitle": "Taidelahja",
-  "introSEODescription": "",
+  "introSEODescription": "Muista läheistäsi taidelahjalla",
   "introTitle": "Muista läheistäsi taidelahjalla",
   "introBody": "Tilaa yllätyksellinen, aineeton taidelahja ihmiselle, jota haluat muistaa! Taidelahja on esitys esimerkiksi klassisen tai kevyen musiikin esiintyjältä, runoilijalta tai tanssijalta, joka tuodaan turvallisesti läheisesi kotipihalle taidelahjaviikonloppuna 7.–9.8.2020.",
   "introMoreInfo": "Lisätiedot",
   "introButtonNext": "Anna lahja",
 
   "toSEOTitle": "Lahjan saaja",
-  "toSEODescription": "",
+  "toSEODescription": "Lahjan saaja",
   "toTitle": "Lahjan saaja",
   "toFormLabelFor": "Lahjan saaja",
   "toFormLabelAddress": "Asuu osoitteessa",
@@ -32,8 +32,8 @@
   "giftsButtonBooking": "Varataan...",
   "giftsButtonNext": "",
 
-  "fromSEOTitle": "",
-  "fromSEODescription": "",
+  "fromSEOTitle": "Lahjan antaja",
+  "fromSEODescription": "Lahjan antaja",
   "fromTitle": "Tietosi",
   "fromGiftDate": "Lahjasi",
   "fromGiftTime": "klo",
