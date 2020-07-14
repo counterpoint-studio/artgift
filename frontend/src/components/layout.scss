@@ -19,9 +19,9 @@ body {
   width: 92vw;
 
   @media (min-width: 768px) {
-    top: calc(4vw + 5px);
-    bottom: calc(4vw + 5px);
-    left: calc(4vw + 5px);
+    top: calc(4vw + #{$frameWidth});
+    bottom: calc(4vw + #{$frameWidth});
+    left: calc(4vw + #{$frameWidth});
     width: 500px;
   }
 
@@ -30,7 +30,7 @@ body {
     content: "";
     display: block;
     position: fixed;
-    border: 5px solid $colorHFYellow;
+    border: $frameWidth solid $colorHFYellow;
     pointer-events: none;
     top: 4vw;
     right: 4vw;
@@ -51,8 +51,8 @@ body {
     @media (min-width: 768px) {
       display: block;
       position: fixed;
-      top: calc(4vw + 5px);
-      right: calc(4vw + 5px);
+      top: calc(4vw + #{$frameWidth});
+      right: calc(4vw + #{$frameWidth});
       width: 250px;
     }
   }
