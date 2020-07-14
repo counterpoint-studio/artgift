@@ -76,6 +76,17 @@ export const ensureGiftCreatingStatus = functions
         return snap.ref.set({ status: 'creating' }, { merge: true })
     });
 
+export const releaseSlotOnGiftDelete = functions
+    .region('europe-west1')
+    .firestore
+    .document("gifts/{giftId}")
+    .onDelete(async (snap) => {
+        if (snap.data().slotId) {
+            let slotRef = db.collection('slots').doc(snap.data().slotId);
+            await slotRef.set({ status: 'available' }, { merge: true });
+        }
+    });
+
 export const createGiftSMS = functions
     .region('europe-west1')
     .firestore
