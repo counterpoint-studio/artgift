@@ -45,6 +45,8 @@ const GiftsPage = () => {
   useEffect(() => {
     if (gift.toName === "") {
       navigate("/")
+    } else if (gift.status === "pending") {
+      navigate("/delivery")
     } else {
       if (!gift.toLocation) return
       let unSub = subscribeToGiftSlotsInRegion(

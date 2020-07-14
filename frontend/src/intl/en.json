@@ -7,14 +7,14 @@
   "homeButton": "Home",
 
   "introSEOTitle": "Art Gift",
-  "introSEODescription": "",
+  "introSEODescription": "Send an Art Gift to your loved one",
   "introTitle": "Send an Art Gift to your loved one",
   "introBody": "Order a surprising, immaterial art gift for someone dear to you! An art gift may be a performance by a classical or popular musician, poet, or dancer, delivered safely to your loved one's front yard during the art gift weekend 7.-9.8.2020.",
   "introMoreInfo": "For more information",
   "introButtonNext": "Give a gift",
 
   "toSEOTitle": "Gift recipient",
-  "toSEODescription": "",
+  "toSEODescription": "Gift recipient",
   "toTitle": "Gift recipient",
   "toFormLabelFor": "For",
   "toFormLabelAddress": "Whose address is",
@@ -32,8 +32,8 @@
   "giftsButtonBooking": "Booking...",
   "giftsButtonNext": "",
 
-  "fromSEOTitle": "",
-  "fromSEODescription": "",
+  "fromSEOTitle": "Gift giver",
+  "fromSEODescription": "Gift giver",
   "fromTitle": "Your details",
   "fromGiftDate": "Your gift on",
   "fromGiftTime": "at",

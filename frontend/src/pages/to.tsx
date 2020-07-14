@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useMemo } from "react"
+import React, { useState, useCallback, useMemo, useEffect } from "react"
 import Helmet from "react-helmet"
-import { useIntl, IntlShape } from "gatsby-plugin-intl"
+import { useIntl, IntlShape, navigate } from "gatsby-plugin-intl"
 import { Textbox, Textarea } from "react-inputs-validation"
 import AutoSuggest from "react-autosuggest"
 import { useDebounceCallback } from "@react-hook/debounce"
@@ -40,6 +40,12 @@ const ToPage = () => {
     gift.toName.trim().length > 0 &&
     gift.toSignificance.trim().length > 0 &&
     !addressValidationResult.error
+
+  useEffect(() => {
+    if (gift.status === "pending") {
+      navigate("/delivery")
+    }
+  }, [gift])
 
   let onUpdateAddressLocation = useDebounceCallback(
     useCallback(

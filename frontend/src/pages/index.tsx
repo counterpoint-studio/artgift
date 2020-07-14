@@ -15,6 +15,7 @@ import NextButton from "../components/nextButton"
 import HeroImage from "../images/heroImage.jpg"
 
 import "./index.scss"
+import { useGiftState } from "../hooks"
 
 const IntroPage = () => {
   let intl = useIntl()
@@ -27,6 +28,7 @@ const IntroPage = () => {
     boundsPadding: 150,
     regions: undefined,
   })
+  let [gift, setGift] = useGiftState(gifts.initGift(intl.locale))
 
   useEffect(() => {
     let unSub = gifts.subscribeToGiftSlotsOverview(giftSlots => {
@@ -35,6 +37,10 @@ const IntroPage = () => {
     })
     return unSub
   }, [])
+
+  let initialiseGift = () => {
+    setGift(gifts.initGift(intl.locale))
+  }
 
   return (
     <Layout>
@@ -80,6 +86,7 @@ const IntroPage = () => {
           <NextButton
             to="/to"
             text={intl.formatMessage({ id: "introButtonNext" })}
+            onClick={initialiseGift}
           />
         </div>
       </main>
