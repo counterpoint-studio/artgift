@@ -30,27 +30,28 @@ export const processSlotReservation = functions
             let giftRef = db.collection('gifts').doc(giftId);
             let slotRef = db.collection('slots').doc(slotId);
             let [slot, prevGift] = await Promise.all([tx.get(slotRef), tx.get(giftRef)]);
-            let slotChanged = prevGift.exists && prevGift.data()!.slotId && slotId !== prevGift.data()!.slotId;
-            let prevSlotRef = slotChanged ? db.collection('slots').doc(prevGift.data()!.slotId) : undefined;
+
+            let prevSlotRef = prevGift.exists && prevGift.data()!.slotId ? db.collection('slots').doc(prevGift.data()!.slotId) : undefined;
             let prevSlot = prevSlotRef && await tx.get(prevSlotRef);
             // Slot is available if its status is available or if it was already reserved for this gift.
-            let slotAvailable = slot.exists && (slot.data()!.status === 'available' || !slotChanged);
+            let slotAvailable = slot.exists && (slot.data()!.status === 'available' || prevSlot?.id === slotId);
             if (slotAvailable) {
                 await tx.set(giftRef, {
                     slotId,
-                    reservationId: document.id,
+                    processedReservationId: document.id,
                     reservedUntil: Date.now() + RESERVATION_PERIOD
                 }, { merge: true });
-                // Set slot as reserved.
-                await tx.set(slotRef, { status: 'reserved' }, { merge: true });
                 // Set previous slot as available again.
                 if (prevSlot) {
                     await tx.set(prevSlotRef!, { status: 'available' }, { merge: true });
                 }
+                // Set slot as reserved.
+                await tx.set(slotRef, { status: 'reserved' }, { merge: true });
             } else {
-                await tx.set(giftRef, { slotId: admin.firestore.FieldValue.delete(), reservationId: document.id }, { merge: true });
+                await tx.set(giftRef, { processedReservationId: document.id }, { merge: true });
             }
         });
+
     });
 
 export const expireUnfinishedGifts = functions.region('europe-west1').pubsub.schedule('every 1 minutes').onRun(async () => {

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react"
+import { PageProps } from "gatsby"
 import Helmet from "react-helmet"
 import { useIntl, navigate } from "gatsby-plugin-intl"
 import classNames from "classnames"
-import { camelCase } from "lodash"
+import { camelCase, omit } from "lodash"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -23,7 +24,7 @@ import { GiftSlot } from "../types"
 import "./gifts.scss"
 import { formatDate, formatTime } from "../services/dates"
 
-const GiftsPage = () => {
+const GiftsPage: React.FC<PageProps> = ({ location }) => {
   let intl = useIntl()
   let mounted = useMounted()
   let [slotsByDate, setSlotsByDate] = useState<{ [date: string]: GiftSlot[] }>(
@@ -33,6 +34,7 @@ const GiftsPage = () => {
   let regions = useMemo(() => getRegionGeoJSON(), [])
   let [gift, setGift] = useGiftState(initGift(intl.locale))
   let [reservingSlotId, setReservingSlotId] = useState<string>()
+  let [failedToReserve, setFailedToReserve] = useState(false)
 
   let { isMoving: isMapMoving } = useMapBackground({
     bounds: gift?.toLocation
@@ -65,12 +67,15 @@ const GiftsPage = () => {
   let onPickSlot = useCallback(
     async (slot: GiftSlot) => {
       setReservingSlotId(slot.id)
-      let savedGift = await saveGift(gift)
+      setFailedToReserve(false)
+      let savedGift = await saveGift(omit(gift, "slotId"))
       let reserved = await reserveSlot(savedGift, slot.id)
       setGift(reserved)
       setReservingSlotId(undefined)
       if (reserved.slotId === slot.id) {
         navigate("/from") // Successful reservation
+      } else {
+        setFailedToReserve(true)
       }
     },
     [gift]
@@ -106,6 +111,16 @@ const GiftsPage = () => {
             id: `region${camelCase(gift.toLocation?.region.toLowerCase())}`,
           })}
         </h1>
+        {(location?.state as any)?.reservationExpired && (
+          <p className="message">
+            {intl.formatMessage({ id: "giftsReservationExpired" })}
+          </p>
+        )}
+        {failedToReserve && (
+          <p className="message">
+            {intl.formatMessage({ id: "giftsFailedToReserve" })}
+          </p>
+        )}
         <div className="giftDates">
           {Object.keys(slotsByDate).map(date => (
             <div

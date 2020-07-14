@@ -64,7 +64,7 @@ export async function reserveSlot(gift: Gift, slotId: string): Promise<Gift> {
     db.collection('reservations').doc(reservationId).set({ giftId: gift.id, slotId: slotId });
     let giftWithReservation = await new Promise<Gift>(res => {
         let unSub = giftRef.onSnapshot(g => {
-            if (g.exists && g.data().reservationId === reservationId) {
+            if (g.exists && g.data().processedReservationId === reservationId) {
                 unSub();
                 res({ ...g.data() as Gift, id: gift.id });
             }
@@ -76,7 +76,7 @@ export async function reserveSlot(gift: Gift, slotId: string): Promise<Gift> {
 export async function saveGift(gift: Gift) {
     let db = firebase.firestore();
     let giftRef = db.collection('gifts').doc(gift.id);
-    await giftRef.set(gift);
+    await giftRef.set(gift, { merge: true });
     return getGift(gift.id);
 }
 

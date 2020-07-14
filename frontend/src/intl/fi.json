@@ -30,6 +30,8 @@
   "giftsTitle": "Lahjat alueella",
   "giftsButtonBook": "Varaa",
   "giftsButtonBooking": "Varataan...",
+  "giftsFailedToReserve": "Varaus ei onnistunut. Joku muu taisi ehtiä ensin!",
+  "giftsReservationExpired": "Varaus ehti vanhentua. Valitse uusi aika.",
   "giftsButtonNext": "",
 
   "fromSEOTitle": "Lahjan antaja",
