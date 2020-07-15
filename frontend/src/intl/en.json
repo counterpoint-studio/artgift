@@ -7,11 +7,21 @@
   "homeButton": "Home",
 
   "introSEOTitle": "Art Gift",
-  "introSEODescription": "Send an Art Gift to your loved one",
+  "introSEODescription": "Send an Art Gift to your loved one.",
   "introTitle": "Send an Art Gift to your loved one",
   "introBody": "Order a surprising, immaterial art gift for someone dear to you! An art gift may be a performance by a classical or popular musician, poet, or dancer, delivered safely to your loved one's front yard during the art gift weekend 7.-9.8.2020.",
   "introMoreInfo": "For more information",
   "introButtonNext": "Give a gift",
+
+  "infoSEOTitle": "Art Gift Info",
+  "infoSEODescription": "What's involved in giving an Art Gift.",
+  "infoTitle": "Info",
+  "infoDescription": "Before you begin, please read and accept the requirements for giving an Art Gift:",
+  "infoRequirementAttendance": "I understand that I must attend the performance along with the gift recipient of my choice",
+  "infoRequirementMarketing": "Photographers may be present during the performance. I agree to my photo being taken, and reproduced in marketing materials by Helsinki Fest",
+  "infoRequirementTerms": "I agree to the Art Gift <a href=\"terms\">Terms & Conditions<a/>",
+  "infoRequirementGDPR": "I consent to my personal information being transmitted to and stored by Helsinki Fest",
+  "infoButtonNext": "Begin",
 
   "toSEOTitle": "Gift recipient",
   "toSEODescription": "Gift recipient",
