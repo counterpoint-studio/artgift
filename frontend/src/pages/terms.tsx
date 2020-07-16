@@ -28,7 +28,7 @@ const TermsPage = () => {
           <h1>{intl.formatMessage({ id: "termsTitle" })}</h1>
           <p>{intl.formatMessage({ id: "termsContent" })}</p>
         </div>
-        <BackButton to="/" text={intl.formatMessage({ id: "homeButton" })} />
+        <BackButton text={intl.formatMessage({ id: "backButton" })} />
       </main>
     </Layout>
   )
