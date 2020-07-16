@@ -93,7 +93,7 @@ const ArtistPage: React.FC<PageProps> = ({ location }) => {
               <div key={idx} className="artistItinerary">
                 <h2>
                   {formatDate(it.from.date, intl)} {formatTime(it.from.time)} -{" "}
-                  {formatTime(it.from.time)}{" "}
+                  {formatTime(it.to.time)}{" "}
                   {intl.formatMessage({
                     id: `region${camelCase(it.region.toLowerCase())}`,
                   })}
