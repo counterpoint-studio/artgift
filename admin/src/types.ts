@@ -25,3 +25,18 @@ export type GiftLocation = {
     region: string;
     point: [number, number];
 };
+
+export type Artist = {
+    id?: string;
+    name: string;
+    phoneNumber: string;
+    email: string;
+    itineraries: ArtistItinerary[]
+}
+
+export type ArtistItinerary = {
+    region: string;
+    from: { date: string, time: string };
+    to: { date: string, time: string };
+    assignedSlotIds: string[];
+}

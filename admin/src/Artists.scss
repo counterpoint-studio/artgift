@@ -1,0 +1,10 @@
+.artists {
+  &--field {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: row;
+  }
+  &--fieldLabel {
+    width: 170px;
+  }
+}

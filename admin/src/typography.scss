@@ -38,6 +38,21 @@ h1,
   }
 }
 
+h2,
+.h2 {
+  font-family: $fontStackHeader;
+  font-weight: normal;
+  color: $colorFontBody;
+  line-height: 1.2;
+  font-size: 16px;
+  text-transform: uppercase;
+  margin: 0 0 $fontSizeBase 0;
+
+  @media (min-width: 768px) {
+    font-size: 20px;
+  }
+}
+
 p,
 .p {
   font-family: $fontStackBody;

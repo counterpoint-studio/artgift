@@ -1,0 +1,15 @@
+.itineraries {
+  &--newItinerary {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    max-width: 1000px;
+  }
+  &--field {
+    display: flex;
+    flex-direction: row;
+    select:first-of-type {
+      margin-left: 15px;
+    }
+  }
+}

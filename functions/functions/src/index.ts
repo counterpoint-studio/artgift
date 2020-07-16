@@ -111,7 +111,7 @@ export const createGiftReminderSMSs = functions.region('europe-west1').pubsub.sc
         let { date, time } = await (await db.collection('slots').doc(giftData.slotId).get()).data()!;
         let giftDate = new Date(
             +date.substring(0, 4),
-            +(date.substring(4, 6) - 1),
+            +(date.substring(4, 6)) - 1,
             +date.substring(6, 8),
             +time.substring(0, 2),
             +time.substring(3, 5)

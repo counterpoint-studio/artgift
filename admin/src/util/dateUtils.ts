@@ -24,3 +24,17 @@ export function formatTime(time: string) {
     let m = minutes < 10 ? `0${minutes}` : `${minutes}`
     return `${h}:${m}`
 }
+
+export function formatTimeFromComponents(hours: number, minutes: number) {
+    return `${padStart('' + hours, 2, "0")}:${'' + padStart('' + minutes, 2, '0')}`;
+}
+
+export function parseDateAndTime(date: string, time: string) {
+    return new Date(
+        +date.substring(0, 4),
+        +(date.substring(4, 6)) - 1,
+        +date.substring(6, 8),
+        +time.substring(0, 2),
+        +time.substring(3, 5)
+    );
+}

@@ -30,6 +30,10 @@ service cloud.firestore {
       allow get;
       allow create;
     }
+    match /artists/{artist} {
+      allow get;
+      allow list, create, update, delete: if isAdminUser()
+    }
     match /admins/{admin} {
       allow read, write: if isAdminUser()
     }

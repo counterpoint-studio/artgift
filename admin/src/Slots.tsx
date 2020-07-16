@@ -7,13 +7,18 @@ import React, {
 } from "react";
 import firebase from "firebase/app";
 import classNames from "classnames";
+import { padStart } from "lodash";
 
 import { REGIONS, DATES, HOURS, MINUTES } from "./constants";
 import { Navigation } from "./Navigation";
-import { formatDate, formatTime } from "./util/dateUtils";
+import {
+  formatDate,
+  formatTime,
+  formatTimeFromComponents,
+} from "./util/dateUtils";
+import { Slot } from "./types";
 
 import "./Slots.scss";
-import { Slot } from "./types";
 
 const INIT_SLOT: Slot = {
   date: DATES[0],
@@ -133,13 +138,16 @@ export const Slots: React.FC = () => {
               onChange={(evt) =>
                 setNewSlot({
                   ...newSlot,
-                  time: `${evt.target.value}:${newSlotMinute}`,
+                  time: formatTimeFromComponents(
+                    +evt.target.value,
+                    newSlotMinute
+                  ),
                 })
               }
             >
               {HOURS.map((h) => (
                 <option key={h} value={h}>
-                  {h}
+                  {padStart("" + h, 2, "0")}
                 </option>
               ))}
             </select>
@@ -149,13 +157,16 @@ export const Slots: React.FC = () => {
               onChange={(evt) =>
                 setNewSlot({
                   ...newSlot,
-                  time: `${newSlotHour}:${evt.target.value}`,
+                  time: formatTimeFromComponents(
+                    newSlotHour,
+                    +evt.target.value
+                  ),
                 })
               }
             >
               {MINUTES.map((m) => (
                 <option key={m} value={m}>
-                  {m}
+                  {padStart("" + m, 2, "0")}
                 </option>
               ))}
             </select>
