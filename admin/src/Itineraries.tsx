@@ -1,6 +1,6 @@
 import React, { useMemo, useEffect, useState, useCallback } from "react";
 import firebase from "firebase/app";
-import { last, flatMap, isEqual, padStart } from "lodash";
+import { last, flatMap, isEqual, padStart, fromPairs } from "lodash";
 
 import { REGIONS, DATES, HOURS, MINUTES } from "./constants";
 import { Navigation } from "./Navigation";
@@ -11,7 +11,7 @@ import {
   formatTimeFromComponents,
 } from "./util/dateUtils";
 
-import { Artist, ArtistItinerary } from "./types";
+import { Artist, ArtistItinerary, Slot, Gift } from "./types";
 
 import "./Itineraries.scss";
 
@@ -19,7 +19,6 @@ export const Itineraries: React.FC = () => {
   let coll = useMemo(() => firebase.firestore().collection("artists"), []);
 
   let [artists, setArtists] = useState<Artist[]>([]);
-
   useEffect(() => {
     let unSub = coll.onSnapshot((artistsSnapshot) => {
       setArtists(
@@ -93,6 +92,24 @@ const RegionItineraries: React.FC<RegionItinerariesProps> = ({
       ),
     [artists]
   );
+  let [detailsExpandedFor, setDetailsExpandedFor] = useState<{
+    [artistId: string]: { [it: string]: boolean };
+  }>({});
+
+  let toggleDetails = useCallback(
+    (artist: Artist, itinerary: ArtistItinerary) => {
+      let aKey = artist.id!;
+      let itKey = itinerary.from.date + itinerary.from.time;
+      setDetailsExpandedFor({
+        ...detailsExpandedFor,
+        [aKey]: {
+          ...(detailsExpandedFor[aKey] || {}),
+          [itKey]: !detailsExpandedFor[aKey]?.[itKey],
+        },
+      });
+    },
+    [detailsExpandedFor]
+  );
 
   let [newItineraryArtistId, setNewItineraryArtistId] = useState<string>();
   let [newItinerary, setNewItinerary] = useState<ArtistItinerary>({
@@ -105,7 +122,7 @@ const RegionItineraries: React.FC<RegionItinerariesProps> = ({
       date: DATES[0],
       time: formatTimeFromComponents(HOURS[0], MINUTES[0]),
     },
-    assignedSlotIds: [],
+    assignments: [],
   });
   let [fromHour, fromMinute] = newItinerary.from.time.split(":").map((t) => +t);
   let [toHour, toMinute] = newItinerary.to.time.split(":").map((t) => +t);
@@ -123,23 +140,39 @@ const RegionItineraries: React.FC<RegionItinerariesProps> = ({
         <thead></thead>
         <tbody>
           {regionItineraries.map(({ artist, itinerary }, idx) => (
-            <tr key={idx}>
-              <td>{artist.name}</td>
-              <td>
-                {formatDate(itinerary.from.date)}{" "}
-                {formatTime(itinerary.from.time)}
-              </td>
-              <td>
-                {formatDate(itinerary.to.date)} {formatTime(itinerary.to.time)}
-              </td>
-              <td>
-                <button
-                  onClick={() => onDeleteItinerary(artist.id!, itinerary)}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
+            <React.Fragment key={idx}>
+              <tr onClick={() => toggleDetails(artist, itinerary)}>
+                <td>{artist.name}</td>
+                <td>
+                  {formatDate(itinerary.from.date)}{" "}
+                  {formatTime(itinerary.from.time)}
+                </td>
+                <td>
+                  {formatDate(itinerary.to.date)}{" "}
+                  {formatTime(itinerary.to.time)}
+                </td>
+                <td>
+                  <button
+                    onClick={(evt) => (
+                      evt.stopPropagation(),
+                      onDeleteItinerary(artist.id!, itinerary)
+                    )}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+              {detailsExpandedFor[artist.id!]?.[
+                itinerary.from.date + itinerary.from.time
+              ] && (
+                <tr>
+                  <td></td>
+                  <td colSpan={3}>
+                    <ItineraryDetails itinerary={itinerary} />
+                  </td>
+                </tr>
+              )}
+            </React.Fragment>
           ))}
         </tbody>
       </table>
@@ -321,3 +354,62 @@ function hasOverlappingItineraries(
     return newFrom.getTime() < to.getTime() && from.getTime() < newTo.getTime();
   });
 }
+
+interface ItineraryDetailsProps {
+  itinerary: ArtistItinerary;
+}
+let ItineraryDetails: React.FC<ItineraryDetailsProps> = ({ itinerary }) => {
+  let slotsColl = useMemo(() => firebase.firestore().collection("slots"), []);
+  let giftsColl = useMemo(() => firebase.firestore().collection("gifts"), []);
+
+  let [slots, setSlots] = useState<{ [slotId: string]: Slot }>({});
+  let [gifts, setGifts] = useState<{ [giftId: string]: Gift }>({});
+
+  useEffect(() => {
+    if (itinerary.assignments.length === 0) return;
+    let unSubSlots = slotsColl
+      .where(
+        firebase.firestore.FieldPath.documentId(),
+        "in",
+        itinerary.assignments.map((a) => a.slotId)
+      )
+      .onSnapshot((slotsSnapshot) => {
+        setSlots(
+          fromPairs(slotsSnapshot.docs.map((d) => [d.id, d.data() as Slot]))
+        );
+      });
+    let unSubGifts = giftsColl
+      .where(
+        firebase.firestore.FieldPath.documentId(),
+        "in",
+        itinerary.assignments.map((a) => a.giftId)
+      )
+      .onSnapshot((giftsSnapshot) => {
+        setGifts(
+          fromPairs(giftsSnapshot.docs.map((d) => [d.id, d.data() as Gift]))
+        );
+      });
+    return () => {
+      unSubSlots();
+      unSubGifts();
+    };
+  }, [itinerary]);
+
+  return (
+    <table className="itineraries--details">
+      <thead></thead>
+      <tbody>
+        {itinerary.assignments.map((a) => (
+          <tr key={a.slotId}>
+            <td>{slots[a.slotId] && formatTime(slots[a.slotId].time)}</td>
+            <td>{gifts[a.giftId]?.toAddress}</td>
+            <td>
+              {gifts[a.giftId]?.fromName} &lt;{gifts[a.giftId]?.fromEmail}&gt; /{" "}
+              {gifts[a.giftId]?.fromPhoneNumber}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};

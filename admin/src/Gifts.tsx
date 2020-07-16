@@ -48,7 +48,7 @@ export const Gifts: React.FC = () => {
     let slotsById = groupBy(slots, (s) => s.id);
     return gifts.map((gift) => ({
       gift,
-      slot: slotsById[gift.slotId!][0] as Slot,
+      slot: slotsById[gift.slotId!]?.[0] as Slot,
     }));
   };
 
@@ -86,9 +86,9 @@ export const Gifts: React.FC = () => {
           {getTableData().map(({ gift, slot }) => (
             <React.Fragment key={gift.id}>
               <tr onClick={() => onToggleDetails(gift)}>
-                <td>{formatDate(slot.date)}</td>
-                <td>{formatTime(slot.time)}</td>
-                <td>{slot.region}</td>
+                <td>{slot && formatDate(slot.date)}</td>
+                <td>{slot && formatTime(slot.time)}</td>
+                <td>{slot?.region}</td>
                 <td>{gift.toAddress}</td>
                 <td>{gift.fromEmail}</td>
                 <td style={{ whiteSpace: "nowrap" }}>
@@ -102,15 +102,16 @@ export const Gifts: React.FC = () => {
                   </span>
                 </td>
                 <td>
-                  {gift.status !== "confirmed" && (
-                    <button
-                      onClick={(evt) =>
-                        onUpdateGiftStatus(gift, "confirmed", evt)
-                      }
-                    >
-                      Confirm
-                    </button>
-                  )}
+                  {gift.status !== "confirmed" &&
+                    gift.status !== "rejected" && (
+                      <button
+                        onClick={(evt) =>
+                          onUpdateGiftStatus(gift, "confirmed", evt)
+                        }
+                      >
+                        Confirm
+                      </button>
+                    )}
                   {gift.status !== "rejected" && (
                     <button
                       onClick={(evt) =>

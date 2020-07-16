@@ -3,6 +3,7 @@ import * as admin from 'firebase-admin';
 import Handlebars from 'handlebars';
 import fetch from 'node-fetch';
 import { URLSearchParams } from 'url';
+import { sortBy, last, pick, isEqual } from 'lodash';
 
 import { RESERVATION_PERIOD, REMINDER_PERIOD, TIME_ZONE_UTC_OFFSET } from './constants';
 
@@ -88,6 +89,17 @@ export const releaseSlotOnGiftDelete = functions
         }
     });
 
+export const releaseSlotOnGiftRejection = functions
+    .region('europe-west1')
+    .firestore
+    .document("gifts/{giftId}")
+    .onUpdate(async (change) => {
+        if (change.after.exists && (change.after.data().status === 'rejected' || change.after.data().status === 'cancelled') && change.after.data().slotId) {
+            let slotRef = db.collection('slots').doc(change.after.data().slotId);
+            await slotRef.set({ status: 'available' }, { merge: true });
+        }
+    });
+
 export const createGiftSMS = functions
     .region('europe-west1')
     .firestore
@@ -109,13 +121,7 @@ export const createGiftReminderSMSs = functions.region('europe-west1').pubsub.sc
     confirmedGifts.forEach(async (gift) => {
         let giftData = gift.data();
         let { date, time } = await (await db.collection('slots').doc(giftData.slotId).get()).data()!;
-        let giftDate = new Date(
-            +date.substring(0, 4),
-            +(date.substring(4, 6)) - 1,
-            +date.substring(6, 8),
-            +time.substring(0, 2),
-            +time.substring(3, 5)
-        );
+        let giftDate = parseDateTime(date, time);
         let giftTimestamp = giftDate.getTime() - TIME_ZONE_UTC_OFFSET * 60 * 60 * 1000;
         if (giftTimestamp - Date.now() < REMINDER_PERIOD) {
             let giftMessages = await db.collection('SMSs').where('giftId', '==', gift.id).get();
@@ -141,6 +147,165 @@ export const createGiftReminderSMSs = functions.region('europe-west1').pubsub.sc
     })
 });
 
+export const populateArtistItinerariesOnArtistUpdate = functions
+    .region('europe-west1')
+    .firestore
+    .document("artists/{artistId}")
+    .onWrite(async (change) => {
+        let affectedRegions = new Set<string>();
+        let itinerariesBefore = change.before.exists ?
+            sortBy(change.before.data()!.itineraries.map((it: any) => pick(it, 'region', 'from', 'to')), it => it.from.date, it => it.from.time) :
+            [];
+        let itinerariesAfter = change.after.exists ?
+            sortBy(change.after.data()!.itineraries.map((it: any) => pick(it, 'region', 'from', 'to')), it => it.from.date, it => it.from.time) :
+            [];
+        if (!isEqual(itinerariesBefore, itinerariesAfter)) {
+            if (change.before.exists) {
+                for (let itinerary of change.before.data()!.itineraries) {
+                    affectedRegions.add(itinerary.region);
+                }
+            }
+            if (change.after.exists) {
+                for (let itinerary of change.after.data()!.itineraries) {
+                    affectedRegions.add(itinerary.region);
+                }
+            }
+        }
+        return db.runTransaction(async tx => {
+            console.log('on artist update, populating itineraries for regions', Array.from(affectedRegions));
+            for (let region of Array.from(affectedRegions)) {
+                await populateArtistItineraries(region, tx);
+            }
+        });
+    });
+
+export const populateArtistItinerariesOnSlotUpdate = functions
+    .region('europe-west1')
+    .firestore
+    .document("slots/{slotId}")
+    .onWrite(async (change) => {
+        return db.runTransaction(async tx => {
+            let affectedRegions = new Set<string>();
+            if (change.before.exists) {
+                affectedRegions.add(change.before.data()!.region);
+                if (change.after.exists) {
+                    affectedRegions.add(change.after.data()!.region);
+                }
+            }
+            console.log('on slot update, populating itineraries for regions', Array.from(affectedRegions));
+            for (let region of Array.from(affectedRegions)) {
+                await populateArtistItineraries(region, tx);
+            }
+        });
+    });
+
+
+function parseDateTime(date: any, time: any) {
+    return new Date(
+        +date.substring(0, 4),
+        +(date.substring(4, 6)) - 1,
+        +date.substring(6, 8),
+        +time.substring(0, 2),
+        +time.substring(3, 5)
+    );
+}
+
+async function populateArtistItineraries(region: string, tx: FirebaseFirestore.Transaction) {
+    let artists = await db.collection('artists').get()
+    let affectedArtistRefs: admin.firestore.DocumentReference[] = [];
+    artists.forEach(artist => {
+        if (artist.data().itineraries.find((i: any) => i.region === region)) {
+            affectedArtistRefs.push(artist.ref);
+        }
+    });
+
+    let slots = await db.collection('slots')
+        .where('region', '==', region)
+        .where('status', '==', 'reserved')
+        .get();
+    let affectedSlotRefs: admin.firestore.DocumentReference[] = [];
+    slots.forEach(slot => affectedSlotRefs.push(slot.ref));
+
+    let gifts = affectedSlotRefs.length > 0 ? await db.collection('gifts')
+        .where('slotId', 'in', affectedSlotRefs.map(r => r.id))
+        .get() :
+        [];
+    let affectedGiftRefs: admin.firestore.DocumentReference[] = [];
+    gifts.forEach(gift => {
+        if (gift.data().status !== 'rejected' && gift.data().status !== 'cancelled') {
+            affectedGiftRefs.push(gift.ref);
+        }
+    });
+
+    let affectedArtists = affectedArtistRefs.length > 0 ? await tx.getAll(...affectedArtistRefs) : [];
+    let affectedSlots = affectedSlotRefs.length > 0 ? await tx.getAll(...affectedSlotRefs) : [];
+    let affectedGifts = affectedGiftRefs.length > 0 ? await tx.getAll(...affectedGiftRefs) : [];
+
+    console.log('populating', affectedGifts.length, 'gifts amongst', affectedArtists.length, 'artists in ', region);
+
+    let slotsInTimeOrder = sortBy(
+        affectedSlots
+            .filter(slot => !!affectedGifts.find(g => (g.data() as any).slotId === slot.id))
+            .map(slot => ({ id: slot.id, data: slot.data() as any })),
+        s => s.data.date,
+        s => s.data.time
+    );
+    let artistData = affectedArtists.map(a => ({
+        ref: a.ref,
+        data: {
+            ...a.data() as any,
+            itineraries: sortBy(
+                (a.data() as any).itineraries.map((i: any) => ({ ...i, assignments: [] })),
+                i => i.from.date,
+                i => i.from.time
+            )
+        }
+    }));
+
+    for (let slot of slotsInTimeOrder) {
+        let slotDate = parseDateTime(slot.data.date, slot.data.time);
+        let gift = affectedGifts.find(g => (g.data() as any).slotId === slot.id)!;
+        console.log('slot', slot.id, 'gift', gift.id, 'at', slotDate);
+        let bestArtistIdx = -1, bestItineraryIdx = -1, bestItineraryGapSincePrevious = 0;
+        for (let i = 0; i < artistData.length; i++) {
+            for (let j = 0; j < artistData[i].data.itineraries.length; j++) {
+                let it = artistData[i].data.itineraries[j];
+                let itFrom = parseDateTime(it.from.date, it.from.time);
+                let itTo = parseDateTime(it.to.date, it.to.time);
+                if (slotDate.getTime() >= itFrom.getTime() && slotDate.getTime() < itTo.getTime()) {
+                    console.log('matching artist itinerary', artistData[i].data, j);
+                    let lastSlotId = getLastAssignedSlotId(artistData[i].data);
+                    let lastSlot = lastSlotId ? slotsInTimeOrder.find(s => s.id === lastSlotId)?.data : null;
+                    let gapSinceLastSlot = lastSlot ? slotDate.getTime() - parseDateTime(lastSlot.date, lastSlot.time).getTime() : Number.MAX_VALUE;
+                    console.log('gap since last', gapSinceLastSlot);
+                    if (gapSinceLastSlot > bestItineraryGapSincePrevious) {
+                        console.log('is best so far');
+                        bestArtistIdx = i;
+                        bestItineraryIdx = j;
+                        bestItineraryGapSincePrevious = gapSinceLastSlot;
+                    }
+                }
+            }
+        }
+        if (bestArtistIdx >= 0 && bestItineraryIdx >= 0) {
+            artistData[bestArtistIdx].data.itineraries[bestItineraryIdx].assignments.push({ slotId: slot.id, giftId: gift.id });
+        }
+    }
+
+    for (let a of artistData) {
+        console.log('artist update', a.ref.id);
+        await tx.set(a.ref, a.data);
+    }
+}
+
+function getLastAssignedSlotId(artistData: any) {
+    for (let i = artistData.itineraries.length - 1; i >= 0; i--) {
+        if (artistData.itineraries[i].assignments.length > 0) {
+            return (last(artistData.itineraries[i].assignments) as any).slotId;
+        }
+    }
+    return null;
+}
 
 async function createMessage(giftId: string, giftDocument: FirebaseFirestore.DocumentData, messageKey: string, eventId: string) {
     let messageRef = db.collection('SMSs').doc(eventId);
@@ -205,6 +370,7 @@ function sendMessage(message: string, toNumber: string) {
 }
 
 function normalisePhoneNumber(number: string) {
+    number = number.replace(/\s+/g, '');
     if (number.startsWith('0')) {
         return '+358' + number.substring(1);
     } else if (number.startsWith('358')) {

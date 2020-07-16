@@ -4,7 +4,7 @@ export type Slot = {
     date: string;
     time: string;
     region: string;
-    status: "available" | "reserved" | "onHold";
+    status: "available" | "reserved";
 };
 
 export type Gift = {
@@ -38,5 +38,5 @@ export type ArtistItinerary = {
     region: string;
     from: { date: string, time: string };
     to: { date: string, time: string };
-    assignedSlotIds: string[];
+    assignments: { slotId: string, giftId: string }[];
 }
