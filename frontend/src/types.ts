@@ -36,3 +36,18 @@ export type Region = {
     feature: Feature;
     bounds: LngLatBoundsLike;
 };
+
+export type Artist = {
+    id: string;
+    name: string;
+    phoneNumber: string;
+    email: string;
+    itineraries: ArtistItinerary[]
+}
+
+export type ArtistItinerary = {
+    region: string;
+    from: { date: string, time: string };
+    to: { date: string, time: string };
+    assignments: { slotId: string, giftId: string }[];
+}

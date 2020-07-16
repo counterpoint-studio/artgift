@@ -106,7 +106,7 @@ const GiftsPage: React.FC<PageProps> = ({ location }) => {
         })}
       >
         <h1>
-          {intl.formatMessage({ id: "giftsTitle" })}{" "}
+          {intl.formatMessage({ id: "giftsTitle" })}:{" "}
           {intl.formatMessage({
             id: `region${camelCase(gift.toLocation?.region.toLowerCase())}`,
           })}

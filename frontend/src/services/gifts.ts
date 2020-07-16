@@ -1,7 +1,7 @@
 import firebase from 'gatsby-plugin-firebase';
 import { nanoid } from 'nanoid';
 
-import { GiftSlot, Gift } from '../types';
+import { GiftSlot, Gift, Artist } from '../types';
 
 export function initGift(fromLanguage = 'fi'): Gift {
     return {
@@ -88,11 +88,17 @@ export function getGift(id: string): Promise<Gift> {
         .then(d => ({ ...d.data(), id: d.id } as Gift))
 }
 
-export function subscribeToGiftWithSlot(id: string, callback: ({ gift: Gift, slot: GiftSlot }) => void) {
+export function subscribeToGiftWithSlot(id: string, callback: (giftAndSlot?: { gift: Gift, slot: GiftSlot }) => void) {
     return firebase.firestore().collection("gifts")
         .doc(id)
-        .onSnapshot(async (d) => callback({
+        .onSnapshot(async (d) => d.exists ? callback({
             gift: { ...d.data(), id: d.id } as Gift,
             slot: await getGiftSlot(d.data().slotId)
-        }))
+        }) : callback())
+}
+
+export function subscribeToArtist(id: string, callback: (artist: Artist) => void) {
+    return firebase.firestore().collection("artists")
+        .doc(id)
+        .onSnapshot(async (d) => callback({ ...d.data(), id: d.id } as Artist))
 }

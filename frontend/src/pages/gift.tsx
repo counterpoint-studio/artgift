@@ -26,9 +26,15 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
     if (queryParams.id) {
       let unSub = gifts.subscribeToGiftWithSlot(
         queryParams.id as string,
-        ({ gift, slot }) => {
-          setGift(gift)
-          setSlot(slot)
+        giftAndSlot => {
+          if (giftAndSlot) {
+            setGift(giftAndSlot.gift)
+            setSlot(giftAndSlot.slot)
+          } else {
+            setGift(undefined)
+            setSlot(undefined)
+            navigate("/")
+          }
         }
       )
       return unSub
@@ -59,7 +65,7 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
       />
       <Helmet
         bodyAttributes={{
-          class: "gift",
+          class: "giftPage",
         }}
         key="helmet"
       />

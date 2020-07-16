@@ -74,6 +74,14 @@
   "giftFrom": "From",
   "giftTo": "To",
 
+  "artistSEOTitle": "Art Gift Artist Page",
+  "artistSEODescription": "Art Gift Artist Page",
+  "artistGiftFrom": "From",
+  "artistGiftTo": "To",
+  "artistGiftLanguage": "Language",
+  "artistGiftReason": "Reason",
+  "artistGiftMessage": "Message",
+
   "validationErrorEmpty": "Cannot be empty",
   "validationErrorMissingBuildingNumber": "Please provide the building number",
   "validationErrorNotInRegion": "Does not seem to be in Helsinki",

@@ -74,6 +74,14 @@
   "giftFrom": "Keneltä",
   "giftTo": "Kenelle",
 
+  "artistSEOTitle": "Taidelahja: Taiteilijasivu",
+  "artistSEODescription": "Taidelahja: Taiteilijasivu",
+  "artistGiftFrom": "Antaja",
+  "artistGiftTo": "Saaja",
+  "artistGiftLanguage": "Kieli",
+  "artistGiftReason": "Syy",
+  "artistGiftMessage": "Viesti",
+
   "validationErrorEmpty": "Ei voi olla tyhjä",
   "validationErrorMissingBuildingNumber": "Täytäthän myös osoitenumeron",
   "validationErrorNotInRegion": "Osoitetta ei löydy Helsingistä",
