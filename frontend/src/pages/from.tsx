@@ -112,87 +112,85 @@ const FromPage = () => {
             </span>
           </p>
           <p>{intl.formatMessage({ id: "fromReservedTimeEnd" })}</p>
-          <form>
-            <div className="inputGroup">
-              <label>
-                {intl.formatMessage({ id: "fromFormLabelName" })}
-                <span className="requiredField">*</span>
-              </label>
-              <Textbox
-                maxLength={50}
-                value={gift.fromName}
-                onChange={name => setGift({ ...gift, fromName: name })}
-                onBlur={() => {}}
-                validationOption={{
-                  required: false,
-                  customFunc: v => validateName(v, intl),
-                }}
-              />
-            </div>
-            <div className="inputGroup">
-              <label>
-                {intl.formatMessage({ id: "fromFormLabelPhone" })}
-                <span className="requiredField">*</span>
-              </label>
-              <Textbox
-                attributesInput={{
-                  type: "tel",
-                }}
-                maxLength={25}
-                value={gift.fromPhoneNumber}
-                onChange={phone => setGift({ ...gift, fromPhoneNumber: phone })}
-                onBlur={() => {}}
-                validationOption={{
-                  required: false,
-                  customFunc: v => validatePhoneNumber(v, intl),
-                }}
-              />
-            </div>
-            <div className="inputGroup">
-              <label>
-                {intl.formatMessage({ id: "fromFormLabelEmail" })}
-                <span className="requiredField">*</span>
-              </label>
-              <Textbox
-                attributesInput={{
-                  type: "email",
-                }}
-                value={gift.fromEmail}
-                onChange={email => setGift({ ...gift, fromEmail: email })}
-                onBlur={() => {}}
-                validationOption={{
-                  required: false,
-                  customFunc: v => validateEmail(v, intl),
-                }}
-              />
-            </div>
-            <div className="inputGroup">
-              <label>
-                {intl.formatMessage({ id: "fromFormLabelSpecialInfo" })}
-              </label>
-              <textarea
-                maxLength={1000}
-                value={gift.fromMessage}
-                onChange={evt =>
-                  setGift({ ...gift, fromMessage: evt.currentTarget.value })
-                }
-              ></textarea>
-            </div>
-            <NextButton
-              to="/delivery"
-              text={intl.formatMessage({ id: "fromButtonNext" })}
-              disabled={!isValid}
-              onClick={evt => {
-                evt.preventDefault()
-                evt.stopPropagation()
-                doReserveGift()
+          <div className="inputGroup">
+            <label>
+              {intl.formatMessage({ id: "fromFormLabelName" })}
+              <span className="requiredField">*</span>
+            </label>
+            <Textbox
+              maxLength={50}
+              value={gift.fromName}
+              onChange={name => setGift({ ...gift, fromName: name })}
+              onBlur={() => {}}
+              validationOption={{
+                required: false,
+                customFunc: v => validateName(v, intl),
               }}
             />
-            <BackButton
-              to="/gifts"
-              text={intl.formatMessage({ id: "backButton" })}
+          </div>
+          <div className="inputGroup">
+            <label>
+              {intl.formatMessage({ id: "fromFormLabelPhone" })}
+              <span className="requiredField">*</span>
+            </label>
+            <Textbox
+              attributesInput={{
+                type: "tel",
+              }}
+              maxLength={25}
+              value={gift.fromPhoneNumber}
+              onChange={phone => setGift({ ...gift, fromPhoneNumber: phone })}
+              onBlur={() => {}}
+              validationOption={{
+                required: false,
+                customFunc: v => validatePhoneNumber(v, intl),
+              }}
             />
-          </form>
+          </div>
+          <div className="inputGroup">
+            <label>
+              {intl.formatMessage({ id: "fromFormLabelEmail" })}
+              <span className="requiredField">*</span>
+            </label>
+            <Textbox
+              attributesInput={{
+                type: "email",
+              }}
+              value={gift.fromEmail}
+              onChange={email => setGift({ ...gift, fromEmail: email })}
+              onBlur={() => {}}
+              validationOption={{
+                required: false,
+                customFunc: v => validateEmail(v, intl),
+              }}
+            />
+          </div>
+          <div className="inputGroup">
+            <label>
+              {intl.formatMessage({ id: "fromFormLabelSpecialInfo" })}
+            </label>
+            <textarea
+              maxLength={1000}
+              value={gift.fromMessage}
+              onChange={evt =>
+                setGift({ ...gift, fromMessage: evt.currentTarget.value })
+              }
+            ></textarea>
+          </div>
+          <NextButton
+            to="/delivery"
+            text={intl.formatMessage({ id: "fromButtonNext" })}
+            disabled={!isValid}
+            onClick={evt => {
+              evt.preventDefault()
+              evt.stopPropagation()
+              doReserveGift()
+            }}
+          />
+          <BackButton
+            to="/gifts"
+            text={intl.formatMessage({ id: "backButton" })}
+          />
         </div>
       </main>
     </Layout>

@@ -1,17 +1,30 @@
 import React from "react"
 import Helmet from "react-helmet"
-import { useIntl, navigate } from "gatsby-plugin-intl"
+import { useIntl } from "gatsby-plugin-intl"
 import { PageProps } from "gatsby"
+import classNames from "classnames"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import NextButton from "../components/nextButton"
 import BackButton from "../components/backButton"
 
+import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
+import { MAP_INIT_CENTER, REGION_BOUNDING_BOX } from "../constants"
+
+import { useMounted } from "../hooks"
+
 import "./info.scss"
 
-const InfoPage: React.FC<PageProps> = ({ location }) => {
+const InfoPage: React.FC<PageProps> = () => {
+  let mounted = useMounted()
   let intl = useIntl()
+  let { isMoving: isMapMoving } = useMapBackground({
+    initPoint: MAP_INIT_CENTER,
+    bounds: REGION_BOUNDING_BOX,
+    boundsPadding: 150,
+    regions: undefined,
+  })
 
   return (
     <Layout>
@@ -25,7 +38,11 @@ const InfoPage: React.FC<PageProps> = ({ location }) => {
         }}
         key="helmet"
       />
-      <main className="main">
+      <main
+        className={classNames("main", {
+          isVisible: mounted && !isMapMoving,
+        })}
+      >
         <div className="scroll">
           <h1>{intl.formatMessage({ id: "infoTitle" })}</h1>
           <p>{intl.formatMessage({ id: "infoDescription" })}</p>

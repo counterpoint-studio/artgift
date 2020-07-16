@@ -1,2 +1,9 @@
-.infoPage {
+.info {
+  .main {
+    opacity: 0;
+    &.isVisible {
+      opacity: 1;
+      transition: opacity 1s;
+    }
+  }
 }

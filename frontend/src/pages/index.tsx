@@ -84,7 +84,7 @@ const IntroPage = () => {
             </p>
           </div>
           <NextButton
-            to="/to"
+            to="/info"
             text={intl.formatMessage({ id: "introButtonNext" })}
             onClick={initialiseGift}
           />

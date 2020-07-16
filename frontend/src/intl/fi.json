@@ -13,15 +13,15 @@
   "introMoreInfo": "Lisätiedot",
   "introButtonNext": "Anna lahja",
 
-  "infoSEOTitle": "Art Gift Info",
-  "infoSEODescription": "What's involved in giving an Art Gift.",
-  "infoTitle": "Info",
-  "infoDescription": "Before you begin, please read and accept the requirements for giving an Art Gift:",
-  "infoRequirementAttendance": "I understand that I must attend the performance along with the gift recipient of my choice",
-  "infoRequirementMarketing": "Photographers may be present during the performance. I agree to my photo being taken, and reproduced in marketing materials by Helsinki Fest",
-  "infoRequirementTerms": "I agree to the Art Gift <a href=\"terms\">Terms & Conditions<a/>",
-  "infoRequirementGDPR": "I consent to my personal information being transmitted to and stored by Helsinki Fest",
-  "infoButtonNext": "Begin",
+  "infoSEOTitle": "Taidelahja Info",
+  "infoSEODescription": "Mitä Taidelahjan antaminen tarkoittaa",
+  "infoTitle": "Tietoa Taidelahjasta",
+  "infoDescription": "Ennen kuin aloitat, pyydämme lupaasi muutamalle asialle:",
+  "infoRequirementAttendance": "Ymmärrän että minun on oltava paikalla lahjan vastaanottajan kanssa sovitussa paikassa sovittuun aikaan.",
+  "infoRequirementMarketing": "Paikalla saattaa olla valokuvaajia. Annan luvan valokuvani ottamiseen ja käyttämiseen Helsinki Festin markkinointimateriaalissa.",
+  "infoRequirementTerms": "Hyväksyn Taidelahjan <a href=\"terms\">Käyttöehdot<a/>",
+  "infoRequirementGDPR": "Annan Helsinki Festille luvan tallentaa antamani henkilötiedot Taidelahjan toimittamista varten. Henkilötietoni jaetaan myös lahjan tuovalle taiteilijalle.",
+  "infoButtonNext": "Aloita",
 
   "toSEOTitle": "Lahjan saaja",
   "toSEODescription": "Lahjan saaja",
@@ -94,11 +94,11 @@
   "regionkoillinen": "Koillinen",
   "regionitainenOstersundom": "Itäinen & Östersundom",
 
-  "privacyLink": "Privacy",
-  "privacyTitle": "Privacy",
+  "privacyLink": "Yksityisyys",
+  "privacyTitle": "Yksityisyys",
   "privacyContent": "<h2>Rekisterin nimi</h2> <p> Helsingin tapahtumasäätiön Taidelahjat-haun yhteyshenkilörekisteri </p> <h2>Rekisterinpitäjä</h2> <p> Helsingin tapahtumasäätiö, Kalevankatu 6, 00100 Helsinki, Y-tunnus 0224232-9, eventshelsinki.fi </p> <h2>Rekisteriasioita hoitava henkilö</h2> <p> Viestintäpäällikkö Laura Gottleben, puh. +358 50 468 7243, <a href=\"mailto:laura.gottleben@eventshelsinki.fi\" >laura.gottleben@eventshelsinki.fi</a > </p> <h2>Henkilötietojen käsittelyn tarkoitus</h2> <p> Tämän henkilötietorekisterin pääasiallisena tarkoituksena on toimia Helsingin tapahtumasäätiön järjestämän Helsinki Fest -tapahtuman esiintyjien yhteyshenkilörekisterinä. Rekisteri sisältää henkilötietoja Helsinki Fest -tapahtumaan ilmoittautuneiden esiintyjien ilmoittamista yhteyshenkilöistä. Tietoja kertyy yhteyshenkilön perustietojen lisäksi sopimuksista, palvelujen käytöstä, palvelujen käyttöalueista sekä palvelujen tuottamisen ja ohjaamisen edellyttämistä tiedoista. Lisäksi rekisteri voi sisältää yhteyshenkilön itse ilmoittamia kiinnostusalueita koskevia tietoja. </p> <p> Rekisterin sisältämiä yhteyshenkilötietoja voidaan käsitellä seuraavissa tarkoituksissa: </p> <ul> <li>Helsinki Fest -tapahtuman hoitaminen ja hallinta</li> <li> Tapahtuman esiintyjille suunnattujen palveluiden toteuttaminen, kehittäminen ja ylläpitäminen </li> <li> Tapahtumaan liittyvän festivaalitutkimuksen suunnittelu ja toteutus </li> <li> Helsingin juhlaviikkojen palveluista ja tuotteista tiedottaminen, viestintä, markkinointi, myynnin edistäminen ja markkinatutkimukset </li> <li> Helsingin juhlaviikkojen operatiivisen liiketoiminnan tarpeisiin, kuten palveluprosessin toteuttaminen, laskutus ja raportointi </li> <li>Helsingin juhlaviikkojen liiketoiminnan suunnittelu ja kehittäminen</li> <li> Helsingin juhlaviikkojen sähköisen liiketoiminnan sopimussuhteisten yhteistyökumppaneiden palveluviestintä ja palvelusopimuksiin perustuva mainonta </li> </ul> <p>Henkilötietojen käsittelyn oikeusperusteet ovat seuraavat:</p> <ul> <li> Sopimussuhteeseen tai oikeutettuun etuun liittyvien toimenpiteiden toteuttaminen </li> <li>Rekisteröidyn antama suostumus</li> </ul> <h2>Rekisterin tietosisältö</h2> <p>Tietokanta sisältää seuraavia tietoja:</p> <ul> <li>Nimet</li> <li>Osoitteita</li> <li>Asuinmaa</li> <li>Puhelinnumeroita</li> <li>Sähköpostiosoitteita</li> <li>Suoramarkkinointilupiin ja -kieltoihin liittyviä merkintöjä</li> <li>Muita palveluiden käytön edellyttämiä tietoja</li> </ul> <h2>Säännönmukaiset tietolähteet</h2> <p>Rekisterin tiedot kertyvät:</p> <ul> <li>Rekisteröidyltä itseltään</li> <li>Yhteisöltä, jonka yhteyshenkilönä rekisteröity toimii</li> <li>Rekisteröidyn suostumuksella kolmannelta osapuolelta</li> </ul> <h2>Säilytysaika</h2> <p> Rekisterinpitäjä säilyttää henkilötietoja niin pitkään kuin on tarpeellista edellä mainittujen tarkoitusten toteuttamiseksi, ellei lainsäädäntö velvoita säilyttämään henkilötietoja pidempään. </p> <p> Yhteisöjen osalta rekisteröidyn henkilötietojen säilyttäminen on sidoksissa siihen, kuinka pitkään kyseinen rekisteröity toimii yhteisön edustajana. </p> <p> Kun tietoja ei enää tarvita edellä määritellyllä tavalla, tiedot poistetaan kohtuullisessa ajassa. </p> <p> Tietojen säännönmukaiset luovutukset ja tietojen siirto EU:n ja ETA:n ulkopuolelle </p> <p> Henkilötietoja ei luovuteta kolmansille osapuolille muutoin kuin pakottavan lainsäädännön niin edellyttäessä. </p> <p> Henkilötietoja voidaan siirtää Euroopan unionin tai Euroopan talousalueen ulkopuolelle käyttäen EU:n komission mallisopimuslausekkeita tai muuta lainmukaista siirtomenettelyä esimerkiksi palvelujen ja viestinnän teknisen toteuttamisen sitä edellyttäessä. </p> <p> Henkilötietoja voidaan kuitenkin luovuttaa rekisteröidyn omalla suostumuksella. </p> <h2>Rekisterin suojaus</h2> <p> Rekisteri on ATK-muodossa. Rekisteriin on käyttöoikeus vain niillä rekisterinpitäjän palveluksessa olevilla ja muilla määritellyillä henkilöillä, jotka tarvitsevat tietoja tehtävissään. Heillä on käytössään käyttäjätunnukset ja salasanat. Tiedot on suojattu palomuurilla ja muilla teknisillä keinoilla. </p> <h2>Rekisteröidyn oikeudet</h2> <p> Rekisteröidyllä on tarkastus- ja virheenoikaisuoikeus, oikeus saada jäljennös henkilötiedoistaan ja oikeus kieltää sähköisten tarjousviestien ja etujen lähettäminen sekä henkilötietojen käyttö suoramarkkinointiin. </p> <p> Rekisteröidyllä on oikeus peruuttaa antamansa suostumus henkilötietojen käsittelylle. Suostumuksen peruuttaminen voi vaikuttaa sopimussuhteen mukaisten toimenpiteiden toteuttamiseen. </p> <p> Lisäksi rekisteröidyllä on tietosuoja-asetuksessa määritellyissä tilanteissa oikeus pyytää henkilötietojensa käsittelyn rajoittamista tai muutoin vastustaa sitä. </p> <p> Halutessaan käyttää edellä mainittuja oikeuksiaan tai saada lisätietoja henkilötietojensa käsittelystä rekisteröity voi ottaa yhteyttä edellä mainitulle rekisteriasioita hoitavalle henkilölle. </p> <p> Rekisteröidyllä on oikeus tehdä valitus valvontaviranomaiselle katsoessaan, ettei henkilötietojen käsittely ole lainmukaista. </p> <p>(Päivitetty 3.6.2020)</p>",
 
-  "termsLink": "Terms",
-  "termsTitle": "Terms",
+  "termsLink": "Käyttöehdot",
+  "termsTitle": "Käyttöehdot",
   "termsContent": "Lorem ipsum dolor sit amet."
 }

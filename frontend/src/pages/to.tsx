@@ -131,108 +131,106 @@ const ToPage = () => {
         })}
       >
         <div className="scroll">
-          <form>
-            <div className="inputGroup">
-              <label>
-                {intl.formatMessage({ id: "toFormLabelFor" })}
-                <span className="requiredField">*</span>
-              </label>
-              <Textbox
-                maxLength={50}
-                value={gift.toName}
-                onBlur={() => {}}
-                onChange={name => {
-                  setGift({ ...gift, toName: name })
-                }}
-                validationOption={{
-                  required: false,
-                  customFunc: v => validateNonEmpty(v, intl),
-                }}
-              />
-            </div>
-            <div className="inputGroup">
-              <label>
-                {intl.formatMessage({ id: "toFormLabelAddress" })}
-                <span className="requiredField">*</span>
-              </label>
-              <AutoSuggest
-                suggestions={addressSuggestions}
-                getSuggestionValue={v => v}
-                renderSuggestion={v => v}
-                inputProps={{
-                  value: gift.toAddress,
-                  onChange: (_, { newValue }) => onUpdateAddress(newValue),
-                  asyncMsgObj: addressValidationResult,
-                }}
-                renderInputComponent={inputProps => (
-                  <Textbox
-                    {...omit(inputProps, "ref")}
-                    value={inputProps.value}
-                    onChange={(v, evt) => inputProps.onChange(evt)}
-                    onBlur={evt => onUpdateAddress(evt.currentTarget.value)}
-                    validationOption={{
-                      required: false,
-                    }}
-                    asyncMsgObj={inputProps.asyncMsgObj}
-                  />
-                )}
-                onSuggestionsFetchRequested={evt =>
-                  onLoadAddressSuggestions(evt.value)
-                }
-                onSuggestionsClearRequested={onClearAddressSuggestions}
-                onSuggestionSelected={onSelectSuggestion}
-              />
-            </div>
-            <div className="inputGroup">
-              <label>
-                {intl.formatMessage({ id: "toFormLabelLanguage" })}
-                <span className="requiredField">*</span>
-              </label>
-              <select
-                value={gift.toLanguage}
-                onChange={evt =>
-                  setGift(gift => ({ ...gift, toLanguage: evt.target.value }))
-                }
-              >
-                <option value="fi">
-                  {intl.formatMessage({ id: "toFormLabelLanguageFi" })}
-                </option>
-                <option value="en">
-                  {intl.formatMessage({ id: "toFormLabelLanguageEn" })}
-                </option>
-                <option value="se">
-                  {intl.formatMessage({ id: "toFormLabelLanguageSe" })}
-                </option>
-              </select>
-            </div>
-            <div className="inputGroup">
-              <label>
-                {intl.formatMessage({ id: "toFormLabelMessage" })}
-                <span className="requiredField">*</span>
-              </label>
-              <Textarea
-                maxLength={1000}
-                value={gift.toSignificance}
-                onBlur={() => {}}
-                onChange={significance =>
-                  setGift(gift => ({ ...gift, toSignificance: significance }))
-                }
-                validationOption={{
-                  required: false,
-                  customFunc: v => validateNonEmpty(v, intl),
-                }}
-              />
-            </div>
-            <NextButton
-              to="/gifts"
-              text={intl.formatMessage({ id: "toButtonNext" })}
-              disabled={!isValid}
+          <div className="inputGroup">
+            <label>
+              {intl.formatMessage({ id: "toFormLabelFor" })}
+              <span className="requiredField">*</span>
+            </label>
+            <Textbox
+              maxLength={50}
+              value={gift.toName}
+              onBlur={() => {}}
+              onChange={name => {
+                setGift({ ...gift, toName: name })
+              }}
+              validationOption={{
+                required: false,
+                customFunc: v => validateNonEmpty(v, intl),
+              }}
             />
-            <BackButton
-              to="/"
-              text={intl.formatMessage({ id: "backButton" })}
+          </div>
+          <div className="inputGroup">
+            <label>
+              {intl.formatMessage({ id: "toFormLabelAddress" })}
+              <span className="requiredField">*</span>
+            </label>
+            <AutoSuggest
+              suggestions={addressSuggestions}
+              getSuggestionValue={v => v}
+              renderSuggestion={v => v}
+              inputProps={{
+                value: gift.toAddress,
+                onChange: (_, { newValue }) => onUpdateAddress(newValue),
+                asyncMsgObj: addressValidationResult,
+              }}
+              renderInputComponent={inputProps => (
+                <Textbox
+                  {...omit(inputProps, "ref")}
+                  value={inputProps.value}
+                  onChange={(v, evt) => inputProps.onChange(evt)}
+                  onBlur={evt => onUpdateAddress(evt.currentTarget.value)}
+                  validationOption={{
+                    required: false,
+                  }}
+                  asyncMsgObj={inputProps.asyncMsgObj}
+                />
+              )}
+              onSuggestionsFetchRequested={evt =>
+                onLoadAddressSuggestions(evt.value)
+              }
+              onSuggestionsClearRequested={onClearAddressSuggestions}
+              onSuggestionSelected={onSelectSuggestion}
             />
-          </form>
+          </div>
+          <div className="inputGroup">
+            <label>
+              {intl.formatMessage({ id: "toFormLabelLanguage" })}
+              <span className="requiredField">*</span>
+            </label>
+            <select
+              value={gift.toLanguage}
+              onChange={evt =>
+                setGift(gift => ({ ...gift, toLanguage: evt.target.value }))
+              }
+            >
+              <option value="fi">
+                {intl.formatMessage({ id: "toFormLabelLanguageFi" })}
+              </option>
+              <option value="en">
+                {intl.formatMessage({ id: "toFormLabelLanguageEn" })}
+              </option>
+              <option value="se">
+                {intl.formatMessage({ id: "toFormLabelLanguageSe" })}
+              </option>
+            </select>
+          </div>
+          <div className="inputGroup">
+            <label>
+              {intl.formatMessage({ id: "toFormLabelMessage" })}
+              <span className="requiredField">*</span>
+            </label>
+            <Textarea
+              maxLength={1000}
+              value={gift.toSignificance}
+              onBlur={() => {}}
+              onChange={significance =>
+                setGift(gift => ({ ...gift, toSignificance: significance }))
+              }
+              validationOption={{
+                required: false,
+                customFunc: v => validateNonEmpty(v, intl),
+              }}
+            />
+          </div>
+          <NextButton
+            to="/gifts"
+            text={intl.formatMessage({ id: "toButtonNext" })}
+            disabled={!isValid}
+          />
+          <BackButton
+            to="/info"
+            text={intl.formatMessage({ id: "backButton" })}
+          />
         </div>
       </main>
     </Layout>
