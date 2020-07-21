@@ -81,48 +81,59 @@ const ArtistPage: React.FC<PageProps> = ({ location }) => {
       />
       <Helmet
         bodyAttributes={{
-          class: "artistPage",
+          class: "artist mapDominant",
         }}
         key="helmet"
       />
-      <div className="pageContent pageContent--artist">
-        {artist && (
-          <div className="artistInfo">
-            <h1>{artist.name}</h1>
-            {artist.itineraries.map((it, idx) => (
-              <div key={idx} className="artistItinerary">
-                <h2>
-                  {formatDate(it.from.date, intl)} {formatTime(it.from.time)} -{" "}
-                  {formatTime(it.to.time)}{" "}
-                  {intl.formatMessage({
-                    id: `region${camelCase(it.region.toLowerCase())}`,
-                  })}
-                </h2>
-                {it.assignments.map(a => (
-                  <div
-                    key={a.giftId}
-                    className={classNames("artistAssignment", {
-                      detailsOpen:
-                        detailedAssignment === giftsAndSlots[a.giftId],
-                    })}
-                    onClick={() =>
-                      setDetailedAssignment(giftsAndSlots[a.giftId])
-                    }
-                  >
-                    {giftsAndSlots[a.giftId] &&
-                      renderAssignment(
-                        giftsAndSlots[a.giftId].gift,
-                        giftsAndSlots[a.giftId].slot,
-                        detailedAssignment === giftsAndSlots[a.giftId],
-                        intl
-                      )}
+      <main className="main">
+        <div className="scroll">
+          {artist && (
+            <div className="artistInfo">
+              <h1>{artist.name}</h1>
+              {artist.itineraries.map((it, idx) => (
+                <div key={idx} className="artistItinerary">
+                  <ul>
+                    <li>Date: {formatDate(it.from.date, intl)} </li>
+                    <li>
+                      Time: {formatTime(it.from.time)} -{" "}
+                      {formatTime(it.to.time)}
+                    </li>
+                    <li>
+                      Location:{" "}
+                      {intl.formatMessage({
+                        id: `region${camelCase(it.region.toLowerCase())}`,
+                      })}
+                    </li>
+                  </ul>
+                  <div className="artistSchedule">
+                    <h2>Schedule:</h2>
+                    {it.assignments.map(a => (
+                      <div
+                        key={a.giftId}
+                        className={classNames("artistAssignment", {
+                          detailsOpen:
+                            detailedAssignment === giftsAndSlots[a.giftId],
+                        })}
+                        onClick={() =>
+                          setDetailedAssignment(giftsAndSlots[a.giftId])
+                        }
+                      >
+                        {giftsAndSlots[a.giftId] &&
+                          renderAssignment(
+                            giftsAndSlots[a.giftId].gift,
+                            giftsAndSlots[a.giftId].slot,
+                            detailedAssignment === giftsAndSlots[a.giftId],
+                            intl
+                          )}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </main>
     </Layout>
   )
 }

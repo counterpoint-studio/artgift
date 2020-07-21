@@ -65,37 +65,38 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
       />
       <Helmet
         bodyAttributes={{
-          class: "giftPage",
+          class: "gift mapDominant",
         }}
         key="helmet"
       />
-      <div className="pageContent pageContent--gift">
-        <div className="giftMap"></div>
-        {gift && slot && (
-          <div className="giftInfo">
-            <h1>{intl.formatMessage({ id: "giftTitle" })}</h1>
-            <p>
-              {intl.formatMessage({ id: "giftStatus" })}:
-              {intl.formatMessage({
-                id: "giftStatus" + (gift.status || "pending"),
-              })}
-            </p>
-            <p>
-              {intl.formatMessage({ id: "giftTime" })}:
-              {formatDate(slot.date, intl)} {formatTime(slot.time)}
-            </p>
-            <p>
-              {intl.formatMessage({ id: "giftPlace" })}:{gift.toAddress}
-            </p>
-            <p>
-              {intl.formatMessage({ id: "giftFrom" })}:{gift.fromName}
-            </p>
-            <p>
-              {intl.formatMessage({ id: "giftTo" })}:{gift.toName}
-            </p>
-          </div>
-        )}
-      </div>
+      <main className="main">
+        <div className="scroll">
+          {gift && slot && (
+            <div className="giftInfo">
+              <h1>{intl.formatMessage({ id: "giftTitle" })}</h1>
+              <p>
+                {intl.formatMessage({ id: "giftStatus" })}:
+                {intl.formatMessage({
+                  id: "giftStatus" + (gift.status || "pending"),
+                })}
+              </p>
+              <p>
+                {intl.formatMessage({ id: "giftTime" })}:
+                {formatDate(slot.date, intl)} {formatTime(slot.time)}
+              </p>
+              <p>
+                {intl.formatMessage({ id: "giftPlace" })}:{gift.toAddress}
+              </p>
+              <p>
+                {intl.formatMessage({ id: "giftFrom" })}:{gift.fromName}
+              </p>
+              <p>
+                {intl.formatMessage({ id: "giftTo" })}:{gift.toName}
+              </p>
+            </div>
+          )}
+        </div>
+      </main>
     </Layout>
   )
 }
