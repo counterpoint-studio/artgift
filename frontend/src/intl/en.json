@@ -85,6 +85,7 @@
   "validationErrorEmpty": "Cannot be empty",
   "validationErrorMissingBuildingNumber": "Please provide the building number",
   "validationErrorNotInRegion": "Does not seem to be in Helsinki",
+  "validationErrorNoGiftsInRegion": "Sorry, it looks like we have no more gifts available in this region",
   "validationErrorInvalidEmail": "Please provide a valid email address",
   "validationErrorInvalidPhoneNumber": "Please provide a valid Finnish mobile number",
 

@@ -12,13 +12,16 @@ import SEO from "../components/seo"
 import NextButton from "../components/nextButton"
 import BackButton from "../components/backButton"
 import * as addresses from "../services/streetAddressLookup"
+import * as gifts from "../services/gifts"
 
-import "./to.scss"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
 import { REGION_BOUNDING_BOX } from "../constants"
 import { useMounted, useGiftState } from "../hooks"
 import { getRegionGeoJSON } from "../services/regionLookup"
 import { initGift } from "../services/gifts"
+import GiftsPage from "./gifts"
+
+import "./to.scss"
 
 const ToPage = () => {
   let intl = useIntl()
@@ -52,7 +55,19 @@ const ToPage = () => {
       async (address: string) => {
         let addressLoc = await addresses.locateAddress(address, regions)
         if (addressLoc) {
-          setGift(gift => ({ ...gift, toLocation: addressLoc }))
+          let slots = await gifts.getGiftSlotsInRegion(addressLoc.region)
+          let availableSlots = slots.filter(s => s.status === "available")
+          if (availableSlots.length > 0) {
+            setGift(gift => ({ ...gift, toLocation: addressLoc }))
+          } else {
+            setAddressValidationResult({
+              error: true,
+              message: intl.formatMessage({
+                id: "validationErrorNoGiftsInRegion",
+              }),
+            })
+            setGift(gift => ({ ...gift, toLocation: undefined }))
+          }
         } else {
           setAddressValidationResult({
             error: true,

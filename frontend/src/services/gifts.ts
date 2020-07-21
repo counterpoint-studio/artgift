@@ -32,6 +32,16 @@ export function subscribeToGiftSlotsOverview(callback: (slots: GiftSlot[]) => vo
 
 }
 
+export function getGiftSlotsInRegion(region: string): Promise<GiftSlot[]> {
+    return firebase.firestore()
+        .collection("slots")
+        .where('region', '==', region)
+        .orderBy("date")
+        .orderBy("time")
+        .get()
+        .then(res => res.docs.map(doc => ({ ...doc.data(), id: doc.id } as GiftSlot)));
+}
+
 export function subscribeToGiftSlotsInRegion(region: string, callback: (slots: { [day: string]: GiftSlot[] }) => void) {
     let unSub = firebase.firestore().collection("slots").where('region', '==', region).orderBy("date")
         .orderBy("time")
