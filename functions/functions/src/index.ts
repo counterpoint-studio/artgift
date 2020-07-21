@@ -5,7 +5,7 @@ import fetch from 'node-fetch';
 import { URLSearchParams } from 'url';
 import { sortBy, last, pick, isEqual } from 'lodash';
 
-import { RESERVATION_PERIOD, REMINDER_PERIOD, TIME_ZONE_UTC_OFFSET } from './constants';
+import { RESERVATION_PERIOD, REMINDER_PERIOD, TIME_ZONE_UTC_OFFSET, DEFAULT_LANGUAGE } from './constants';
 
 let smsTemplateSources = require('./messages.json');
 
@@ -179,6 +179,29 @@ export const populateArtistItinerariesOnArtistUpdate = functions
         });
     });
 
+export const createSMSOnArtistCreate = functions
+    .region('europe-west1')
+    .firestore
+    .document("artists/{artistId}")
+    .onCreate(async doc => {
+        let messageRef = db.collection('SMSs').doc(doc.id);
+        let phoneNumber = doc.data().phoneNumber;
+        if (phoneNumber) {
+            let template = smsTemplates[DEFAULT_LANGUAGE].artistCreated;
+            let baseUrl = functions.config().artgift.baseurl;
+            let message = template({
+                url: new Handlebars.SafeString(`${baseUrl}/artist?id=${doc.id}`)
+            });
+            messageRef.set({
+                message,
+                toNumber: phoneNumber,
+                messageKey: 'artistCreated',
+                sent: false,
+                createdAt: admin.firestore.FieldValue.serverTimestamp()
+            })
+        }
+    });
+
 export const populateArtistItinerariesOnSlotUpdate = functions
     .region('europe-west1')
     .firestore
@@ -335,7 +358,7 @@ function shouldCreate(messageRef: FirebaseFirestore.DocumentReference) {
     });
 }
 
-export const sendGiftSMSs = functions.region('europe-west1').pubsub.schedule('every 2 minutes').onRun(async () => {
+export const sendSMSs = functions.region('europe-west1').pubsub.schedule('every 2 minutes').onRun(async () => {
     let unsentMessages = await db.collection('SMSs').where('sent', '==', false).get();
     unsentMessages.forEach(async doc => {
         let { message, toNumber, createdAt } = doc.data()!;
