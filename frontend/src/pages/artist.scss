@@ -1,2 +1,139 @@
+@import "../components/variables";
+
 .artist {
+  @media (max-width: 767px) {
+    .content {
+      top: 50vh;
+      bottom: 0;
+      left: 0;
+      width: 100vw;
+
+      &:after {
+        display: none;
+      }
+    }
+
+    .main .scroll {
+      padding: 15px;
+    }
+  }
+
+  h1 {
+    @media (max-width: 767px) {
+      font-size: 16px;
+      margin: 0;
+    }
+  }
+
+  .day {
+    font-size: 13px;
+    text-transform: uppercase;
+    margin-bottom: 0;
+
+    @media (min-width: 768px) {
+      margin-bottom: 15px;
+    }
+
+    &Heading {
+      padding: 15px 0;
+      border-bottom: 3px solid black;
+    }
+
+    .date {
+      font-size: 16px;
+      margin-bottom: 5px;
+
+      @media (min-width: 768px) {
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+    }
+
+    .timeLocation {
+      font-size: 10px;
+
+      @media (min-width: 768px) {
+        font-size: 13px;
+      }
+    }
+
+    .artistAssignment {
+      cursor: pointer;
+      background: transparent;
+      transition: background-color 0.15s ease;
+
+      &:hover,
+      &.detailsOpen {
+        background: rgba($colorHFGrey, 0.25);
+      }
+
+      &Header {
+        display: grid;
+        grid-auto-flow: column;
+        grid-template-columns: auto auto 1fr;
+        border-bottom: 1px solid $colorHFGrey;
+
+        gap: 10px;
+        padding: 10px 0;
+        font-size: 10px;
+
+        @media (min-width: 768px) {
+          gap: 15px;
+          padding: 15px 0;
+          font-size: 13px;
+        }
+      }
+
+      .arrow {
+        display: block;
+        transition: transform 0.15s ease;
+        width: 10px;
+        height: 10px;
+        margin: 0 0 0 10px;
+
+        @media (min-width: 768px) {
+          width: 14px;
+          height: 14px;
+          margin: 0 0 0 15px;
+        }
+      }
+
+      &.detailsOpen .arrow {
+        transform: rotate(90deg);
+      }
+
+      &Details {
+        display: block;
+        width: 100%;
+        padding: 10px;
+
+        @media (min-width: 768px) {
+          padding: 15px;
+        }
+
+        table {
+          width: 100%;
+          max-width: 100%;
+          padding: 0;
+          margin: 0;
+          font-size: 10px;
+
+          @media (min-width: 768px) {
+            font-size: 13px;
+          }
+
+          td {
+            vertical-align: top;
+            line-height: 1.5;
+            border: none;
+            padding: 2px 0;
+
+            @media (min-width: 768px) {
+              padding: 5px 0;
+            }
+          }
+        }
+      }
+    }
+  }
 }

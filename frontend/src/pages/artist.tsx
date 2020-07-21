@@ -81,7 +81,7 @@ const ArtistPage: React.FC<PageProps> = ({ location }) => {
       />
       <Helmet
         bodyAttributes={{
-          class: "artist mapDominant",
+          class: "artist mapLayout",
         }}
         key="helmet"
       />
@@ -91,22 +91,17 @@ const ArtistPage: React.FC<PageProps> = ({ location }) => {
             <div className="artistInfo">
               <h1>{artist.name}</h1>
               {artist.itineraries.map((it, idx) => (
-                <div key={idx} className="artistItinerary">
-                  <ul>
-                    <li>Date: {formatDate(it.from.date, intl)} </li>
-                    <li>
-                      Time: {formatTime(it.from.time)} -{" "}
-                      {formatTime(it.to.time)}
-                    </li>
-                    <li>
-                      Location:{" "}
+                <div key={idx} className="day">
+                  <div className="dayHeading">
+                    <div className="date">{formatDate(it.from.date, intl)}</div>
+                    <div className="timeLocation">
+                      {formatTime(it.from.time)} - {formatTime(it.to.time)} /{" "}
                       {intl.formatMessage({
                         id: `region${camelCase(it.region.toLowerCase())}`,
                       })}
-                    </li>
-                  </ul>
-                  <div className="artistSchedule">
-                    <h2>Schedule:</h2>
+                    </div>
+                  </div>
+                  <div className="assignments">
                     {it.assignments.map(a => (
                       <div
                         key={a.giftId}
@@ -146,28 +141,58 @@ function renderAssignment(
 ) {
   return (
     <>
-      {formatTime(slot.time)} {gift.toAddress}
+      <div className="artistAssignmentHeader">
+        <svg
+          className="arrow"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 14 14"
+        >
+          <path
+            fill="black"
+            d="M13.92,7.38a.92.92,0,0,0,0-.76,1.15,1.15,0,0,0-.21-.33l-6-6a1,1,0,0,0-1.42,0,1,1,0,0,0,0,1.42L10.58,6H1A1,1,0,0,0,1,8h9.58L6.27,12.29a1,1,0,0,0,0,1.41h0A1,1,0,0,0,7,14a1,1,0,0,0,.71-.29l6-6A1.29,1.29,0,0,0,13.92,7.38Z"
+          />
+        </svg>
+        <div className="time">{formatTime(slot.time)}</div>{" "}
+        <div className="address">{gift.toAddress}</div>
+      </div>
       {withDetails && (
         <div className="artistAssignmentDetails">
-          <div>
-            {intl.formatMessage({ id: "artistGiftFrom" })}: {gift.fromName} &lt;
-            {gift.fromEmail}&gt; {gift.fromPhoneNumber}
-          </div>
-          <div>
-            {intl.formatMessage({ id: "artistGiftTo" })}: {gift.toName}
-          </div>
-          <div>
-            {intl.formatMessage({ id: "artistGiftLanguage" })}:{" "}
-            {gift.toLanguage}
-          </div>
-          <div>
-            {intl.formatMessage({ id: "artistGiftReason" })}:{" "}
-            {gift.toSignificance}
-          </div>
-          <div>
-            {intl.formatMessage({ id: "artistGiftMessage" })}:{" "}
-            {gift.fromMessage || "-"}
-          </div>
+          <table>
+            <colgroup>
+              <col className="title" />
+              <col className="description" />
+            </colgroup>
+            <tbody>
+              <tr>
+                <td>{intl.formatMessage({ id: "artistGiftFrom" })}</td>
+                <td>
+                  {gift.fromName}
+                  <br />
+                  <a className="email" href={`mailto:${gift.fromEmail}`}>
+                    {gift.fromEmail}
+                  </a>
+                  <br />
+                  <span className="phone">{gift.fromPhoneNumber}</span>
+                </td>
+              </tr>
+              <tr>
+                <td>{intl.formatMessage({ id: "artistGiftTo" })}</td>
+                <td>{gift.toName}</td>
+              </tr>
+              <tr>
+                <td>{intl.formatMessage({ id: "artistGiftLanguage" })}</td>
+                <td>{gift.toLanguage}</td>
+              </tr>
+              <tr>
+                <td>{intl.formatMessage({ id: "artistGiftReason" })}</td>
+                <td>{gift.toSignificance}</td>
+              </tr>
+              <tr>
+                <td>{intl.formatMessage({ id: "artistGiftMessage" })}</td>
+                <td>{gift.fromMessage || "-"}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       )}
     </>

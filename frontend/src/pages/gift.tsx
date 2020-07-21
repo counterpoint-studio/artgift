@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import Helmet from "react-helmet"
 import { useIntl, navigate } from "gatsby-plugin-intl"
 import { PageProps } from "gatsby"
+import classNames from "classnames"
 import qs from "qs"
 
 import Layout from "../components/layout"
@@ -65,7 +66,7 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
       />
       <Helmet
         bodyAttributes={{
-          class: "gift mapDominant",
+          class: "gift mapLayout",
         }}
         key="helmet"
       />
@@ -74,25 +75,47 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
           {gift && slot && (
             <div className="giftInfo">
               <h1>{intl.formatMessage({ id: "giftTitle" })}</h1>
-              <p>
-                {intl.formatMessage({ id: "giftStatus" })}:
-                {intl.formatMessage({
-                  id: "giftStatus" + (gift.status || "pending"),
-                })}
-              </p>
-              <p>
-                {intl.formatMessage({ id: "giftTime" })}:
-                {formatDate(slot.date, intl)} {formatTime(slot.time)}
-              </p>
-              <p>
-                {intl.formatMessage({ id: "giftPlace" })}:{gift.toAddress}
-              </p>
-              <p>
-                {intl.formatMessage({ id: "giftFrom" })}:{gift.fromName}
-              </p>
-              <p>
-                {intl.formatMessage({ id: "giftTo" })}:{gift.toName}
-              </p>
+              <table>
+                <colgroup>
+                  <col className="title" />
+                  <col className="description" />
+                </colgroup>
+                <tbody>
+                  <tr>
+                    <td>{intl.formatMessage({ id: "giftStatus" })}</td>
+                    <td>
+                      <span
+                        className={classNames(
+                          "giftStatus",
+                          gift.status || "pending"
+                        )}
+                      >
+                        {intl.formatMessage({
+                          id: "giftStatus" + (gift.status || "pending"),
+                        })}
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{intl.formatMessage({ id: "giftTime" })}</td>
+                    <td>
+                      {formatDate(slot.date, intl)} {formatTime(slot.time)}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{intl.formatMessage({ id: "giftPlace" })}</td>
+                    <td>{gift.toAddress}</td>
+                  </tr>
+                  <tr>
+                    <td>{intl.formatMessage({ id: "giftFrom" })}</td>
+                    <td>{gift.fromName}</td>
+                  </tr>
+                  <tr>
+                    <td>{intl.formatMessage({ id: "giftTo" })}</td>
+                    <td>{gift.toName}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           )}
         </div>
