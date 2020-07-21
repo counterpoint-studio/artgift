@@ -171,12 +171,10 @@ export const populateArtistItinerariesOnArtistUpdate = functions
                 }
             }
         }
-        return db.runTransaction(async tx => {
-            console.log('on artist update, populating itineraries for regions', Array.from(affectedRegions));
-            for (let region of Array.from(affectedRegions)) {
-                await populateArtistItineraries(region, tx);
-            }
-        });
+        console.log('on artist update, populating itineraries for regions', Array.from(affectedRegions));
+        for (let region of Array.from(affectedRegions)) {
+            await db.runTransaction(tx => populateArtistItineraries(region, tx));
+        }
     });
 
 export const createSMSOnArtistCreate = functions
@@ -207,19 +205,17 @@ export const populateArtistItinerariesOnSlotUpdate = functions
     .firestore
     .document("slots/{slotId}")
     .onWrite(async (change) => {
-        return db.runTransaction(async tx => {
-            let affectedRegions = new Set<string>();
-            if (change.before.exists) {
-                affectedRegions.add(change.before.data()!.region);
-                if (change.after.exists) {
-                    affectedRegions.add(change.after.data()!.region);
-                }
+        let affectedRegions = new Set<string>();
+        if (change.before.exists) {
+            affectedRegions.add(change.before.data()!.region);
+            if (change.after.exists) {
+                affectedRegions.add(change.after.data()!.region);
             }
-            console.log('on slot update, populating itineraries for regions', Array.from(affectedRegions));
-            for (let region of Array.from(affectedRegions)) {
-                await populateArtistItineraries(region, tx);
-            }
-        });
+        }
+        console.log('on slot update, populating itineraries for regions', Array.from(affectedRegions));
+        for (let region of Array.from(affectedRegions)) {
+            await db.runTransaction(tx => populateArtistItineraries(region, tx));
+        }
     });
 
 
@@ -278,7 +274,10 @@ async function populateArtistItineraries(region: string, tx: FirebaseFirestore.T
         data: {
             ...a.data() as any,
             itineraries: sortBy(
-                (a.data() as any).itineraries.map((i: any) => ({ ...i, assignments: [] })),
+                (a.data() as any).itineraries.map((i: any) => ({
+                    ...i,
+                    assignments: i.region === region ? [] : i.assignments // clear existing assignments for this region
+                })),
                 i => i.from.date,
                 i => i.from.time
             )
@@ -293,6 +292,9 @@ async function populateArtistItineraries(region: string, tx: FirebaseFirestore.T
         for (let i = 0; i < artistData.length; i++) {
             for (let j = 0; j < artistData[i].data.itineraries.length; j++) {
                 let it = artistData[i].data.itineraries[j];
+                if (it.region !== region) {
+                    continue;
+                }
                 let itFrom = parseDateTime(it.from.date, it.from.time);
                 let itTo = parseDateTime(it.to.date, it.to.time);
                 if (slotDate.getTime() >= itFrom.getTime() && slotDate.getTime() < itTo.getTime()) {

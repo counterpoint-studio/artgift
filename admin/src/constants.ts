@@ -3,6 +3,7 @@ export const REGIONS = [
     { id: 'LÄNTINEN', name: { fi: 'Läntinen', en: 'Western' } },
     { id: 'KESKINEN', name: { fi: 'Keskinen', en: 'Central' } },
     { id: 'KOILLINEN', name: { fi: 'Koillinen', en: 'Northeastern' } },
+    { id: 'KAAKKOINEN', name: { fi: 'Kaakkoinen', en: 'Southeastern' } },
     { id: 'ITÄINEN & ÖSTERSUNDOM', name: { fi: 'Itäinen & Östersundom', en: 'Eastern & Östersundom' } }
 ];
 export const DATES = ['20200807', '20200808', '20200809'];

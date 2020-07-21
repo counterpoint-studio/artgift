@@ -205,7 +205,10 @@ const ToPage = () => {
             <select
               value={gift.toLanguage}
               onChange={evt =>
-                setGift(gift => ({ ...gift, toLanguage: evt.target.value }))
+                setGift(gift => ({
+                  ...gift,
+                  toLanguage: evt.currentTarget.value,
+                }))
               }
             >
               <option value="fi">
