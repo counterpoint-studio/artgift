@@ -41,6 +41,7 @@
     "use-persisted-state": "^0.3.0"
   },
   "devDependencies": {
+    "cypress": "^4.10.0",
     "prettier": "2.0.5"
   },
   "keywords": [
@@ -54,7 +55,7 @@
     "start": "npm run develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
+    "cypress:open": "cypress open"
   },
   "repository": {
     "type": "git",
