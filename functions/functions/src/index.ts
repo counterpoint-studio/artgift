@@ -359,6 +359,10 @@ function shouldCreate(messageRef: FirebaseFirestore.DocumentReference) {
 }
 
 export const sendSMSs = functions.region('europe-west1').pubsub.schedule('every 2 minutes').onRun(async () => {
+    let testMode = functions.config().artgift.testmode;
+    if (testMode) {
+        console.log('In test mode; skipping message sending');
+    }
     let unsentMessages = await db.collection('SMSs').where('sent', '==', false).get();
     unsentMessages.forEach(async doc => {
         let { message, toNumber, createdAt } = doc.data()!;

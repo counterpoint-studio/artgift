@@ -10,7 +10,8 @@
     "typescript": "^3.8.0"
   },
   "scripts": {
-    "initDatabase": "GOOGLE_APPLICATION_CREDENTIALS=art-gift-firebase-adminsdk-credentials.json ts-node ./initDatabase.ts"
+    "prod:initDatabase": "GOOGLE_APPLICATION_CREDENTIALS=art-gift-firebase-adminsdk-credentials.json ts-node ./initDatabase.ts",
+    "test:initDatabase": "GOOGLE_APPLICATION_CREDENTIALS=art-gift-test-firebase-adminsdk-credentials.json ts-node ./initDatabase.ts"
   },
   "private": true
 }

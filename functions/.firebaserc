@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "art-gift"
+    "default": "art-gift",
+    "test": "art-gift-test"
   }
 }

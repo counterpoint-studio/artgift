@@ -54,6 +54,7 @@
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "start": "npm run develop",
     "serve": "gatsby serve",
+    "serve:test": "GATSBY_ACTIVE_ENV=test gatsby build && gatsby serve --port=8001",
     "clean": "gatsby clean",
     "cypress:open": "cypress open"
   },
