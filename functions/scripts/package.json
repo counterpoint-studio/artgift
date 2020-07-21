@@ -1,0 +1,16 @@
+{
+  "name": "artgift-scripts",
+  "dependencies": {
+    "@types/lodash": "^4.14.157",
+    "firebase-admin": "^8.10.0",
+    "lodash": "^4.17.19"
+  },
+  "devDependencies": {
+    "ts-node": "^8.10.2",
+    "typescript": "^3.8.0"
+  },
+  "scripts": {
+    "initDatabase": "GOOGLE_APPLICATION_CREDENTIALS=art-gift-firebase-adminsdk-credentials.json ts-node ./initDatabase.ts"
+  },
+  "private": true
+}
