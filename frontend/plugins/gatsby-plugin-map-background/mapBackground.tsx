@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react"
 import mapboxgl, { LngLatBoundsLike, LngLatLike } from "mapbox-gl"
-import { useWindowWidth } from "@react-hook/window-size"
+import { useWindowSize } from "@react-hook/window-size"
 
 import "./mapBackground.scss"
 
@@ -13,13 +13,14 @@ const FIRST_ZOOM_DURATION_MS = 5_000
 const SUBSEQUENT_ZOOM_DURATION_MS = 2_000
 const FIRST_POINT_ENTER_DELAY_MS = 3_000
 const MIN_POINT_ENTER_DELAY_MS = 0
-const MAX_POINT_ENTER_INTERVAL_MS = 30
+const MAX_POINT_ENTER_INTERVAL_MS = 20
 const LAST_POINT_ENTER_DELAY_MS = 1_000
 
 export interface MapBackgroundProps {
   initPoint?: LngLatLike
   bounds?: LngLatBoundsLike
   boundsPadding?: number
+  isSplitScreen?: boolean
   regions?: { feature: GeoJSON.Feature; bounds: mapboxgl.LngLatBoundsLike }[]
   points?: { id: string; location: [number, number] }[]
   focusPoint?: { className: string; location: [number, number] }
@@ -30,12 +31,13 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
   initPoint,
   bounds,
   boundsPadding,
+  isSplitScreen,
   regions,
   points,
   focusPoint,
   onSetMoving,
 }) => {
-  let windowWidth = useWindowWidth()
+  let [windowWidth, windowHeight] = useWindowSize()
   let mapEl = useRef<HTMLDivElement>()
   let [map, setMap] = useState<mapboxgl.Map>()
   let [addingPoints, setAddingPoints] = useState(false)
@@ -61,10 +63,10 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
         left: windowWidth > 768 ? 500 : 0,
         top: 0,
         right: 0,
-        bottom: 0,
+        bottom: isSplitScreen ? windowHeight / 2 : 0,
       })
     },
-    [map, windowWidth]
+    [map, windowWidth, windowHeight, isSplitScreen]
   )
   useEffect(
     function centerMap() {
