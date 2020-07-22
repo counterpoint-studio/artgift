@@ -10,11 +10,7 @@ interface BackButtonProps {
 }
 const BackButton: React.FC<BackButtonProps> = ({ text, to }) => (
   <button
-    onClick={() =>
-      to
-        ? (console.log("intl navigating", to), intlNavigate(to))
-        : (console.log("back"), navigate(-1))
-    }
+    onClick={() => (to ? intlNavigate(to) : navigate(-1))}
     className="button button--back"
   >
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23.96 14">

@@ -1,6 +1,6 @@
 import React from "react"
 import Helmet from "react-helmet"
-import { useIntl } from "gatsby-plugin-intl"
+import { useIntl, Link } from "gatsby-plugin-intl"
 import { PageProps } from "gatsby"
 import classNames from "classnames"
 import { useWindowWidth } from "@react-hook/window-size"
@@ -66,11 +66,12 @@ const InfoPage: React.FC<PageProps> = () => {
             <div className="inputGroup">
               <label>
                 <input type="checkbox" />
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: intl.formatMessage({ id: "infoRequirementTerms" }),
-                  }}
-                ></span>{" "}
+                <span>
+                  {intl.formatMessage({ id: "infoRequirementTerms" })}{" "}
+                  <Link to="/terms" state={{ backTo: `/info` }}>
+                    {intl.formatMessage({ id: "infoRequirementTermsLinkText" })}
+                  </Link>
+                </span>{" "}
                 <span className="requiredField">*</span>
               </label>
             </div>

@@ -19,7 +19,8 @@
   "infoDescription": "Ennen kuin aloitat, pyydämme lupaasi muutamalle asialle:",
   "infoRequirementAttendance": "Ymmärrän että minun on oltava paikalla lahjan vastaanottajan kanssa sovitussa paikassa sovittuun aikaan.",
   "infoRequirementMarketing": "Paikalla saattaa olla valokuvaajia. Annan luvan valokuvani ottamiseen ja käyttämiseen Helsinki Festin markkinointimateriaalissa.",
-  "infoRequirementTerms": "Hyväksyn Taidelahjan <a href=\"terms\">Käyttöehdot<a/>",
+  "infoRequirementTerms": "Hyväksyn Taidelahjan",
+  "infoRequirementTermsLinkText": "Käyttöehdot",
   "infoRequirementGDPR": "Annan Helsinki Festille luvan tallentaa antamani henkilötiedot Taidelahjan toimittamista varten. Henkilötietoni jaetaan myös lahjan tuovalle taiteilijalle.",
   "infoButtonNext": "Aloita",
 

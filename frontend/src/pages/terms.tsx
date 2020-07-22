@@ -1,5 +1,6 @@
 import React from "react"
 import Helmet from "react-helmet"
+import { PageProps } from "gatsby"
 import { useIntl } from "gatsby-plugin-intl"
 
 import Layout from "../components/layout"
@@ -8,7 +9,7 @@ import BackButton from "../components/backButton"
 
 import "./terms.scss"
 
-const TermsPage = () => {
+const TermsPage: React.FC<PageProps> = ({ location }) => {
   let intl = useIntl()
 
   return (
@@ -28,7 +29,10 @@ const TermsPage = () => {
           <h1>{intl.formatMessage({ id: "termsTitle" })}</h1>
           <p>{intl.formatMessage({ id: "termsContent" })}</p>
         </div>
-        <BackButton text={intl.formatMessage({ id: "backButton" })} />
+        <BackButton
+          text={intl.formatMessage({ id: "backButton" })}
+          to={(location.state as any)?.backTo}
+        />
       </main>
     </Layout>
   )
