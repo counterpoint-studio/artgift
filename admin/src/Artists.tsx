@@ -41,6 +41,7 @@ export const Artists: React.FC = () => {
     (evt: FormEvent) => {
       evt.preventDefault();
       coll.add(newArtist);
+      setNewArtist(INIT_ARTIST);
     },
     [coll, newArtist]
   );
