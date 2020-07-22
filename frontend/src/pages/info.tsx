@@ -3,6 +3,7 @@ import Helmet from "react-helmet"
 import { useIntl } from "gatsby-plugin-intl"
 import { PageProps } from "gatsby"
 import classNames from "classnames"
+import { useWindowWidth } from "@react-hook/window-size"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -19,10 +20,11 @@ import "./info.scss"
 const InfoPage: React.FC<PageProps> = () => {
   let mounted = useMounted()
   let intl = useIntl()
+  let windowWidth = useWindowWidth()
   let { isMoving: isMapMoving } = useMapBackground({
     initPoint: MAP_INIT_CENTER,
     bounds: REGION_BOUNDING_BOX,
-    boundsPadding: 150,
+    boundsPadding: windowWidth < 768 ? 0 : 150,
     regions: undefined,
   })
 
