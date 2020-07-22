@@ -48,46 +48,53 @@ const InfoPage: React.FC<PageProps> = () => {
           <p>{intl.formatMessage({ id: "infoDescription" })}</p>
           <div className="checkboxes">
             <div className="inputGroup">
-              <label>
-                <input type="checkbox" />
-                {intl.formatMessage({ id: "infoRequirementAttendance" })}{" "}
-                <span className="requiredField">*</span>
-              </label>
+              <div className="inputCheckbox">
+                <input type="checkbox" id="infoRequirementAttendance" />
+                <label htmlFor="infoRequirementAttendance">
+                  {intl.formatMessage({ id: "infoRequirementAttendance" })}{" "}
+                  <span className="requiredField">*</span>
+                </label>
+              </div>
             </div>
             <div className="inputGroup">
-              <label>
-                <input type="checkbox" />
-                {intl.formatMessage({ id: "infoRequirementMarketing" })}{" "}
-                <span className="requiredField">*</span>
-              </label>
+              <div className="inputCheckbox">
+                <input type="checkbox" id="infoRequirementMarketing" />
+                <label htmlFor="infoRequirementMarketing">
+                  {intl.formatMessage({ id: "infoRequirementMarketing" })}{" "}
+                  <span className="requiredField">*</span>
+                </label>
+              </div>
             </div>
             <div className="inputGroup">
-              <label>
-                <input type="checkbox" />
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: intl.formatMessage({ id: "infoRequirementTerms" }),
-                  }}
-                ></span>{" "}
-                <span className="requiredField">*</span>
-              </label>
+              <div className="inputCheckbox">
+                <input type="checkbox" id="infoRequirementTerms" />
+                <label htmlFor="infoRequirementTerms">
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: intl.formatMessage({
+                        id: "infoRequirementTerms",
+                      }),
+                    }}
+                  ></span>{" "}
+                  <span className="requiredField">*</span>
+                </label>
+              </div>
             </div>
             <div className="inputGroup">
-              <label>
-                <input type="checkbox" />
-                {intl.formatMessage({ id: "infoRequirementGDPR" })}{" "}
-                <span className="requiredField">*</span>
-              </label>
+              <div className="inputCheckbox">
+                <input type="checkbox" id="infoRequirementGDPR" />
+                <label htmlFor="infoRequirementGDPR">
+                  {intl.formatMessage({ id: "infoRequirementGDPR" })}{" "}
+                  <span className="requiredField">*</span>
+                </label>
+              </div>
             </div>
-            <NextButton
-              to="/to"
-              text={intl.formatMessage({ id: "infoButtonNext" })}
-            />
-            <BackButton
-              to="/"
-              text={intl.formatMessage({ id: "backButton" })}
-            />
           </div>
+          <NextButton
+            to="/to"
+            text={intl.formatMessage({ id: "infoButtonNext" })}
+          />
+          <BackButton to="/" text={intl.formatMessage({ id: "backButton" })} />
         </div>
       </main>
     </Layout>
