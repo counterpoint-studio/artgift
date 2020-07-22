@@ -16,16 +16,18 @@ import HeroImage from "../images/heroImage.jpg"
 
 import "./index.scss"
 import { useGiftState } from "../hooks"
+import { useWindowWidth } from "@react-hook/window-size"
 
 const IntroPage = () => {
   let intl = useIntl()
+  let windowWidth = useWindowWidth()
   let [pointsLoaded, setPointsLoaded] = useState(false)
 
   let mapContext = useContext(MapBackgroundContext)
   let { isMoving: isMapMoving } = useMapBackground({
     initPoint: MAP_INIT_CENTER,
     bounds: REGION_BOUNDING_BOX,
-    boundsPadding: 150,
+    boundsPadding: windowWidth < 768 ? 0 : 150,
     regions: undefined,
   })
   let [gift, setGift] = useGiftState(gifts.initGift(intl.locale))
