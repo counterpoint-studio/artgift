@@ -5,6 +5,7 @@ import { PageProps } from "gatsby"
 import qs from "qs"
 import classNames from "classnames"
 import { camelCase, flatMap } from "lodash"
+import { useWindowWidth } from "@react-hook/window-size"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -20,6 +21,7 @@ const emptyPoints = []
 
 const ArtistPage: React.FC<PageProps> = ({ location }) => {
   let intl = useIntl()
+  let windowWidth = useWindowWidth()
   let [artist, setArtist] = useState<Artist>()
   let [giftsAndSlots, setGiftsAndSlots] = useState<{
     [giftId: string]: { gift: Gift; slot: GiftSlot }
@@ -66,6 +68,7 @@ const ArtistPage: React.FC<PageProps> = ({ location }) => {
       ? boundsAround(detailedAssignment?.gift.toLocation.point)
       : REGION_BOUNDING_BOX,
     boundsPadding: 0,
+    isSplitScreen: windowWidth < 768,
     points: emptyPoints,
     focusPoint: detailedAssignment?.gift?.toLocation && {
       className: "artistPage",

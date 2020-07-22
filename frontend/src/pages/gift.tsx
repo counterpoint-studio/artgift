@@ -4,6 +4,7 @@ import { useIntl, navigate } from "gatsby-plugin-intl"
 import { PageProps } from "gatsby"
 import classNames from "classnames"
 import qs from "qs"
+import { useWindowWidth } from "@react-hook/window-size"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -19,6 +20,7 @@ const emptyPoints = []
 
 const GiftPage: React.FC<PageProps> = ({ location }) => {
   let intl = useIntl()
+  let windowWidth = useWindowWidth()
   let [gift, setGift] = useState<Gift>()
   let [slot, setSlot] = useState<GiftSlot>()
 
@@ -51,6 +53,7 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
       ? boundsAround(gift.toLocation.point)
       : REGION_BOUNDING_BOX,
     boundsPadding: 0,
+    isSplitScreen: windowWidth < 768,
     points: emptyPoints,
     focusPoint: gift?.toLocation && {
       className: "giftPage",
