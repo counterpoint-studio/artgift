@@ -4,7 +4,7 @@ export type Slot = {
     date: string;
     time: string;
     region: string;
-    status: "available" | "reserved";
+    status: "notAvailable" | "available" | "reserved";
 };
 
 export type Gift = {

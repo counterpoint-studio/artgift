@@ -16,6 +16,11 @@ service cloud.firestore {
       return (request.resource.data.status == resource.data.status || request.resource.data.status == 'pending') && (!('slotId' in request.resource.data) || request.resource.data.slotId == resource.data.slotId);
     }
 
+    match /appstates/{appstate} {
+      allow read;
+      allow write: if isAdminUser()
+    }
+
     match /slots/{slot} {
       allow read;
       allow write: if isAdminUser()

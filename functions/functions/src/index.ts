@@ -21,6 +21,30 @@ for (let locale of Object.keys(smsTemplateSources)) {
     }
 }
 
+export const makeSlotsAvailableBasedOnAppState = functions.region('europe-west1')
+    .firestore
+    .document("appstates/{appStateId}")
+    .onWrite(async change => {
+        if (!change.after.exists) return;
+        let appState = change.after.data()!.state;
+        if (appState === 'open') {
+            let slotsToUpdate = await db.collection('slots').where('status', '==', 'notAvailable').get();
+            let batch = db.batch();
+            slotsToUpdate.forEach(slot => {
+                batch.set(slot.ref, { status: 'available' }, { merge: true });
+            })
+            await batch.commit();
+        } else if (appState === 'closed') {
+            let slotsToUpdate = await db.collection('slots').where('status', '==', 'available').get();
+            let batch = db.batch();
+            slotsToUpdate.forEach(slot => {
+                batch.set(slot.ref, { status: 'notAvailable' }, { merge: true });
+            })
+            await batch.commit();
+        }
+    });
+
+
 export const processSlotReservation = functions
     .region('europe-west1')
     .firestore

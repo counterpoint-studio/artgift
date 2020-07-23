@@ -6,7 +6,7 @@ export type GiftSlot = {
     region: string;
     date: string;
     time: string;
-    status: 'available' | 'reserved' | 'onHold'
+    status: 'notAvailable' | 'available' | 'reserved'
 }
 
 export type Gift = {

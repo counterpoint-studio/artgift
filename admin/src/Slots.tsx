@@ -20,18 +20,20 @@ import { Slot } from "./types";
 
 import "./Slots.scss";
 
-const INIT_SLOT: Slot = {
-  date: DATES[0],
-  time: "11:00",
-  region: REGIONS[0].id,
-  status: "available",
-};
+function initSlot(appState: "open" | "closed"): Slot {
+  return {
+    date: DATES[0],
+    time: "11:00",
+    region: REGIONS[0].id,
+    status: appState === "open" ? "available" : "notAvailable",
+  };
+}
 
 export const Slots: React.FC = () => {
   let coll = useMemo(() => firebase.firestore().collection("slots"), []);
 
   let [slots, setSlots] = useState<Slot[]>([]);
-  let [newSlot, setNewSlot] = useState<Slot>(INIT_SLOT);
+  let [newSlot, setNewSlot] = useState<Slot>(initSlot("open"));
   let [newSlotHour, newSlotMinute] = newSlot.time.split(":").map((t) => +t);
 
   useEffect(() => {

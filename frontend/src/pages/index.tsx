@@ -21,6 +21,7 @@ import { useWindowWidth } from "@react-hook/window-size"
 const IntroPage = () => {
   let intl = useIntl()
   let windowWidth = useWindowWidth()
+  let [appState, setAppState] = useState<"notOpenYet" | "open" | "closed">()
   let [pointsLoaded, setPointsLoaded] = useState(false)
 
   let mapContext = useContext(MapBackgroundContext)
@@ -36,6 +37,16 @@ const IntroPage = () => {
     let unSub = gifts.subscribeToGiftSlotsOverview(giftSlots => {
       mapContext.update({ points: regions.getRandomLocations(giftSlots) })
       setPointsLoaded(true)
+      let anySlotsAvailable = giftSlots.find(s => s.status === "available")
+      if (anySlotsAvailable) {
+        setAppState("open")
+      } else {
+        setAppState(
+          giftSlots.find(s => s.status === "notAvailable")
+            ? "notOpenYet"
+            : "closed"
+        )
+      }
     })
     return unSub
   }, [])
@@ -85,11 +96,27 @@ const IntroPage = () => {
               </a>
             </p>
           </div>
-          <NextButton
-            to="/info"
-            text={intl.formatMessage({ id: "introButtonNext" })}
-            onClick={initialiseGift}
-          />
+          {appState === "open" && (
+            <NextButton
+              to="/info"
+              text={intl.formatMessage({ id: "introButtonNext" })}
+              onClick={initialiseGift}
+            />
+          )}
+          {appState === "notOpenYet" && (
+            <p
+              dangerouslySetInnerHTML={{
+                __html: intl.formatMessage({ id: "introNotOpenYet" }),
+              }}
+            />
+          )}
+          {appState === "closed" && (
+            <p
+              dangerouslySetInnerHTML={{
+                __html: intl.formatMessage({ id: "introClosed" }),
+              }}
+            />
+          )}
         </div>
       </main>
     </Layout>
