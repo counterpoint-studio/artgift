@@ -14,6 +14,7 @@
     "@types/react-dom": "^16.9.0",
     "@types/react-router-dom": "^5.1.5",
     "classnames": "^2.2.6",
+    "export-to-csv": "^0.2.1",
     "firebase": "^7.15.0",
     "lodash": "^4.17.15",
     "node-sass": "^4.14.1",
