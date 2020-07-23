@@ -151,7 +151,7 @@ export const createGiftReminderSMSs = functions.region('europe-west1').pubsub.sc
             let giftMessages = await db.collection('SMSs').where('giftId', '==', gift.id).get();
             let existingReminder = giftMessages.docs.find(d => d.data().messageKey === 'giftReminder');
             if (!existingReminder) {
-                let template = smsTemplates[giftData.fromLanguage || 'en'].giftReminder;
+                let template = smsTemplates[giftData.fromLanguage || 'en'].giftReminderBody;
                 let baseUrl = functions.config().artgift.baseurl;
                 let message = template({
                     dateTime: `${formatDate(date)} ${formatTime(time)}`,
@@ -209,7 +209,7 @@ export const createSMSOnArtistCreate = functions
         let messageRef = db.collection('SMSs').doc(doc.id);
         let phoneNumber = doc.data().phoneNumber;
         if (phoneNumber) {
-            let template = smsTemplates[DEFAULT_LANGUAGE].artistCreated;
+            let template = smsTemplates[DEFAULT_LANGUAGE].artistCreatedBody;
             let baseUrl = functions.config().artgift.baseurl;
             let message = template({
                 url: new Handlebars.SafeString(`${baseUrl}/artist?id=${doc.id}`)
@@ -360,7 +360,7 @@ async function createMessage(giftId: string, giftDocument: FirebaseFirestore.Doc
     let messageRef = db.collection('SMSs').doc(eventId);
     if (await shouldCreate(messageRef)) {
         let slot = await (await db.collection('slots').doc(giftDocument.slotId).get()).data();
-        let template = smsTemplates[giftDocument.fromLanguage || 'en'][messageKey];
+        let template = smsTemplates[giftDocument.fromLanguage || 'en'][messageKey + 'Body'];
         let baseUrl = functions.config().artgift.baseurl;
         let message = template({
             dateTime: `${formatDate(slot!.date)} ${formatTime(slot!.time)}`,

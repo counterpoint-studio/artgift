@@ -1,14 +1,22 @@
 {
   "fi": {
-    "giftCreated": "Taidelahjasi {{dateTime}} {{address}} on varattu. Saat varmistusviestin kun olemme tarkistaneet lahjan saatavuuden. Katso lahjan tiedot osoitteessa {{url}}",
-    "giftConfirmed": "Taidelahjasi {{dateTime}} {{address}} on varmistettu. Saavuthan sovitusti paikalle lahjan saajan kanssa. Katso lahjan tiedot osoitteessa {{url}}",
-    "giftReminder": "Taidelahjasi {{dateTime}} {{address}} saapuu huomenna! Saavuthan sovitusti paikalle lahjan saajan kanssa. Katso lahjan tiedot osoitteessa {{url}}",
-    "artistCreated": "Tervetuloa taiteilijaksi Taidelahja-projektiin! Voit milloin tahansa käydä henkilökohtaisella taiteilijasivullasi osoitteessa {{url}} katsomassa päiväkohtaisen aikataulusi"
+    "giftCreatedSubject": "Taidelahja varattu",
+    "giftCreatedBody": "Taidelahjasi {{dateTime}} {{address}} on varattu. Saat varmistusviestin kun olemme tarkistaneet lahjan saatavuuden. Katso lahjan tiedot osoitteessa {{url}}",
+    "giftConfirmedSubject": "Taidelahjan varauas varmistettu",
+    "giftConfirmedBody": "Taidelahjasi {{dateTime}} {{address}} on varmistettu. Saavuthan sovitusti paikalle lahjan saajan kanssa. Katso lahjan tiedot osoitteessa {{url}}",
+    "giftReminderSubject": "Taidelahjasi saapuu huomenna",
+    "giftReminderBody": "Taidelahjasi {{dateTime}} {{address}} saapuu huomenna! Saavuthan sovitusti paikalle lahjan saajan kanssa. Katso lahjan tiedot osoitteessa {{url}}",
+    "artistCreatedSubject": "Tervetuloa Taidelahja-taiteilijaksi",
+    "artistCreatedBody": "Tervetuloa taiteilijaksi Taidelahja-projektiin! Voit milloin tahansa käydä henkilökohtaisella taiteilijasivullasi osoitteessa {{url}} katsomassa päiväkohtaisen aikataulusi"
   },
   "en": {
-    "giftCreated": "Your Art Gift {{dateTime}} {{address}} is reserved. You will receive a confirmation once we've ensured availability. Find gift details at {{url}}",
-    "giftConfirmed": "Your Art Gift {{dateTime}} {{address}} has been confirmed. Please be there with the gift recipient at this time. Find gift details at {{url}}",
-    "giftReminder": "Your Art Gift {{dateTime}} {{address}} will be delivered tomorrow! Please be there with the gift recipient at this time. Find gift details at {{url}}",
-    "artistCreated": "Welcome to the Art Gift project, artist! You may at any point go to your personal artist page at {{url}} to see your daily schedule"
+    "giftCreatedSubject": "Art Gift Reserved",
+    "giftCreatedBody": "Your Art Gift {{dateTime}} {{address}} is reserved. You will receive a confirmation once we've ensured availability. Find gift details at {{url}}",
+    "giftConfirmedSubject": "Art Gift Reservation Confirmed",
+    "giftConfirmedBody": "Your Art Gift {{dateTime}} {{address}} has been confirmed. Please be there with the gift recipient at this time. Find gift details at {{url}}",
+    "giftReminderSubject": "Your Art Gift will arrive tomorrow",
+    "giftReminderBody": "Your Art Gift {{dateTime}} {{address}} will be delivered tomorrow! Please be there with the gift recipient at this time. Find gift details at {{url}}",
+    "artistCreatedSubject": "Welcome, Art Gift Artist",
+    "artistCreatedBody": "Welcome to the Art Gift project, artist! You may at any point go to your personal artist page at {{url}} to see your daily schedule"
   }
 }
