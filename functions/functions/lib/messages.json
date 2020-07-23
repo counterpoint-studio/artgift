@@ -2,7 +2,7 @@
   "fi": {
     "giftCreatedSubject": "Taidelahja varattu",
     "giftCreatedBody": "Taidelahjasi {{dateTime}} {{address}} on varattu. Saat varmistusviestin kun olemme tarkistaneet lahjan saatavuuden. Katso lahjan tiedot osoitteessa {{url}}",
-    "giftConfirmedSubject": "Taidelahjan varauas varmistettu",
+    "giftConfirmedSubject": "Taidelahjan varaus varmistettu",
     "giftConfirmedBody": "Taidelahjasi {{dateTime}} {{address}} on varmistettu. Saavuthan sovitusti paikalle lahjan saajan kanssa. Katso lahjan tiedot osoitteessa {{url}}",
     "giftReminderSubject": "Taidelahjasi saapuu huomenna",
     "giftReminderBody": "Taidelahjasi {{dateTime}} {{address}} saapuu huomenna! Saavuthan sovitusti paikalle lahjan saajan kanssa. Katso lahjan tiedot osoitteessa {{url}}",
