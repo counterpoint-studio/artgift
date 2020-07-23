@@ -54,6 +54,7 @@
   "fromFormLabelPhone": "Matkapuhelinnumeroni",
   "fromFormLabelEmail": "Sähköpostiosoitteeni",
   "fromFormLabelSpecialInfo": "Lisätiedot ja erityistoiveet",
+  "fromFormPlaceholderSpecialInfo": "Esim. missä tapaat taiteilijan",
   "fromButtonNext": "Varaa lahja",
 
   "deliveryTitle": "Lahjasi on varattu!",

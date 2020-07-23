@@ -172,6 +172,9 @@ const FromPage = () => {
             <textarea
               maxLength={1000}
               value={gift.fromMessage}
+              placeholder={intl.formatMessage({
+                id: "fromFormPlaceholderSpecialInfo",
+              })}
               onChange={evt =>
                 setGift({ ...gift, fromMessage: evt.currentTarget.value })
               }

@@ -54,6 +54,7 @@
   "fromFormLabelPhone": "My mobile phone number",
   "fromFormLabelEmail": "My email",
   "fromFormLabelSpecialInfo": "Special requirements of recipient",
+  "fromFormPlaceholderSpecialInfo": "E.g. where you will meet the artist",
   "fromButtonNext": "Send gift",
 
   "deliveryTitle": "Your gift was delivered!",
