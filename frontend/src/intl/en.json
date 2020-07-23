@@ -75,6 +75,10 @@
   "giftFrom": "From",
   "giftTo": "To",
   "giftSupportMessage": "If you need assistance, send us an email to <a href=\"mailto:pihat@helsinkifestival.fi\">pihat@helsinkifestival.fi</a>.",
+  "giftCancellation": "Cancel Gift",
+  "giftCancellationFormLabelReason": "Reason for cancellation",
+  "giftCancellationFormPlaceholderReason": "E.g. can't make it due to illness",
+  "giftCancellationFormSubmit": "Cancel Gift",
 
   "artistSEOTitle": "Art Gift Artist Page",
   "artistSEODescription": "Art Gift Artist Page",

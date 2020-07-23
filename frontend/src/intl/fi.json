@@ -75,6 +75,10 @@
   "giftFrom": "Keneltä",
   "giftTo": "Kenelle",
   "giftSupportMessage": "Jos tarvitset lisätietoja tai apua, lähetä meille sähköpostia osoitteeseen <a href=\"mailto:pihat@helsinkifestival.fi\">pihat@helsinkifestival.fi</a>.",
+  "giftCancellation": "Lahjan peruutus",
+  "giftCancellationFormLabelReason": "Syy peruutukselle",
+  "giftCancellationFormPlaceholderReason": "Esim. sairastapauksen vuoksi",
+  "giftCancellationFormSubmit": "Peruuta lahja",
 
   "artistSEOTitle": "Taidelahja: Taiteilijasivu",
   "artistSEODescription": "Taidelahja: Taiteilijasivu",

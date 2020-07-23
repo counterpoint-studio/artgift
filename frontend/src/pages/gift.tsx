@@ -23,6 +23,7 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
   let windowWidth = useWindowWidth()
   let [gift, setGift] = useState<Gift>()
   let [slot, setSlot] = useState<GiftSlot>()
+  let [cancellationReason, setCancellationReason] = useState("")
 
   useEffect(() => {
     let queryParams = qs.parse(location.search, { ignoreQueryPrefix: true })
@@ -124,6 +125,39 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
                   __html: intl.formatMessage({ id: "giftSupportMessage" }),
                 }}
               ></p>
+              <form
+                className="giftCancellation"
+                onSubmit={e => e.preventDefault()}
+              >
+                <h2>{intl.formatMessage({ id: "giftCancellation" })}</h2>
+                <div className="inputGroup">
+                  <label>
+                    {intl.formatMessage({
+                      id: "giftCancellationFormLabelReason",
+                    })}
+                    <span className="requiredField">*</span>
+                  </label>
+                  <textarea
+                    value={cancellationReason}
+                    placeholder={intl.formatMessage({
+                      id: "giftCancellationFormPlaceholderReason",
+                    })}
+                    onBlur={() => {}}
+                    onChange={evt => setCancellationReason(evt.target.value)}
+                  />
+                  <button
+                    type="submit"
+                    className={classNames("button", {
+                      disabled: cancellationReason.trim().length === 0,
+                    })}
+                    disabled={cancellationReason.trim().length === 0}
+                  >
+                    {intl.formatMessage({
+                      id: "giftCancellationFormSubmit",
+                    })}
+                  </button>
+                </div>
+              </form>
             </div>
           )}
         </div>
