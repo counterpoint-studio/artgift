@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import Helmet from "react-helmet"
 import { useIntl, Link } from "gatsby-plugin-intl"
 import { PageProps } from "gatsby"
@@ -27,6 +27,8 @@ const InfoPage: React.FC<PageProps> = () => {
     boundsPadding: windowWidth < 768 ? 0 : 150,
     regions: undefined,
   })
+  let [attendanceAccepted, setAttendanceAccepted] = useState(false)
+  let [gdprAccepted, setGdprAccepted] = useState(false)
 
   return (
     <Layout>
@@ -51,9 +53,28 @@ const InfoPage: React.FC<PageProps> = () => {
           <div className="checkboxes">
             <div className="inputGroup">
               <div className="inputCheckbox">
-                <input type="checkbox" id="infoRequirementAttendance" />
+                <input
+                  type="checkbox"
+                  id="infoRequirementAttendance"
+                  checked={attendanceAccepted}
+                  onChange={evt => setAttendanceAccepted(evt.target.checked)}
+                />
                 <label htmlFor="infoRequirementAttendance">
                   {intl.formatMessage({ id: "infoRequirementAttendance" })}{" "}
+                  <span className="requiredField">*</span>
+                </label>
+              </div>
+            </div>
+            <div className="inputGroup">
+              <div className="inputCheckbox">
+                <input
+                  type="checkbox"
+                  id="infoRequirementGDPR"
+                  checked={gdprAccepted}
+                  onChange={evt => setGdprAccepted(evt.target.checked)}
+                />
+                <label htmlFor="infoRequirementGDPR">
+                  {intl.formatMessage({ id: "infoRequirementGDPR" })}{" "}
                   <span className="requiredField">*</span>
                 </label>
               </div>
@@ -63,16 +84,6 @@ const InfoPage: React.FC<PageProps> = () => {
                 <input type="checkbox" id="infoRequirementMarketing" />
                 <label htmlFor="infoRequirementMarketing">
                   {intl.formatMessage({ id: "infoRequirementMarketing" })}{" "}
-                  <span className="requiredField">*</span>
-                </label>
-              </div>
-            </div>
-            <div className="inputGroup">
-              <div className="inputCheckbox">
-                <input type="checkbox" id="infoRequirementGDPR" />
-                <label htmlFor="infoRequirementGDPR">
-                  {intl.formatMessage({ id: "infoRequirementGDPR" })}{" "}
-                  <span className="requiredField">*</span>
                 </label>
               </div>
             </div>
@@ -80,6 +91,7 @@ const InfoPage: React.FC<PageProps> = () => {
           <NextButton
             to="/to"
             text={intl.formatMessage({ id: "infoButtonNext" })}
+            disabled={!attendanceAccepted || !gdprAccepted}
           />
           <BackButton to="/" text={intl.formatMessage({ id: "backButton" })} />
         </div>
