@@ -9,4 +9,11 @@
   .giftStatus.cancelled {
     background-color: pink;
   }
+
+  .giftArtistStatus.assigned {
+    background-color: lightgreen;
+  }
+  .giftArtistStatus.unassigned {
+    background-color: pink;
+  }
 }

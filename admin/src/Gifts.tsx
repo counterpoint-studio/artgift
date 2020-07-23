@@ -1,10 +1,10 @@
 import React, { useMemo, useEffect, useState, useCallback } from "react";
 import firebase from "firebase/app";
-import { groupBy } from "lodash";
+import { groupBy, fromPairs, flatMap } from "lodash";
 import classNames from "classnames";
 
 import { Navigation } from "./Navigation";
-import { Gift, Slot } from "./types";
+import { Gift, Slot, Artist } from "./types";
 import { formatDate, formatTime } from "./util/dateUtils";
 import { MAIN_APP_HOST } from "./constants";
 
@@ -13,9 +13,17 @@ import "./Gifts.scss";
 export const Gifts: React.FC = () => {
   let giftColl = useMemo(() => firebase.firestore().collection("gifts"), []);
   let slotColl = useMemo(() => firebase.firestore().collection("slots"), []);
+  let artistColl = useMemo(
+    () => firebase.firestore().collection("artists"),
+    []
+  );
 
   let [gifts, setGifts] = useState<Gift[]>([]);
   let [slots, setSlots] = useState<Slot[]>([]);
+  let [artistAssignments, setArtistAssignments] = useState<{
+    [giftId: string]: string;
+  }>({});
+
   let [showingDetails, setShowingDetails] = useState<{
     [giftId: string]: boolean;
   }>({});
@@ -42,6 +50,25 @@ export const Gifts: React.FC = () => {
       unSub();
     };
   }, [slotColl]);
+  useEffect(() => {
+    let unSub = artistColl.orderBy("name").onSnapshot((artistsSnapshot) => {
+      let artists = artistsSnapshot.docs.map(
+        (d) => ({ id: d.id, ...d.data() } as Artist)
+      );
+      setArtistAssignments(
+        fromPairs(
+          flatMap(artists, (artist) =>
+            flatMap(artist.itineraries, (it) =>
+              it.assignments.map((a) => [a.giftId, artist.name])
+            )
+          )
+        )
+      );
+    });
+    return () => {
+      unSub();
+    };
+  }, [artistColl]);
 
   let getTableData = () => {
     if (gifts.length === 0 || slots.length === 0) return [];
@@ -99,6 +126,18 @@ export const Gifts: React.FC = () => {
                     )}
                   >
                     {gift.status || "pending"}
+                  </span>
+                </td>
+                <td style={{ whiteSpace: "nowrap" }}>
+                  <span
+                    className={classNames(
+                      "giftArtistStatus",
+                      artistAssignments[gift.id] ? "assigned" : "unassigned"
+                    )}
+                  >
+                    {gift.status === "confirmed"
+                      ? artistAssignments[gift.id] || "no artist"
+                      : ""}
                   </span>
                 </td>
                 <td>
