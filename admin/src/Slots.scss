@@ -5,6 +5,9 @@
   .slotStatus.reserved {
     background-color: pink;
   }
+  .slotStatus.notAvailable {
+    background-color: orange;
+  }
 
   &--field {
     margin: 20px 0;

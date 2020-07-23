@@ -12,6 +12,8 @@
   "introBody": "Tilaa yllätyksellinen, aineeton taidelahja ihmiselle, jota haluat muistaa! Taidelahja on esitys esimerkiksi klassisen tai kevyen musiikin esiintyjältä, runoilijalta tai tanssijalta, joka tuodaan turvallisesti läheisesi kotipihalle taidelahjaviikonloppuna 7.–9.8.2020.",
   "introMoreInfo": "Lisätiedot",
   "introButtonNext": "Anna lahja",
+  "introNotOpenYet": "Taidelahjojen varaus ei ole vielä avoinna. Tervetuloa takaisin 3.8. klo 12:00!",
+  "introClosed": "Valitettavasti Taidelahjat on jo varattu viimeistä myöten! Katso Helsinki Festin ohjelma osoitteessa <a href=\"https://helsinkifest.fi/\">helsinkifest.fi</a>",
 
   "infoSEOTitle": "Taidelahja Info",
   "infoSEODescription": "Mitä Taidelahjan antaminen tarkoittaa",
@@ -81,6 +83,7 @@
   "giftCancellationFormLabelReason": "Syy peruutukselle",
   "giftCancellationFormPlaceholderReason": "Esim. sairastapauksen vuoksi",
   "giftCancellationFormSubmit": "Peruuta lahja",
+  "giftCancellationConfirm": "Haluatko varmasti peruuttaa tämän lahjan?",
 
   "artistSEOTitle": "Taidelahja: Taiteilijasivu",
   "artistSEODescription": "Taidelahja: Taiteilijasivu",

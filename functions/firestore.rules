@@ -13,7 +13,12 @@ service cloud.firestore {
 
     function isAllowedGiftUpdate() {
       // Only allowed to set the gift status to pending, and not allowed to directly change slotId
-      return (request.resource.data.status == resource.data.status || request.resource.data.status == 'pending') && (!('slotId' in request.resource.data) || request.resource.data.slotId == resource.data.slotId);
+      return (request.resource.data.status == resource.data.status || request.resource.data.status == 'pending'  || request.resource.data.status == 'cancelled') && (!('slotId' in request.resource.data) || request.resource.data.slotId == resource.data.slotId);
+    }
+
+    match /appstates/{appstate} {
+      allow read;
+      allow write: if isAdminUser()
     }
 
     match /slots/{slot} {

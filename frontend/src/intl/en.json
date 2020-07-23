@@ -12,6 +12,8 @@
   "introBody": "Order a surprising, immaterial art gift for someone dear to you! An art gift may be a performance by a classical or popular musician, poet, or dancer, delivered safely to your loved one's front yard during the art gift weekend 7.-9.8.2020.",
   "introMoreInfo": "For more information",
   "introButtonNext": "Give a gift",
+  "introNotOpenYet": "Art Gift reservations have not opened yet. Welcome back on 3.8. at 12:00!",
+  "introClosed": "Unfortunately it seems all Art Gifts have already been reserved. See the Helsinki Fest programme at <a href=\"https://helsinkifest.fi/\">helsinkifest.fi</a>",
 
   "infoSEOTitle": "Art Gift Info",
   "infoSEODescription": "What's involved in giving an Art Gift.",
@@ -81,6 +83,7 @@
   "giftCancellationFormLabelReason": "Reason for cancellation",
   "giftCancellationFormPlaceholderReason": "E.g. can't make it due to illness",
   "giftCancellationFormSubmit": "Cancel Gift",
+  "giftCancellationConfirm": "Are you sure you want to cancel this gift?",
 
   "artistSEOTitle": "Art Gift Artist Page",
   "artistSEODescription": "Art Gift Artist Page",

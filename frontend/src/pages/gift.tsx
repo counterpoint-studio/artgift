@@ -62,6 +62,13 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
     },
   })
 
+  let cancelGift = (evt: React.FormEvent) => {
+    evt.preventDefault()
+    if (window.confirm(intl.formatMessage({ id: "giftCancellationConfirm" }))) {
+      gifts.saveGift({ ...gift, status: "cancelled", cancellationReason })
+    }
+  }
+
   return (
     <Layout>
       <SEO
@@ -131,39 +138,44 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
                   }}
                 ></p>
               </div>
-              <form
-                className="giftCancellation"
-                onSubmit={e => e.preventDefault()}
-              >
-                <h2>{intl.formatMessage({ id: "giftCancellation" })}</h2>
-                <div className="inputGroup">
-                  <label>
-                    {intl.formatMessage({
-                      id: "giftCancellationFormLabelReason",
-                    })}
-                    <span className="requiredField">*</span>
-                  </label>
-                  <textarea
-                    value={cancellationReason}
-                    placeholder={intl.formatMessage({
-                      id: "giftCancellationFormPlaceholderReason",
-                    })}
-                    onBlur={() => {}}
-                    onChange={evt => setCancellationReason(evt.target.value)}
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className={classNames("button button--small button--cancel", {
-                    disabled: cancellationReason.trim().length === 0,
-                  })}
-                  disabled={cancellationReason.trim().length === 0}
+              {gift.status !== "cancelled" && gift.status !== "rejected" && (
+                <form
+                  className="giftCancellation"
+                  onSubmit={e => e.preventDefault()}
                 >
-                  {intl.formatMessage({
-                    id: "giftCancellationFormSubmit",
-                  })}
-                </button>
-              </form>
+                  <h2>{intl.formatMessage({ id: "giftCancellation" })}</h2>
+                  <div className="inputGroup">
+                    <label>
+                      {intl.formatMessage({
+                        id: "giftCancellationFormLabelReason",
+                      })}
+                      <span className="requiredField">*</span>
+                    </label>
+                    <textarea
+                      value={cancellationReason}
+                      placeholder={intl.formatMessage({
+                        id: "giftCancellationFormPlaceholderReason",
+                      })}
+                      onBlur={() => {}}
+                      onChange={evt => setCancellationReason(evt.target.value)}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className={classNames(
+                      "button button--small button--cancel",
+                      {
+                        disabled: cancellationReason.trim().length === 0,
+                      }
+                    )}
+                    disabled={cancellationReason.trim().length === 0}
+                  >
+                    {intl.formatMessage({
+                      id: "giftCancellationFormSubmit",
+                    })}
+                  </button>
+                </form>
+              )}
             </div>
           )}
         </div>
