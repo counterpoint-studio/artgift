@@ -74,6 +74,7 @@
   "giftPlace": "Paikka",
   "giftFrom": "Keneltä",
   "giftTo": "Kenelle",
+  "giftSupportMessage": "Jos tarvitset lisätietoja tai apua, lähetä meille sähköpostia osoitteeseen <a href=\"mailto:pihat@helsinkifestival.fi\">pihat@helsinkifestival.fi</a>.",
 
   "artistSEOTitle": "Taidelahja: Taiteilijasivu",
   "artistSEODescription": "Taidelahja: Taiteilijasivu",

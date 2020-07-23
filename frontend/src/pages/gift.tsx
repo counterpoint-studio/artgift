@@ -119,6 +119,11 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
                   </tr>
                 </tbody>
               </table>
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: intl.formatMessage({ id: "giftSupportMessage" }),
+                }}
+              ></p>
             </div>
           )}
         </div>
