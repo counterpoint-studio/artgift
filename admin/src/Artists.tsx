@@ -12,7 +12,6 @@ import { Artist } from "./types";
 
 import "./Artists.scss";
 import { MAIN_APP_HOST } from "./constants";
-import { parseDateAndTime } from "./util/dateUtils";
 
 const INIT_ARTIST: Artist = {
   name: "",
@@ -25,7 +24,7 @@ export const Artists: React.FC = () => {
   let coll = useMemo(() => firebase.firestore().collection("artists"), []);
 
   let [artists, setArtists] = useState<Artist[]>([]);
-  let [newArtist, setNewArtist] = useState<Artist>(INIT_ARTIST);
+  let [editingArtist, setEditingArtist] = useState<Artist>(INIT_ARTIST);
 
   useEffect(() => {
     let unSub = coll.orderBy("name").onSnapshot((artistsSnapshot) => {
@@ -38,13 +37,17 @@ export const Artists: React.FC = () => {
     };
   }, [coll]);
 
-  let onAddNewArtist = useCallback(
+  let onSaveArtist = useCallback(
     (evt: FormEvent) => {
       evt.preventDefault();
-      coll.add(newArtist);
-      setNewArtist(INIT_ARTIST);
+      if (editingArtist.id) {
+        coll.doc(editingArtist.id).set(editingArtist, { merge: true });
+      } else {
+        coll.add(editingArtist);
+      }
+      setEditingArtist(INIT_ARTIST);
     },
-    [coll, newArtist]
+    [coll, editingArtist]
   );
 
   let onTriggerInvitation = useCallback(
@@ -98,26 +101,27 @@ export const Artists: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {`${MAIN_APP_HOST}/artist?id=${artist.id}`}
+                  Artist page link
                 </a>
               </td>
               <td>
+                <button onClick={() => setEditingArtist(artist)}>Edit</button>
                 <button onClick={() => onDeleteArtist(artist)}>Delete</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <form className="slots--newSlot" onSubmit={onAddNewArtist}>
-        <h1>Add Artist</h1>
+      <form className="artists--editArtist" onSubmit={onSaveArtist}>
+        <h1>{editingArtist.id ? "Edit" : "Add"} Artist</h1>
         <div className="artists--field">
           <div className="artists--fieldLabel">Name</div>
           <div className="artists--fieldInput">
             <input
               type="text"
-              value={newArtist.name}
+              value={editingArtist.name}
               onChange={(e) =>
-                setNewArtist({ ...newArtist, name: e.target.value })
+                setEditingArtist({ ...editingArtist, name: e.target.value })
               }
             />
           </div>
@@ -127,9 +131,12 @@ export const Artists: React.FC = () => {
           <div className="artists--fieldInput">
             <input
               type="tel"
-              value={newArtist.phoneNumber}
+              value={editingArtist.phoneNumber}
               onChange={(e) =>
-                setNewArtist({ ...newArtist, phoneNumber: e.target.value })
+                setEditingArtist({
+                  ...editingArtist,
+                  phoneNumber: e.target.value,
+                })
               }
             />
           </div>
@@ -139,16 +146,24 @@ export const Artists: React.FC = () => {
           <div className="artists--fieldInput">
             <input
               type="email"
-              value={newArtist.email}
+              value={editingArtist.email}
               onChange={(e) =>
-                setNewArtist({ ...newArtist, email: e.target.value })
+                setEditingArtist({ ...editingArtist, email: e.target.value })
               }
             />
           </div>
         </div>
         <button type="submit" className="artists--action">
-          Add
+          {editingArtist.id ? "Update" : "Add"}
         </button>
+        {editingArtist.id && (
+          <button
+            className="artists--action"
+            onClick={() => setEditingArtist(INIT_ARTIST)}
+          >
+            Cancel
+          </button>
+        )}
       </form>
     </div>
   );
