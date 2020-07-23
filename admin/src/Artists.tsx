@@ -91,7 +91,15 @@ export const Artists: React.FC = () => {
                       artist.invitationTrigger
                     )}`
                   : "No invitation sent"}
-                <button onClick={() => onTriggerInvitation(artist)}>
+                <button
+                  onClick={() => onTriggerInvitation(artist)}
+                  disabled={!artist.email && !artist.phoneNumber}
+                  title={
+                    !artist.email && !artist.phoneNumber
+                      ? "Add an email address and/or phone number first"
+                      : ""
+                  }
+                >
                   Send
                 </button>
               </td>
