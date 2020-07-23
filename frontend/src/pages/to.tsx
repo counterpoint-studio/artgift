@@ -19,7 +19,6 @@ import { REGION_BOUNDING_BOX } from "../constants"
 import { useMounted, useGiftState } from "../hooks"
 import { getRegionGeoJSON } from "../services/regionLookup"
 import { initGift } from "../services/gifts"
-import GiftsPage from "./gifts"
 
 import "./to.scss"
 

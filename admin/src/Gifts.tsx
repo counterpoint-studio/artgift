@@ -209,6 +209,12 @@ export const Gifts: React.FC = () => {
                           <td>{gift.fromMessage}</td>
                         </tr>
                         <tr>
+                          <td>Permission to photograph:</td>
+                          <td>
+                            {gift.fromPhotographyPermissionGiven ? "yes" : "no"}
+                          </td>
+                        </tr>
+                        <tr>
                           <td>App link:</td>
                           <td>
                             <a

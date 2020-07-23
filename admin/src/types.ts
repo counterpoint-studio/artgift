@@ -20,6 +20,7 @@ export type Gift = {
     fromPhoneNumber: string;
     fromEmail: string;
     fromMessage: string;
+    fromPhotographyPermissionGiven: boolean;
     cancellationReason?: string;
 };
 export type GiftLocation = {
