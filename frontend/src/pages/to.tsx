@@ -230,6 +230,9 @@ const ToPage = () => {
             <Textarea
               maxLength={1000}
               value={gift.toSignificance}
+              placeholder={intl.formatMessage({
+                id: "toFormPlaceholderMessage",
+              })}
               onBlur={() => {}}
               onChange={significance =>
                 setGift(gift => ({ ...gift, toSignificance: significance }))
