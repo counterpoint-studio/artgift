@@ -81,6 +81,7 @@
   "giftCancellationFormLabelReason": "Syy peruutukselle",
   "giftCancellationFormPlaceholderReason": "Esim. sairastapauksen vuoksi",
   "giftCancellationFormSubmit": "Peruuta lahja",
+  "giftCancellationConfirm": "Haluatko varmasti peruuttaa tämän lahjan?",
 
   "artistSEOTitle": "Taidelahja: Taiteilijasivu",
   "artistSEODescription": "Taidelahja: Taiteilijasivu",

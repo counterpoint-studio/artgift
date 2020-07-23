@@ -24,6 +24,7 @@ export type Gift = {
     fromEmail: string;
     fromMessage: string;
     fromLanguage: string;
+    cancellationReason?: string;
 }
 
 export type GiftLocation = {

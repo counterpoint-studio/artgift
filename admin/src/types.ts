@@ -20,6 +20,7 @@ export type Gift = {
     fromPhoneNumber: string;
     fromEmail: string;
     fromMessage: string;
+    cancellationReason?: string;
 };
 export type GiftLocation = {
     region: string;

@@ -181,6 +181,12 @@ export const Gifts: React.FC = () => {
                             </a>
                           </td>
                         </tr>
+                        {gift.status === "cancelled" && (
+                          <tr>
+                            <td>Cancellation reason:</td>
+                            <td>{gift.cancellationReason}</td>
+                          </tr>
+                        )}
                       </tbody>
                     </table>
                   </td>
