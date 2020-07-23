@@ -69,20 +69,6 @@ const InfoPage: React.FC<PageProps> = () => {
             </div>
             <div className="inputGroup">
               <div className="inputCheckbox">
-                <input type="checkbox" id="infoRequirementTerms" />
-                <label htmlFor="infoRequirementTerms">
-                  {intl.formatMessage({ id: "infoRequirementTerms" })}{" "}
-                  <Link to="/terms" state={{ backTo: `/info` }}>
-                    {intl.formatMessage({
-                      id: "infoRequirementTermsLinkText",
-                    })}
-                  </Link>
-                  <span className="requiredField">*</span>
-                </label>
-              </div>
-            </div>
-            <div className="inputGroup">
-              <div className="inputCheckbox">
                 <input type="checkbox" id="infoRequirementGDPR" />
                 <label htmlFor="infoRequirementGDPR">
                   {intl.formatMessage({ id: "infoRequirementGDPR" })}{" "}

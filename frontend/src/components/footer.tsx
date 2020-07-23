@@ -12,9 +12,6 @@ const Footer = () => {
       <Link to="/privacy" className="footerLink footerLink--privacy">
         {intl.formatMessage({ id: "privacyLink" })}
       </Link>
-      <Link to="/terms" className="footerLink footerLink--terms">
-        {intl.formatMessage({ id: "termsLink" })}
-      </Link>
       <a
         className="footerLink footerLink--helsingin-sanomat"
         href="https://www.hs.fi"
