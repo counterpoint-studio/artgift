@@ -175,7 +175,10 @@ function renderAssignment(
                     {gift.fromEmail}
                   </a>
                   <br />
-                  <span className="phone">{gift.fromPhoneNumber}</span>
+                  <a className="phone" href={`tel:#31#${gift.fromPhoneNumber}`}>
+                    <span className="phonePrivacyPrefix">#31#</span>
+                    {gift.fromPhoneNumber}
+                  </a>
                 </td>
               </tr>
               <tr>
