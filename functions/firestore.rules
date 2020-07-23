@@ -42,5 +42,8 @@ service cloud.firestore {
     match /admins/{admin} {
       allow read, write: if isAdminUser()
     }
+    match /messages/{admin} {
+      allow read, write: if isAdminUser()
+    }
   }
 }

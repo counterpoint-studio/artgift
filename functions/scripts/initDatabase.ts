@@ -10,13 +10,13 @@ let times = argv.filter(a => /\d\d:\d\d/.test(a));
 let regions = argv.filter(a => !/\d/.test(a));
 
 async function initDatabase() {
-    let smss = db.collection('SMSs');
+    let messages = db.collection('messages');
     let gifts = db.collection('gifts');
     let slots = db.collection('slots');
     let reservations = db.collection('reservations');
     let artists = db.collection('artists');
 
-    await smss.listDocuments().then(docs => Promise.all(docs.map(d => d.delete())));
+    await messages.listDocuments().then(docs => Promise.all(docs.map(d => d.delete())));
     await reservations.listDocuments().then(docs => Promise.all(docs.map(d => d.delete())));
     await gifts.listDocuments().then(docs => Promise.all(docs.map(d => d.delete())));
     await slots.listDocuments().then(docs => Promise.all(docs.map(d => d.delete())));

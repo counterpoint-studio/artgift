@@ -203,37 +203,41 @@ export const populateArtistItinerariesOnArtistUpdate = functions
         }
     });
 
-export const createMessageOnArtistCreate = functions
+export const sendArtistInvitation = functions
     .region('europe-west1')
     .firestore
     .document("artists/{artistId}")
-    .onCreate(async doc => {
-        let messageRef = db.collection('messages').doc(doc.id);
-        let phoneNumber = doc.data().phoneNumber;
-        let email = doc.data().email;
-        let name = doc.data().name;
-        if (phoneNumber || email) {
-            let emailSubject = messageTemplates[DEFAULT_LANGUAGE].artistCreatedSubject({});
-            let bodyTemplate = messageTemplates[DEFAULT_LANGUAGE].artistCreatedBody;
-            let baseUrl = functions.config().artgift.baseurl;
-            let url = `${baseUrl}/artist?id=${doc.id}`;
-            let smsBody = bodyTemplate({
-                url: new Handlebars.SafeString(url)
-            });
-            let emailBody = bodyTemplate({
-                url: new Handlebars.SafeString(`<a href="${url}">${url}</a>`)
-            });
-            messageRef.set({
-                emailSubject,
-                emailBody,
-                smsBody,
-                toNumber: phoneNumber,
-                toEmail: email,
-                toName: name,
-                messageKey: 'artistCreated',
-                sent: false,
-                createdAt: admin.firestore.FieldValue.serverTimestamp()
-            })
+    .onUpdate(async ({ before, after }) => {
+        let beforeInvitationTrigger = before.exists && before.data()!.invitationTrigger;
+        let afterInvitationTrigger = after.exists && after.data()!.invitationTrigger;
+        if (afterInvitationTrigger && afterInvitationTrigger !== beforeInvitationTrigger) {
+            let messageRef = db.collection('messages').doc(after.id);
+            let phoneNumber = after.data().phoneNumber;
+            let email = after.data().email;
+            let name = after.data().name;
+            if (phoneNumber || email) {
+                let emailSubject = messageTemplates[DEFAULT_LANGUAGE].artistCreatedSubject({});
+                let bodyTemplate = messageTemplates[DEFAULT_LANGUAGE].artistCreatedBody;
+                let baseUrl = functions.config().artgift.baseurl;
+                let url = `${baseUrl}/artist?id=${after.id}`;
+                let smsBody = bodyTemplate({
+                    url: new Handlebars.SafeString(url)
+                });
+                let emailBody = bodyTemplate({
+                    url: new Handlebars.SafeString(`<a href="${url}">${url}</a>`)
+                });
+                messageRef.set({
+                    emailSubject,
+                    emailBody,
+                    smsBody,
+                    toNumber: phoneNumber,
+                    toEmail: email,
+                    toName: name,
+                    messageKey: 'artistCreated',
+                    sent: false,
+                    createdAt: admin.firestore.FieldValue.serverTimestamp()
+                })
+            }
         }
     });
 

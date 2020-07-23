@@ -12,6 +12,7 @@ import { Artist } from "./types";
 
 import "./Artists.scss";
 import { MAIN_APP_HOST } from "./constants";
+import { parseDateAndTime } from "./util/dateUtils";
 
 const INIT_ARTIST: Artist = {
   name: "",
@@ -46,9 +47,25 @@ export const Artists: React.FC = () => {
     [coll, newArtist]
   );
 
+  let onTriggerInvitation = useCallback(
+    (artist: Artist) => {
+      coll
+        .doc(artist.id)
+        .set({ invitationTrigger: Date.now() }, { merge: true });
+    },
+    [coll]
+  );
+
+  let getTriggerInvitationTime = useCallback((time: number) => {
+    let date = new Date(time);
+    return `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`;
+  }, []);
+
   let onDeleteArtist = useCallback(
     (artist: Artist) => {
-      coll.doc(artist.id).delete();
+      if (window.confirm(`Are you sure you want to delete ${artist.name}?`)) {
+        coll.doc(artist.id).delete();
+      }
     },
     [coll]
   );
@@ -62,8 +79,19 @@ export const Artists: React.FC = () => {
           {artists.map((artist, idx) => (
             <tr key={idx}>
               <td>{artist.name}</td>
-              <td>{artist.phoneNumber}</td>
-              <td>{artist.email}</td>
+              <td>
+                {artist.phoneNumber} {artist.email}
+              </td>
+              <td>
+                {artist.invitationTrigger
+                  ? `Invitation sent ${getTriggerInvitationTime(
+                      artist.invitationTrigger
+                    )}`
+                  : "No invitation sent"}
+                <button onClick={() => onTriggerInvitation(artist)}>
+                  Send
+                </button>
+              </td>
               <td>
                 <a
                   href={`${MAIN_APP_HOST}/artist?id=${artist.id}`}

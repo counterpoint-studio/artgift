@@ -33,6 +33,7 @@ export type Artist = {
     name: string;
     phoneNumber: string;
     email: string;
+    invitationTrigger?: number;
     itineraries: ArtistItinerary[]
 }
 
