@@ -6,7 +6,7 @@ import mandrill from 'mandrill-api';
 import { URLSearchParams } from 'url';
 import { sortBy, last, pick, isEqual } from 'lodash';
 
-import { RESERVATION_PERIOD, REMINDER_PERIOD, TIME_ZONE_UTC_OFFSET, DEFAULT_LANGUAGE } from './constants';
+import { RESERVATION_PERIOD, REMINDER_PERIOD, TIME_ZONE_UTC_OFFSET, DEFAULT_LANGUAGE, NOOP_PHONE_NUMBER } from './constants';
 
 let messageTemplateSources = require('./messages.json');
 
@@ -417,7 +417,7 @@ export const sendMessages = functions.region('europe-west1').pubsub.schedule('ev
     unsentMessages.forEach(async doc => {
         let { emailSubject, emailBody, smsBody, toNumber, toEmail, toName, createdAt } = doc.data()!;
         if (createdAt.toMillis() < Date.now() - 2 * 60 * 1000) {
-            let smsSend = toNumber ? sendSMS(smsBody, toNumber) : Promise.resolve();
+            let smsSend = toNumber && toNumber !== NOOP_PHONE_NUMBER ? sendSMS(smsBody, toNumber) : Promise.resolve();
             let emailSend = toEmail ? sendEmail(emailSubject, emailBody, toEmail, toName) : Promise.resolve();
             await Promise.all([smsSend, emailSend]);
             doc.ref.set({ sent: true, sentAt: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
