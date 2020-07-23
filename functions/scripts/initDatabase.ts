@@ -1,15 +1,15 @@
+import * as fs from 'fs';
 import * as admin from 'firebase-admin';
 
 admin.initializeApp();
 
 let db = admin.firestore();
 
-let argv = process.argv.slice(2);
-let dates = argv.filter(a => /\d{8}/.test(a));
-let times = argv.filter(a => /\d\d:\d\d/.test(a));
-let regions = argv.filter(a => !/\d/.test(a));
+let seedFileName = process.argv[2];
+let seedData = JSON.parse(fs.readFileSync(seedFileName, 'utf-8'));
 
 async function initDatabase() {
+    let storeStatus = (await db.collection('appstates').doc('singleton').get()).data()?.state;
     let messages = db.collection('messages');
     let gifts = db.collection('gifts');
     let slots = db.collection('slots');
@@ -23,13 +23,20 @@ async function initDatabase() {
     await artists.listDocuments().then(docs => Promise.all(docs.map(d => d.delete())));
 
     let batch = db.batch();
-    for (let date of dates) {
-        for (let time of times) {
-            for (let region of regions) {
-                batch.set(slots.doc(), { date, time, region, status: 'available' });
+    for (let region of Object.keys(seedData.slots)) {
+        for (let date of Object.keys(seedData.slots[region])) {
+            for (let time of seedData.slots[region][date]) {
+                batch.set(slots.doc(), { date, time, region, status: storeStatus === 'open' ? 'available' : 'notAvailable' });
             }
         }
     }
+    for (let artist of seedData.artists) {
+        for (let it of artist.itineraries || []) {
+            it.assignments = [];
+        }
+        batch.set(artists.doc(), artist);
+    }
+
     await batch.commit();
 }
 
