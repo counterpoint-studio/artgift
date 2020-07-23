@@ -1,27 +1,4 @@
 @import "variables.scss";
 
 .button--next {
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 50px;
-  padding: 10px 10px 11px 10px;
-  background: black;
-  text-align: center;
-  text-transform: uppercase;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.5s ease;
-
-  &:focus {
-    outline: none;
-  }
-
-  svg {
-    display: block;
-    height: 12px;
-    margin: 2px 0 0 16px;
-  }
 }

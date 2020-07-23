@@ -79,52 +79,58 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
           {gift && slot && (
             <div className="giftInfo">
               <h1>{intl.formatMessage({ id: "giftTitle" })}</h1>
-              <table>
-                <colgroup>
-                  <col className="title" />
-                  <col className="description" />
-                </colgroup>
-                <tbody>
-                  <tr>
-                    <td>{intl.formatMessage({ id: "giftStatus" })}</td>
-                    <td>
-                      <span
-                        className={classNames(
-                          "giftStatus",
-                          gift.status || "pending"
-                        )}
-                      >
-                        {intl.formatMessage({
-                          id: "giftStatus" + (gift.status || "pending"),
-                        })}
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>{intl.formatMessage({ id: "giftTime" })}</td>
-                    <td>
-                      {formatDate(slot.date, intl)} {formatTime(slot.time)}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>{intl.formatMessage({ id: "giftPlace" })}</td>
-                    <td>{gift.toAddress}</td>
-                  </tr>
-                  <tr>
-                    <td>{intl.formatMessage({ id: "giftFrom" })}</td>
-                    <td>{gift.fromName}</td>
-                  </tr>
-                  <tr>
-                    <td>{intl.formatMessage({ id: "giftTo" })}</td>
-                    <td>{gift.toName}</td>
-                  </tr>
-                </tbody>
-              </table>
-              <p
-                dangerouslySetInnerHTML={{
-                  __html: intl.formatMessage({ id: "giftSupportMessage" }),
-                }}
-              ></p>
+              <div className="giftDetails">
+                <h2>{intl.formatMessage({ id: "giftDetailsHeading" })}</h2>
+                <table>
+                  <colgroup>
+                    <col className="title" />
+                    <col className="description" />
+                  </colgroup>
+                  <tbody>
+                    <tr>
+                      <td>{intl.formatMessage({ id: "giftStatus" })}</td>
+                      <td>
+                        <span
+                          className={classNames(
+                            "giftStatus",
+                            gift.status || "pending"
+                          )}
+                        >
+                          {intl.formatMessage({
+                            id: "giftStatus" + (gift.status || "pending"),
+                          })}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{intl.formatMessage({ id: "giftFrom" })}</td>
+                      <td>{gift.fromName}</td>
+                    </tr>
+                    <tr>
+                      <td>{intl.formatMessage({ id: "giftTo" })}</td>
+                      <td>{gift.toName}</td>
+                    </tr>
+                    <tr>
+                      <td>{intl.formatMessage({ id: "giftTime" })}</td>
+                      <td>
+                        {formatDate(slot.date, intl)} {formatTime(slot.time)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{intl.formatMessage({ id: "giftPlace" })}</td>
+                      <td>{gift.toAddress}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="giftSupport">
+                <h2>{intl.formatMessage({ id: "giftSupportHeading" })}</h2>
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: intl.formatMessage({ id: "giftSupportMessage" }),
+                  }}
+                ></p>
+              </div>
               <form
                 className="giftCancellation"
                 onSubmit={e => e.preventDefault()}
@@ -145,18 +151,18 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
                     onBlur={() => {}}
                     onChange={evt => setCancellationReason(evt.target.value)}
                   />
-                  <button
-                    type="submit"
-                    className={classNames("button", {
-                      disabled: cancellationReason.trim().length === 0,
-                    })}
-                    disabled={cancellationReason.trim().length === 0}
-                  >
-                    {intl.formatMessage({
-                      id: "giftCancellationFormSubmit",
-                    })}
-                  </button>
                 </div>
+                <button
+                  type="submit"
+                  className={classNames("button button--small button--cancel", {
+                    disabled: cancellationReason.trim().length === 0,
+                  })}
+                  disabled={cancellationReason.trim().length === 0}
+                >
+                  {intl.formatMessage({
+                    id: "giftCancellationFormSubmit",
+                  })}
+                </button>
               </form>
             </div>
           )}

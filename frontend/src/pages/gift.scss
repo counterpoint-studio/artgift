@@ -1,3 +1,5 @@
+@import "../components/variables";
+
 .gift {
   @media (max-width: 767px) {
     .content {
@@ -32,22 +34,27 @@
     text-transform: uppercase;
 
     @media (min-width: 768px) {
-      font-size: 13px;
+      font-size: 12px;
     }
 
     td {
       vertical-align: top;
       line-height: 1.5;
       border: none;
+      border-bottom: 1px solid $colorHFGrey;
       padding: 2px 0;
 
       @media (min-width: 768px) {
-        padding: 5px 0;
+        padding: 10px 0;
+      }
+
+      &:first-child {
+        padding-right: 15px;
       }
     }
   }
 
-  .giftStatus {
+  &Status {
     display: inline-flex;
     padding: 2px 4px;
     border-radius: 3px;
@@ -63,6 +70,22 @@
     &.cancelled {
       background: red;
       color: white;
+    }
+  }
+
+  &Details,
+  &Support,
+  &Cancellation {
+    margin-top: 15px;
+
+    @media (min-width: 768px) {
+      margin-top: 30px;
+    }
+  }
+
+  &Cancellation {
+    .inputGroup {
+      margin-bottom: 15px;
     }
   }
 }

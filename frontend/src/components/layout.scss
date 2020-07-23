@@ -97,12 +97,26 @@ body {
 }
 
 .button {
-  display: block;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 50px;
+  padding: 10px 10px 11px 10px;
   background: black;
+  border: none;
   text-align: center;
   text-transform: uppercase;
+  text-decoration: none;
   color: white;
   cursor: pointer;
+  transition: background-color 0.5s ease;
+  font-size: $fontSizeBaseMobile;
+
+  @media (min-width: 768px) {
+    font-size: $fontSizeBase;
+  }
 
   &:focus {
     outline: none;
@@ -113,14 +127,34 @@ body {
     background: $colorHFGrey;
   }
 
+  &--small {
+    height: 30px;
+    width: auto;
+    font-size: 12px;
+    padding: 0px 12px;
+  }
+
   &--next {
     margin-top: $fontSizeBase * 1.5;
   }
 
   &--book {
-    display: inline-block;
+    display: inline-flex;
+    width: auto;
+    height: 25px;
     font-size: 10px;
     padding: 0px 10px;
+  }
+
+  &--cancel {
+    background: red;
+    color: white;
+  }
+
+  svg {
+    display: block;
+    height: 12px;
+    margin: 2px 0 0 16px;
   }
 }
 
@@ -156,15 +190,6 @@ body {
     border-bottom: 1px solid black;
     font-size: $fontSizeBaseMobile;
 
-    // &.react-inputs-validation__textbox__input___20hDL {
-    //   border: 0;
-    //   border-bottom: 1px solid red;
-    // }
-
-    // &.react-inputs-validation__msg___pxv8o {
-    //   color: red;
-    // }
-
     @media (min-width: 768px) {
       font-size: $fontSizeBase;
     }
@@ -189,18 +214,18 @@ body {
     border: 1px solid rgba(black, 1);
     border-radius: 0px;
     cursor: pointer;
-    font-size: $fontSizeBaseMobile;
     line-height: 1.25;
     text-indent: 0;
     transition: background-color 0.15s ease;
     color: black;
-
-    option {
-      color: black;
-    }
+    font-size: $fontSizeBaseMobile;
 
     @media (min-width: 768px) {
       font-size: $fontSizeBase;
+    }
+
+    option {
+      color: black;
     }
 
     &:focus {
@@ -218,6 +243,11 @@ body {
     border: 1px solid black;
     padding: (0.5 * $fontSizeBase);
     line-height: 1.25;
+    font-size: $fontSizeBaseMobile;
+
+    @media (min-width: 768px) {
+      font-size: $fontSizeBase;
+    }
 
     &:focus {
       outline: none;
