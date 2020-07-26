@@ -80,7 +80,13 @@ export const processSlotReservation = functions
 
     });
 
-export const expireUnfinishedGifts = functions.region('europe-west1').pubsub.schedule('every 1 minutes').onRun(async () => {
+export const expireUnfinishedGifts = functions
+    .region('europe-west1')
+    .pubsub
+    .schedule('every 1 minutes')
+    .onRun(expireUnfinished);
+
+export async function expireUnfinished() {
     let creatingGifts = await db.collection('gifts').where('status', '==', 'creating').get();
     creatingGifts.forEach(doc => {
         let data = doc.data();
