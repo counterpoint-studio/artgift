@@ -211,10 +211,10 @@ const ToPage = () => {
               id="toLanguage"
               value={gift.toLanguage}
               onChange={evt =>
-                setGift(gift => ({
+                setGift({
                   ...gift,
                   toLanguage: evt.currentTarget.value,
-                }))
+                })
               }
             >
               <option value="fi">
