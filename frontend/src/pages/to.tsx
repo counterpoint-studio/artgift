@@ -153,6 +153,9 @@ const ToPage = () => {
             <Textbox
               maxLength={50}
               value={gift.toName}
+              attributesWrapper={{
+                id: "toName",
+              }}
               onBlur={() => {}}
               onChange={name => {
                 setGift({ ...gift, toName: name })
@@ -183,6 +186,9 @@ const ToPage = () => {
                   value={inputProps.value}
                   onChange={(v, evt) => inputProps.onChange(evt)}
                   onBlur={evt => onUpdateAddress(evt.currentTarget.value)}
+                  attributesWrapper={{
+                    id: "toAddress",
+                  }}
                   validationOption={{
                     required: false,
                   }}
@@ -202,6 +208,7 @@ const ToPage = () => {
               <span className="requiredField">*</span>
             </label>
             <select
+              id="toLanguage"
               value={gift.toLanguage}
               onChange={evt =>
                 setGift(gift => ({
@@ -232,6 +239,9 @@ const ToPage = () => {
               placeholder={intl.formatMessage({
                 id: "toFormPlaceholderMessage",
               })}
+              attributesWrapper={{
+                id: "toSignificance",
+              }}
               onBlur={() => {}}
               onChange={significance =>
                 setGift(gift => ({ ...gift, toSignificance: significance }))

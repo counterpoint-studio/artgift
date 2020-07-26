@@ -152,6 +152,7 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
                       <span className="requiredField">*</span>
                     </label>
                     <textarea
+                      id="cancellationReason"
                       value={cancellationReason}
                       placeholder={intl.formatMessage({
                         id: "giftCancellationFormPlaceholderReason",

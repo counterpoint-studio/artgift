@@ -126,6 +126,9 @@ const FromPage = () => {
                 required: false,
                 customFunc: v => validateName(v, intl),
               }}
+              attributesInput={{
+                id: "fromName",
+              }}
             />
           </div>
           <div className="inputGroup">
@@ -136,6 +139,7 @@ const FromPage = () => {
             <Textbox
               attributesInput={{
                 type: "tel",
+                id: "fromPhoneNumber",
               }}
               maxLength={25}
               value={gift.fromPhoneNumber}
@@ -155,6 +159,7 @@ const FromPage = () => {
             <Textbox
               attributesInput={{
                 type: "email",
+                id: "fromEmail",
               }}
               value={gift.fromEmail}
               onChange={email => setGift({ ...gift, fromEmail: email })}
@@ -170,6 +175,7 @@ const FromPage = () => {
               {intl.formatMessage({ id: "fromFormLabelSpecialInfo" })}
             </label>
             <textarea
+              id="fromSpecialInfo"
               maxLength={1000}
               value={gift.fromMessage}
               placeholder={intl.formatMessage({
