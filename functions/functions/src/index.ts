@@ -352,7 +352,7 @@ async function populateArtistItineraries(region: string, tx: FirebaseFirestore.T
                 let itTo = parseDateTime(it.to.date, it.to.time);
                 if (slotDate.getTime() >= itFrom.getTime() && slotDate.getTime() < itTo.getTime()) {
                     console.log('matching artist itinerary', artistData[i].data, j);
-                    let lastSlotId = getLastAssignedSlotId(artistData[i].data);
+                    let lastSlotId = getLastAssignedSlotId(artistData[i].data, region);
                     let lastSlot = lastSlotId ? slotsInTimeOrder.find(s => s.id === lastSlotId)?.data : null;
                     let gapSinceLastSlot = lastSlot ? slotDate.getTime() - parseDateTime(lastSlot.date, lastSlot.time).getTime() : Number.MAX_VALUE;
                     console.log('gap since last', gapSinceLastSlot);
@@ -376,9 +376,9 @@ async function populateArtistItineraries(region: string, tx: FirebaseFirestore.T
     }
 }
 
-function getLastAssignedSlotId(artistData: any) {
+function getLastAssignedSlotId(artistData: any, region: string) {
     for (let i = artistData.itineraries.length - 1; i >= 0; i--) {
-        if (artistData.itineraries[i].assignments.length > 0) {
+        if (artistData.itineraries[i].region === region && artistData.itineraries[i].assignments.length > 0) {
             return (last(artistData.itineraries[i].assignments) as any).slotId;
         }
     }
