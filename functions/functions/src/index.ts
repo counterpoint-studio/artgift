@@ -319,20 +319,23 @@ async function populateArtistItineraries(region: string, tx: FirebaseFirestore.T
         s => s.data.date,
         s => s.data.time
     );
-    let artistData = affectedArtists.map(a => ({
-        ref: a.ref,
-        data: {
-            ...a.data() as any,
-            itineraries: sortBy(
-                (a.data() as any).itineraries.map((i: any) => ({
-                    ...i,
-                    assignments: i.region === region ? [] : i.assignments // clear existing assignments for this region
-                })),
-                i => i.from.date,
-                i => i.from.time
-            )
-        }
-    }));
+    let artistData = sortBy(
+        affectedArtists.map(a => ({
+            ref: a.ref,
+            data: {
+                ...a.data() as any,
+                itineraries: sortBy(
+                    (a.data() as any).itineraries.map((i: any) => ({
+                        ...i,
+                        assignments: i.region === region || !i.assignments ? [] : i.assignments // clear existing assignments for this region
+                    })),
+                    i => i.from.date,
+                    i => i.from.time
+                )
+            }
+        })),
+        a => a.data.name
+    );
 
     for (let slot of slotsInTimeOrder) {
         let slotDate = parseDateTime(slot.data.date, slot.data.time);
