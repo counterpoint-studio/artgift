@@ -105,15 +105,7 @@ export async function expireUnfinished() {
             });
         }
     });
-});
-
-export const ensureGiftCreatingStatus = functions
-    .region('europe-west1')
-    .firestore
-    .document("gifts/{giftId}")
-    .onCreate((snap) => {
-        return snap.ref.set({ status: 'creating' }, { merge: true })
-    });
+}
 
 export const releaseSlotOnGiftDelete = functions
     .region('europe-west1')
