@@ -8,18 +8,24 @@ import { sortBy, last, pick, isEqual } from 'lodash';
 
 import { RESERVATION_PERIOD, REMINDER_PERIOD, TIME_ZONE_UTC_OFFSET, DEFAULT_LANGUAGE, NOOP_PHONE_NUMBER } from './constants';
 
-let messageTemplateSources = require('./messages.json');
 
 admin.initializeApp();
 
 let db = admin.firestore();
 
-let messageTemplates: { [locale: string]: { [key: string]: Handlebars.TemplateDelegate } } = {};
-for (let locale of Object.keys(messageTemplateSources)) {
-    messageTemplates[locale] = {};
-    for (let msg of Object.keys(messageTemplateSources[locale])) {
-        messageTemplates[locale][msg] = Handlebars.compile(messageTemplateSources[locale][msg]);
+let messageTemplates: { [locale: string]: { [key: string]: Handlebars.TemplateDelegate } } | null = null;
+function getMessageTemplates() {
+    if (!messageTemplates) {
+        let messageTemplateSources = require('./messages.json');
+        messageTemplates = {};
+        for (let locale of Object.keys(messageTemplateSources)) {
+            messageTemplates[locale] = {};
+            for (let msg of Object.keys(messageTemplateSources[locale])) {
+                messageTemplates[locale][msg] = Handlebars.compile(messageTemplateSources[locale][msg]);
+            }
+        }
     }
+    return messageTemplates;
 }
 
 export const makeSlotsAvailableBasedOnAppState = functions.region('europe-west1')
@@ -158,7 +164,7 @@ export const createGiftReminderMessages = functions.region('europe-west1').pubsu
             let giftMessages = await db.collection('messages').where('giftId', '==', gift.id).get();
             let existingReminder = giftMessages.docs.find(d => d.data().messageKey === 'giftReminder');
             if (!existingReminder) {
-                let template = messageTemplates[giftData.fromLanguage || 'en'].giftReminderBody;
+                let template = getMessageTemplates()[giftData.fromLanguage || 'en'].giftReminderBody;
                 let baseUrl = functions.config().artgift.baseurl;
                 let message = template({
                     dateTime: `${formatDate(date)} ${formatTime(time)}`,
@@ -221,8 +227,8 @@ export const sendArtistInvitation = functions
             let email = after.data().email;
             let name = after.data().name;
             if (phoneNumber || email) {
-                let emailSubject = messageTemplates[DEFAULT_LANGUAGE].artistCreatedSubject({});
-                let bodyTemplate = messageTemplates[DEFAULT_LANGUAGE].artistCreatedBody;
+                let emailSubject = getMessageTemplates()[DEFAULT_LANGUAGE].artistCreatedSubject({});
+                let bodyTemplate = getMessageTemplates()[DEFAULT_LANGUAGE].artistCreatedBody;
                 let baseUrl = functions.config().artgift.baseurl;
                 let url = `${baseUrl}/artist?id=${after.id}`;
                 let smsBody = bodyTemplate({
@@ -382,8 +388,8 @@ async function createMessage(giftId: string, giftDocument: FirebaseFirestore.Doc
     let messageRef = db.collection('messages').doc(eventId);
     if (await shouldCreate(messageRef)) {
         let slot = await (await db.collection('slots').doc(giftDocument.slotId).get()).data();
-        let bodyTemplate = messageTemplates[giftDocument.fromLanguage || 'en'][messageKey + 'Body'];
-        let emailSubject = messageTemplates[giftDocument.fromLanguage || 'en'][messageKey + 'Subject']({})
+        let bodyTemplate = getMessageTemplates()[giftDocument.fromLanguage || 'en'][messageKey + 'Body'];
+        let emailSubject = getMessageTemplates()[giftDocument.fromLanguage || 'en'][messageKey + 'Subject']({})
         let baseUrl = functions.config().artgift.baseurl;
         let url = `${baseUrl}/gift?id=${giftId}`;
         let smsBody = bodyTemplate({
