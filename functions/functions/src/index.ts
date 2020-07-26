@@ -112,7 +112,9 @@ export const releaseSlotOnGiftDelete = functions
     .firestore
     .document("gifts/{giftId}")
     .onDelete(async (snap) => {
-        if (snap.data().slotId) {
+        let statusBefore = snap.data()!.status;
+        if (statusBefore && (statusBefore === 'creating' || statusBefore === 'pending' || statusBefore === 'confirmed') &&
+            snap.data().slotId) {
             let slotRef = db.collection('slots').doc(snap.data().slotId);
             await slotRef.set({ status: 'available' }, { merge: true });
         }
@@ -123,7 +125,11 @@ export const releaseSlotOnGiftRejection = functions
     .firestore
     .document("gifts/{giftId}")
     .onUpdate(async (change) => {
-        if (change.after.exists && (change.after.data().status === 'rejected' || change.after.data().status === 'cancelled') && change.after.data().slotId) {
+        let statusBefore = change.before.exists && change.before.data()!.status;
+        let statusAfter = change.after.exists && change.after.data()!.status;
+        if (statusBefore && (statusBefore === 'creating' || statusBefore === 'pending' || statusBefore === 'confirmed') &&
+            statusAfter && (statusAfter === 'rejected' || statusAfter === 'cancelled') &&
+            change.after.data().slotId) {
             let slotRef = db.collection('slots').doc(change.after.data().slotId);
             await slotRef.set({ status: 'available' }, { merge: true });
         }
