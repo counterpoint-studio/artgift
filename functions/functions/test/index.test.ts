@@ -350,6 +350,7 @@ describe('slot reservations', function () {
         await sleep();
 
         await gift('other').set({ status: 'creating', slotId: 'reserved' });
+        await slot('reserved').set({ status: 'reserved' }, { merge: true });
         await sleep();
 
         await gift('mine').delete()
