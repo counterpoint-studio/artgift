@@ -2,6 +2,7 @@ export const REGIONS = [
     { id: 'ETELÄINEN', name: { fi: 'Eteläinen', en: 'Southern' } },
     { id: 'LÄNTINEN', name: { fi: 'Läntinen', en: 'Western' } },
     { id: 'KESKINEN', name: { fi: 'Keskinen', en: 'Central' } },
+    { id: 'POHJOINEN', name: { fi: 'Pohjoinen', en: 'Northern' } },
     { id: 'KOILLINEN', name: { fi: 'Koillinen', en: 'Northeastern' } },
     { id: 'KAAKKOINEN', name: { fi: 'Kaakkoinen', en: 'Southeastern' } },
     { id: 'ITÄINEN & ÖSTERSUNDOM', name: { fi: 'Itäinen & Östersundom', en: 'Eastern & Östersundom' } }
