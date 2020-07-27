@@ -1,10 +1,10 @@
 {
   "fi": {
-    "giftCreatedSubject": "Taidelahja varattu",
-    "giftCreatedBody": "Taidelahjasi {{dateTime}} {{address}} on varattu. Saat varmistusviestin kun olemme tarkistaneet lahjan saatavuuden. Katso lahjan tiedot osoitteessa {{url}}",
-    "giftConfirmedSubject": "Taidelahjan varaus varmistettu",
-    "giftConfirmedBody": "Taidelahjasi {{dateTime}} {{address}} on varmistettu. Saavuthan sovitusti paikalle lahjan saajan kanssa. Katso lahjan tiedot osoitteessa {{url}}",
-    "giftReminderSubject": "Taidelahjasi saapuu huomenna",
+    "giftCreatedSubject": "Taidelahjan varaus vastaanotettu",
+    "giftCreatedBody": "Taidelahjasi {{dateTime}} {{address}} varaus on vastaanotettu. Saat varmistusviestin kun olemme tarkistaneet lahjan saatavuuden. Katso lahjan tiedot osoitteessa {{url}}",
+    "giftConfirmedSubject": "Taidelahjan varaus vahvistettu",
+    "giftConfirmedBody": "Taidelahjasi {{dateTime}} {{address}} on vahvistettu. Saavuthan sovitusti paikalle lahjan saajan kanssa. Katso lahjan tiedot osoitteessa {{url}}. Ihania taidehetkiä! ",
+    "giftReminderSubject": "Muistutus: Taidelahjasi saapuu huomenna",
     "giftReminderBody": "Taidelahjasi {{dateTime}} {{address}} saapuu huomenna! Saavuthan sovitusti paikalle lahjan saajan kanssa. Katso lahjan tiedot osoitteessa {{url}}",
     "artistCreatedSubject": "Tervetuloa Taidelahja-taiteilijaksi",
     "artistCreatedBody": "Tervetuloa taiteilijaksi Taidelahja-projektiin! Voit milloin tahansa käydä henkilökohtaisella taiteilijasivullasi osoitteessa {{url}} katsomassa päiväkohtaisen aikataulusi"
