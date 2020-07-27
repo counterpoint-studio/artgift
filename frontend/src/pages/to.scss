@@ -15,12 +15,21 @@
     .react-autosuggest__suggestions-container--open {
       z-index: 3;
       position: absolute;
-      bottom: 0;
       left: 0;
       right: 0;
       transform: translateY(100%);
       background: white;
       box-shadow: 0px 5px 10px 5px rgba($colorHFGrey, 1);
+
+      bottom: 25px;
+
+      @media (min-width: 360px) {
+        bottom: 14px;
+      }
+
+      @media (min-width: 768px) {
+        bottom: 14px;
+      }
 
       ul {
         list-style: none;
@@ -32,6 +41,16 @@
           margin: 0;
           border-bottom: 1px solid $colorHFGrey;
           cursor: pointer;
+
+          font-size: $fontSizeBaseMobileXS;
+
+          @media (min-width: 360px) {
+            font-size: $fontSizeBaseMobile;
+          }
+
+          @media (min-width: 768px) {
+            font-size: $fontSizeBase;
+          }
 
           &:hover {
             background: rgba($colorHFGrey, 0.3);

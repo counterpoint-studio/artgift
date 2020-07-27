@@ -18,9 +18,17 @@ body {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
-  font-size: $fontSizeBase;
   text-align: left;
   color: $colorFontBody;
+  font-size: $fontSizeBaseMobileXS;
+
+  @media (min-width: 360px) {
+    font-size: $fontSizeBaseMobile;
+  }
+
+  @media (min-width: 768px) {
+    font-size: $fontSizeBase;
+  }
 }
 
 h1,

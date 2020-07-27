@@ -32,6 +32,16 @@
       padding: 10px 0;
       cursor: pointer;
 
+      font-size: $fontSizeBaseMobileXS;
+
+      @media (min-width: 360px) {
+        font-size: $fontSizeBaseMobile;
+      }
+
+      @media (min-width: 768px) {
+        font-size: $fontSizeBase;
+      }
+
       &.isSelected:after {
         content: "";
         display: block;
@@ -64,7 +74,16 @@
     td {
       border-bottom: 1px solid $colorHFGrey;
       padding: 5px 0;
-      font-size: 14px;
+
+      font-size: $fontSizeBaseMobileXS;
+
+      @media (min-width: 360px) {
+        font-size: $fontSizeBaseMobile;
+      }
+
+      @media (min-width: 768px) {
+        font-size: $fontSizeBase;
+      }
     }
 
     tr:last-child td {

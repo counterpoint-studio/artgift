@@ -29,12 +29,17 @@ h1,
   font-weight: normal;
   color: $colorFontBody;
   line-height: 1.2;
-  font-size: 18px;
   text-transform: uppercase;
-  margin: 0 0 $fontSizeBase 0;
+  font-size: 6.75vw;
+  margin: 0 0 $fontSizeBaseMobileXS 0;
+
+  @media (min-width: 360px) {
+    margin: 0 0 $fontSizeBaseMobile 0;
+  }
 
   @media (min-width: 768px) {
-    font-size: 30px;
+    font-size: 32px;
+    margin: 0 0 $fontSizeBase 0;
   }
 }
 
@@ -57,13 +62,20 @@ p,
 .p {
   font-family: $fontStackBody;
   font-weight: normal;
-  font-size: $fontSizeBaseMobile;
   line-height: 1.5;
-  margin: 0 0 $fontSizeBase 0;
   color: $colorFontBody;
+
+  font-size: $fontSizeBaseMobileXS;
+  margin: 0 0 $fontSizeBaseMobileXS 0;
+
+  @media (min-width: 360px) {
+    font-size: $fontSizeBaseMobile;
+    margin: 0 0 $fontSizeBaseMobile 0;
+  }
 
   @media (min-width: 768px) {
     font-size: $fontSizeBase;
+    margin: 0 0 $fontSizeBase 0;
   }
 }
 

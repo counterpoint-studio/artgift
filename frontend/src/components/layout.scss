@@ -13,10 +13,10 @@ body {
 .content {
   z-index: 1; // everything on top of map
   position: fixed;
-  top: 4vw;
-  bottom: 4vw;
-  left: 4vw;
-  width: 92vw;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
 
   @media (min-width: 768px) {
     top: calc((2 * #{$frameMargin}) + #{$frameWidth});
@@ -32,10 +32,10 @@ body {
     position: fixed;
     border: $frameWidth solid $colorHFYellow;
     pointer-events: none;
-    top: $frameMargin * 2;
-    right: $frameMargin * 2;
-    bottom: $frameMargin * 2;
-    left: $frameMargin * 2;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
 
     @media (min-width: 768px) {
       top: $frameMargin;
@@ -79,7 +79,13 @@ body {
         display: none;
       }
 
-      padding: 30px 30px 0 30px;
+      padding: calc(#{$frameWidth} + 15px) calc(#{$frameWidth} + 15px) 0
+        calc(#{$frameWidth} + 15px);
+
+      @media (min-width: 360px) {
+        padding: calc(#{$frameWidth} + 30px) calc(#{$frameWidth} + 30px) 0
+          calc(#{$frameWidth} + 30px);
+      }
 
       @media (min-width: 768px) {
         padding: 60px 60px 30px 60px;
@@ -102,7 +108,6 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 50px;
   padding: 10px 10px 11px 10px;
   background: black;
   border: none;
@@ -112,9 +117,16 @@ body {
   color: white;
   cursor: pointer;
   transition: background-color 0.5s ease;
-  font-size: $fontSizeBaseMobile;
+  height: 35px;
+  font-size: $fontSizeBaseMobileXS;
+
+  @media (min-width: 360px) {
+    height: 40px;
+    font-size: $fontSizeBaseMobile;
+  }
 
   @media (min-width: 768px) {
+    height: 50px;
     font-size: $fontSizeBase;
   }
 
@@ -135,7 +147,15 @@ body {
   }
 
   &--next {
-    margin-top: $fontSizeBase * 1.5;
+    margin-top: $fontSizeBaseMobileXS * 1.5;
+
+    @media (min-width: 360px) {
+      margin-top: $fontSizeBaseMobile * 1.5;
+    }
+
+    @media (min-width: 768px) {
+      margin-top: $fontSizeBase * 1.5;
+    }
   }
 
   &--book {
@@ -161,12 +181,25 @@ body {
 .inputGroup {
   display: flex;
   flex-flow: column nowrap;
-  margin-bottom: $fontSizeBase * 2;
+  margin-bottom: $fontSizeBaseMobileXS * 2;
+
+  @media (min-width: 360px) {
+    margin-bottom: $fontSizeBaseMobile * 2;
+  }
+
+  @media (min-width: 768px) {
+    margin-bottom: $fontSizeBase * 2;
+  }
 
   label {
     display: inline-block;
-    font-size: $fontSizeBaseMobile;
-    line-height: $fontSizeBaseMobile * 1.25;
+    font-size: $fontSizeBaseMobileXS;
+    line-height: $fontSizeBaseMobileXS * 1.25;
+
+    @media (min-width: 360px) {
+      font-size: $fontSizeBaseMobile;
+      line-height: $fontSizeBaseMobile * 1.25;
+    }
 
     @media (min-width: 768px) {
       font-size: $fontSizeBase;
@@ -182,21 +215,52 @@ body {
   input[type="email"],
   input[type="tel"] {
     width: 100%;
-    height: 40px;
     padding-left: 0;
     padding-right: 0;
     border-radius: 0;
     border: none;
     border-bottom: 1px solid black;
-    font-size: $fontSizeBaseMobile;
+
+    height: 30px;
+    font-size: $fontSizeBaseMobileXS;
+
+    @media (min-width: 360px) {
+      height: 35px;
+      font-size: $fontSizeBaseMobile;
+    }
 
     @media (min-width: 768px) {
+      height: 40px;
       font-size: $fontSizeBase;
     }
 
     &:focus {
       outline: none;
     }
+
+    &.react-inputs-validation__error___2aXSp {
+      border: none;
+      border-bottom: 1px solid red;
+
+      font-size: $fontSizeBaseMobileXS;
+
+      @media (min-width: 360px) {
+        font-size: $fontSizeBaseMobile;
+      }
+
+      @media (min-width: 768px) {
+        font-size: $fontSizeBase;
+      }
+    }
+  }
+
+  .react-inputs-validation__msg_identifier {
+    display: inline-flex;
+    align-items: center;
+    background: red;
+    color: white;
+    margin: 0;
+    padding: 3px 5px 5px 5px;
   }
 
   select {
@@ -204,13 +268,13 @@ body {
     position: relative;
     display: flex;
     align-items: center;
-    height: 42px;
     width: 100%;
     margin-top: $fontSizeBase;
     padding: 0 28px 3px 12px;
-    background: rgba(white, 0.1)
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 7.2'%3E%3Cpath style='fill:%23000000' d='M0,1.6,6,7.2l6-5.6L10.4,0,6,4,1.6,0Z'/%3E%3C/svg%3E")
-      right 13px top 15px / 10px 12px no-repeat;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 7.2'%3E%3Cpath style='fill:%23000000' d='M0,1.6,6,7.2l6-5.6L10.4,0,6,4,1.6,0Z'/%3E%3C/svg%3E") !important;
+    background-size: 10px 12px !important;
+    background-repeat: no-repeat !important;
+    background-position: right 13px center !important;
     border: 1px solid rgba(black, 1);
     border-radius: 0px;
     cursor: pointer;
@@ -218,9 +282,17 @@ body {
     text-indent: 0;
     transition: background-color 0.15s ease;
     color: black;
-    font-size: $fontSizeBaseMobile;
+
+    height: 32px;
+    font-size: $fontSizeBaseMobileXS;
+
+    @media (min-width: 360px) {
+      height: 37px;
+      font-size: $fontSizeBaseMobile;
+    }
 
     @media (min-width: 768px) {
+      height: 42px;
       font-size: $fontSizeBase;
     }
 
@@ -243,7 +315,11 @@ body {
     border: 1px solid black;
     padding: (0.5 * $fontSizeBase);
     line-height: 1.25;
-    font-size: $fontSizeBaseMobile;
+    font-size: $fontSizeBaseMobileXS;
+
+    @media (min-width: 360px) {
+      font-size: $fontSizeBaseMobile;
+    }
 
     @media (min-width: 768px) {
       font-size: $fontSizeBase;
@@ -251,6 +327,10 @@ body {
 
     &:focus {
       outline: none;
+    }
+
+    &.react-inputs-validation__error___2aXSp {
+      border-color: red;
     }
   }
 
