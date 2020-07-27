@@ -15,7 +15,8 @@ export function initGift(fromLanguage = 'fi'): Gift {
         fromPhoneNumber: "",
         fromEmail: "",
         fromMessage: "",
-        fromLanguage
+        fromLanguage,
+        fromPhotographyPermissionGiven: false
     }
 };
 

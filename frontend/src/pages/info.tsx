@@ -12,8 +12,9 @@ import BackButton from "../components/backButton"
 
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
 import { MAP_INIT_CENTER, REGION_BOUNDING_BOX } from "../constants"
+import { initGift } from "../services/gifts"
 
-import { useMounted } from "../hooks"
+import { useMounted, useGiftState } from "../hooks"
 
 import "./info.scss"
 
@@ -29,6 +30,7 @@ const InfoPage: React.FC<PageProps> = () => {
   })
   let [attendanceAccepted, setAttendanceAccepted] = useState(false)
   let [gdprAccepted, setGdprAccepted] = useState(false)
+  let [gift, setGift] = useGiftState(initGift(intl.locale))
 
   return (
     <Layout>
@@ -81,7 +83,17 @@ const InfoPage: React.FC<PageProps> = () => {
             </div>
             <div className="inputGroup">
               <div className="inputCheckbox">
-                <input type="checkbox" id="infoRequirementMarketing" />
+                <input
+                  type="checkbox"
+                  id="infoRequirementMarketing"
+                  checked={gift.fromPhotographyPermissionGiven}
+                  onChange={evt =>
+                    setGift({
+                      ...gift,
+                      fromPhotographyPermissionGiven: evt.target.checked,
+                    })
+                  }
+                />
                 <label htmlFor="infoRequirementMarketing">
                   {intl.formatMessage({ id: "infoRequirementMarketing" })}{" "}
                 </label>

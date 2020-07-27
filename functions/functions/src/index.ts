@@ -2,23 +2,30 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import Handlebars from 'handlebars';
 import fetch from 'node-fetch';
+import mandrill from 'mandrill-api';
 import { URLSearchParams } from 'url';
 import { sortBy, last, pick, isEqual } from 'lodash';
 
-import { RESERVATION_PERIOD, REMINDER_PERIOD, TIME_ZONE_UTC_OFFSET, DEFAULT_LANGUAGE } from './constants';
+import { RESERVATION_PERIOD, REMINDER_PERIOD, TIME_ZONE_UTC_OFFSET, DEFAULT_LANGUAGE, NOOP_PHONE_NUMBER } from './constants';
 
-let smsTemplateSources = require('./messages.json');
 
 admin.initializeApp();
 
 let db = admin.firestore();
 
-let smsTemplates: { [locale: string]: { [key: string]: Handlebars.TemplateDelegate } } = {};
-for (let locale of Object.keys(smsTemplateSources)) {
-    smsTemplates[locale] = {};
-    for (let msg of Object.keys(smsTemplateSources[locale])) {
-        smsTemplates[locale][msg] = Handlebars.compile(smsTemplateSources[locale][msg]);
+let messageTemplates: { [locale: string]: { [key: string]: Handlebars.TemplateDelegate } } | null = null;
+function getMessageTemplates() {
+    if (!messageTemplates) {
+        let messageTemplateSources = require('./messages.json');
+        messageTemplates = {};
+        for (let locale of Object.keys(messageTemplateSources)) {
+            messageTemplates[locale] = {};
+            for (let msg of Object.keys(messageTemplateSources[locale])) {
+                messageTemplates[locale][msg] = Handlebars.compile(messageTemplateSources[locale][msg]);
+            }
+        }
     }
+    return messageTemplates;
 }
 
 export const makeSlotsAvailableBasedOnAppState = functions.region('europe-west1')
@@ -79,7 +86,13 @@ export const processSlotReservation = functions
 
     });
 
-export const expireUnfinishedGifts = functions.region('europe-west1').pubsub.schedule('every 1 minutes').onRun(async () => {
+export const expireUnfinishedGifts = functions
+    .region('europe-west1')
+    .pubsub
+    .schedule('every 1 minutes')
+    .onRun(expireUnfinished);
+
+export async function expireUnfinished() {
     let creatingGifts = await db.collection('gifts').where('status', '==', 'creating').get();
     creatingGifts.forEach(doc => {
         let data = doc.data();
@@ -92,22 +105,16 @@ export const expireUnfinishedGifts = functions.region('europe-west1').pubsub.sch
             });
         }
     });
-});
-
-export const ensureGiftCreatingStatus = functions
-    .region('europe-west1')
-    .firestore
-    .document("gifts/{giftId}")
-    .onCreate((snap) => {
-        return snap.ref.set({ status: 'creating' }, { merge: true })
-    });
+}
 
 export const releaseSlotOnGiftDelete = functions
     .region('europe-west1')
     .firestore
     .document("gifts/{giftId}")
     .onDelete(async (snap) => {
-        if (snap.data().slotId) {
+        let statusBefore = snap.data()!.status;
+        if (statusBefore && (statusBefore === 'creating' || statusBefore === 'pending' || statusBefore === 'confirmed') &&
+            snap.data().slotId) {
             let slotRef = db.collection('slots').doc(snap.data().slotId);
             await slotRef.set({ status: 'available' }, { merge: true });
         }
@@ -118,13 +125,17 @@ export const releaseSlotOnGiftRejection = functions
     .firestore
     .document("gifts/{giftId}")
     .onUpdate(async (change) => {
-        if (change.after.exists && (change.after.data().status === 'rejected' || change.after.data().status === 'cancelled') && change.after.data().slotId) {
+        let statusBefore = change.before.exists && change.before.data()!.status;
+        let statusAfter = change.after.exists && change.after.data()!.status;
+        if (statusBefore && (statusBefore === 'creating' || statusBefore === 'pending' || statusBefore === 'confirmed') &&
+            statusAfter && (statusAfter === 'rejected' || statusAfter === 'cancelled') &&
+            change.after.data().slotId) {
             let slotRef = db.collection('slots').doc(change.after.data().slotId);
             await slotRef.set({ status: 'available' }, { merge: true });
         }
     });
 
-export const createGiftSMS = functions
+export const createGiftMessage = functions
     .region('europe-west1')
     .firestore
     .document("gifts/{giftId}")
@@ -140,7 +151,7 @@ export const createGiftSMS = functions
         return Promise.resolve()
     });
 
-export const createGiftReminderSMSs = functions.region('europe-west1').pubsub.schedule('every 1 hours').onRun(async () => {
+export const createGiftReminderMessages = functions.region('europe-west1').pubsub.schedule('every 1 hours').onRun(async () => {
     let confirmedGifts = await db.collection('gifts').where('status', '==', 'confirmed').get();
     confirmedGifts.forEach(async (gift) => {
         let giftData = gift.data();
@@ -148,17 +159,17 @@ export const createGiftReminderSMSs = functions.region('europe-west1').pubsub.sc
         let giftDate = parseDateTime(date, time);
         let giftTimestamp = giftDate.getTime() - TIME_ZONE_UTC_OFFSET * 60 * 60 * 1000;
         if (giftTimestamp - Date.now() < REMINDER_PERIOD) {
-            let giftMessages = await db.collection('SMSs').where('giftId', '==', gift.id).get();
+            let giftMessages = await db.collection('messages').where('giftId', '==', gift.id).get();
             let existingReminder = giftMessages.docs.find(d => d.data().messageKey === 'giftReminder');
             if (!existingReminder) {
-                let template = smsTemplates[giftData.fromLanguage || 'en'].giftReminderBody;
+                let template = getMessageTemplates()[giftData.fromLanguage || 'en'].giftReminderBody;
                 let baseUrl = functions.config().artgift.baseurl;
                 let message = template({
                     dateTime: `${formatDate(date)} ${formatTime(time)}`,
                     address: giftData.toAddress,
                     url: new Handlebars.SafeString(`${baseUrl}/gift?id=${gift.id}`)
                 });
-                db.collection('SMSs').add({
+                db.collection('messages').add({
                     message,
                     toNumber: giftData.fromPhoneNumber,
                     giftId: gift.id,
@@ -201,26 +212,41 @@ export const populateArtistItinerariesOnArtistUpdate = functions
         }
     });
 
-export const createSMSOnArtistCreate = functions
+export const sendArtistInvitation = functions
     .region('europe-west1')
     .firestore
     .document("artists/{artistId}")
-    .onCreate(async doc => {
-        let messageRef = db.collection('SMSs').doc(doc.id);
-        let phoneNumber = doc.data().phoneNumber;
-        if (phoneNumber) {
-            let template = smsTemplates[DEFAULT_LANGUAGE].artistCreatedBody;
-            let baseUrl = functions.config().artgift.baseurl;
-            let message = template({
-                url: new Handlebars.SafeString(`${baseUrl}/artist?id=${doc.id}`)
-            });
-            messageRef.set({
-                message,
-                toNumber: phoneNumber,
-                messageKey: 'artistCreated',
-                sent: false,
-                createdAt: admin.firestore.FieldValue.serverTimestamp()
-            })
+    .onUpdate(async ({ before, after }) => {
+        let beforeInvitationTrigger = before.exists && before.data()!.invitationTrigger;
+        let afterInvitationTrigger = after.exists && after.data()!.invitationTrigger;
+        if (afterInvitationTrigger && afterInvitationTrigger !== beforeInvitationTrigger) {
+            let messageRef = db.collection('messages').doc(after.id);
+            let phoneNumber = after.data().phoneNumber;
+            let email = after.data().email;
+            let name = after.data().name;
+            if (phoneNumber || email) {
+                let emailSubject = getMessageTemplates()[DEFAULT_LANGUAGE].artistCreatedSubject({});
+                let bodyTemplate = getMessageTemplates()[DEFAULT_LANGUAGE].artistCreatedBody;
+                let baseUrl = functions.config().artgift.baseurl;
+                let url = `${baseUrl}/artist?id=${after.id}`;
+                let smsBody = bodyTemplate({
+                    url: new Handlebars.SafeString(url)
+                });
+                let emailBody = bodyTemplate({
+                    url: new Handlebars.SafeString(`<a href="${url}">${url}</a>`)
+                });
+                messageRef.set({
+                    emailSubject,
+                    emailBody,
+                    smsBody,
+                    toNumber: phoneNumber,
+                    toEmail: email,
+                    toName: name,
+                    messageKey: 'artistCreated',
+                    sent: false,
+                    createdAt: admin.firestore.FieldValue.serverTimestamp()
+                })
+            }
         }
     });
 
@@ -293,20 +319,23 @@ async function populateArtistItineraries(region: string, tx: FirebaseFirestore.T
         s => s.data.date,
         s => s.data.time
     );
-    let artistData = affectedArtists.map(a => ({
-        ref: a.ref,
-        data: {
-            ...a.data() as any,
-            itineraries: sortBy(
-                (a.data() as any).itineraries.map((i: any) => ({
-                    ...i,
-                    assignments: i.region === region ? [] : i.assignments // clear existing assignments for this region
-                })),
-                i => i.from.date,
-                i => i.from.time
-            )
-        }
-    }));
+    let artistData = sortBy(
+        affectedArtists.map(a => ({
+            ref: a.ref,
+            data: {
+                ...a.data() as any,
+                itineraries: sortBy(
+                    (a.data() as any).itineraries.map((i: any) => ({
+                        ...i,
+                        assignments: i.region === region || !i.assignments ? [] : i.assignments // clear existing assignments for this region
+                    })),
+                    i => i.from.date,
+                    i => i.from.time
+                )
+            }
+        })),
+        a => a.data.name
+    );
 
     for (let slot of slotsInTimeOrder) {
         let slotDate = parseDateTime(slot.data.date, slot.data.time);
@@ -323,7 +352,7 @@ async function populateArtistItineraries(region: string, tx: FirebaseFirestore.T
                 let itTo = parseDateTime(it.to.date, it.to.time);
                 if (slotDate.getTime() >= itFrom.getTime() && slotDate.getTime() < itTo.getTime()) {
                     console.log('matching artist itinerary', artistData[i].data, j);
-                    let lastSlotId = getLastAssignedSlotId(artistData[i].data);
+                    let lastSlotId = getLastAssignedSlotId(artistData[i].data, region);
                     let lastSlot = lastSlotId ? slotsInTimeOrder.find(s => s.id === lastSlotId)?.data : null;
                     let gapSinceLastSlot = lastSlot ? slotDate.getTime() - parseDateTime(lastSlot.date, lastSlot.time).getTime() : Number.MAX_VALUE;
                     console.log('gap since last', gapSinceLastSlot);
@@ -347,9 +376,9 @@ async function populateArtistItineraries(region: string, tx: FirebaseFirestore.T
     }
 }
 
-function getLastAssignedSlotId(artistData: any) {
+function getLastAssignedSlotId(artistData: any, region: string) {
     for (let i = artistData.itineraries.length - 1; i >= 0; i--) {
-        if (artistData.itineraries[i].assignments.length > 0) {
+        if (artistData.itineraries[i].region === region && artistData.itineraries[i].assignments.length > 0) {
             return (last(artistData.itineraries[i].assignments) as any).slotId;
         }
     }
@@ -357,19 +386,30 @@ function getLastAssignedSlotId(artistData: any) {
 }
 
 async function createMessage(giftId: string, giftDocument: FirebaseFirestore.DocumentData, messageKey: string, eventId: string) {
-    let messageRef = db.collection('SMSs').doc(eventId);
+    let messageRef = db.collection('messages').doc(eventId);
     if (await shouldCreate(messageRef)) {
         let slot = await (await db.collection('slots').doc(giftDocument.slotId).get()).data();
-        let template = smsTemplates[giftDocument.fromLanguage || 'en'][messageKey + 'Body'];
+        let bodyTemplate = getMessageTemplates()[giftDocument.fromLanguage || 'en'][messageKey + 'Body'];
+        let emailSubject = getMessageTemplates()[giftDocument.fromLanguage || 'en'][messageKey + 'Subject']({})
         let baseUrl = functions.config().artgift.baseurl;
-        let message = template({
+        let url = `${baseUrl}/gift?id=${giftId}`;
+        let smsBody = bodyTemplate({
             dateTime: `${formatDate(slot!.date)} ${formatTime(slot!.time)}`,
             address: giftDocument.toAddress,
-            url: new Handlebars.SafeString(`${baseUrl}/gift?id=${giftId}`)
+            url: new Handlebars.SafeString(url)
+        });
+        let emailBody = bodyTemplate({
+            dateTime: `${formatDate(slot!.date)} ${formatTime(slot!.time)}`,
+            address: giftDocument.toAddress,
+            url: new Handlebars.SafeString(`<a href="${url}">${url}</a>`)
         });
         messageRef.set({
-            message,
+            emailSubject,
+            emailBody,
+            smsBody,
             toNumber: giftDocument.fromPhoneNumber,
+            toEmail: giftDocument.fromEmail,
+            toName: giftDocument.fromName,
             giftId,
             messageKey,
             sent: false,
@@ -379,27 +419,29 @@ async function createMessage(giftId: string, giftDocument: FirebaseFirestore.Doc
 }
 
 function shouldCreate(messageRef: FirebaseFirestore.DocumentReference) {
-    return messageRef.get().then(smsDoc => {
-        return !smsDoc.exists;
+    return messageRef.get().then(messageDoc => {
+        return !messageDoc.exists;
     });
 }
 
-export const sendSMSs = functions.region('europe-west1').pubsub.schedule('every 2 minutes').onRun(async () => {
+export const sendMessages = functions.region('europe-west1').pubsub.schedule('every 2 minutes').onRun(async () => {
     let testMode = functions.config().artgift.testmode;
     if (testMode) {
         console.log('In test mode; skipping message sending');
     }
-    let unsentMessages = await db.collection('SMSs').where('sent', '==', false).get();
+    let unsentMessages = await db.collection('messages').where('sent', '==', false).get();
     unsentMessages.forEach(async doc => {
-        let { message, toNumber, createdAt } = doc.data()!;
+        let { emailSubject, emailBody, smsBody, toNumber, toEmail, toName, createdAt } = doc.data()!;
         if (createdAt.toMillis() < Date.now() - 2 * 60 * 1000) {
-            await sendMessage(message, toNumber);
+            let smsSend = toNumber && toNumber !== NOOP_PHONE_NUMBER ? sendSMS(smsBody, toNumber) : Promise.resolve();
+            let emailSend = toEmail ? sendEmail(emailSubject, emailBody, toEmail, toName) : Promise.resolve();
+            await Promise.all([smsSend, emailSend]);
             doc.ref.set({ sent: true, sentAt: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
         }
     });
 });
 
-function sendMessage(message: string, toNumber: string) {
+function sendSMS(message: string, toNumber: string) {
     let cfg = functions.config();
     let smsApiUrl = cfg.artgift.smsapi.url;
     let smsApiUsername = cfg.artgift.smsapi.username;
@@ -420,6 +462,43 @@ function sendMessage(message: string, toNumber: string) {
             throw new Error('SMS API error: ' + message);
         }
     })
+}
+
+function sendEmail(subject: string, body: string, toEmail: string, toName: string) {
+    let cfg = functions.config();
+    let fromEmail = cfg.artgift.emailapi.fromaddress;
+    let fromName = cfg.artgift.emailapi.fromname;
+    let mandrillClient = new mandrill.Mandrill(functions.config().artgift.emailapi.apikey);
+    return new Promise((res) => mandrillClient.messages.send({
+        message: {
+            subject,
+            html: body,
+            from_email: fromEmail,
+            from_name: fromName,
+            to: [{
+                email: toEmail,
+                name: toName,
+                type: 'to'
+            }],
+            auto_text: true
+        }
+    }, result => {
+        console.log('Email API response', result, 'for request', {
+            message: {
+                subject,
+                html: body,
+                from_email: fromEmail,
+                from_name: fromName,
+                to: [{
+                    email: toEmail,
+                    name: toName,
+                    type: 'to'
+                }],
+                auto_text: true
+            }
+        });
+        res();
+    }));
 }
 
 function normalisePhoneNumber(number: string) {

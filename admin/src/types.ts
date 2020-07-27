@@ -20,6 +20,7 @@ export type Gift = {
     fromPhoneNumber: string;
     fromEmail: string;
     fromMessage: string;
+    fromPhotographyPermissionGiven: boolean;
     cancellationReason?: string;
 };
 export type GiftLocation = {
@@ -30,8 +31,9 @@ export type GiftLocation = {
 export type Artist = {
     id?: string;
     name: string;
-    phoneNumber: string;
-    email: string;
+    phoneNumber?: string;
+    email?: string;
+    invitationTrigger?: number;
     itineraries: ArtistItinerary[]
 }
 

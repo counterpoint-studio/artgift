@@ -139,10 +139,7 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
                 ></p>
               </div>
               {gift.status !== "cancelled" && gift.status !== "rejected" && (
-                <form
-                  className="giftCancellation"
-                  onSubmit={e => e.preventDefault()}
-                >
+                <form className="giftCancellation" onSubmit={cancelGift}>
                   <h2>{intl.formatMessage({ id: "giftCancellation" })}</h2>
                   <div className="inputGroup">
                     <label>
@@ -152,6 +149,7 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
                       <span className="requiredField">*</span>
                     </label>
                     <textarea
+                      id="cancellationReason"
                       value={cancellationReason}
                       placeholder={intl.formatMessage({
                         id: "giftCancellationFormPlaceholderReason",

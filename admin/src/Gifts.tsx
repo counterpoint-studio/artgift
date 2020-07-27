@@ -1,10 +1,11 @@
 import React, { useMemo, useEffect, useState, useCallback } from "react";
 import firebase from "firebase/app";
-import { groupBy } from "lodash";
+import { groupBy, fromPairs, flatMap } from "lodash";
 import classNames from "classnames";
+import { ExportToCsv } from "export-to-csv";
 
 import { Navigation } from "./Navigation";
-import { Gift, Slot } from "./types";
+import { Gift, Slot, Artist } from "./types";
 import { formatDate, formatTime } from "./util/dateUtils";
 import { MAIN_APP_HOST } from "./constants";
 
@@ -13,9 +14,21 @@ import "./Gifts.scss";
 export const Gifts: React.FC = () => {
   let giftColl = useMemo(() => firebase.firestore().collection("gifts"), []);
   let slotColl = useMemo(() => firebase.firestore().collection("slots"), []);
+  let artistColl = useMemo(
+    () => firebase.firestore().collection("artists"),
+    []
+  );
+  let csvExporter = useMemo(
+    () => new ExportToCsv({ title: `Art Gifts`, useKeysAsHeaders: true }),
+    []
+  );
 
   let [gifts, setGifts] = useState<Gift[]>([]);
   let [slots, setSlots] = useState<Slot[]>([]);
+  let [artistAssignments, setArtistAssignments] = useState<{
+    [giftId: string]: string;
+  }>({});
+
   let [showingDetails, setShowingDetails] = useState<{
     [giftId: string]: boolean;
   }>({});
@@ -42,15 +55,35 @@ export const Gifts: React.FC = () => {
       unSub();
     };
   }, [slotColl]);
+  useEffect(() => {
+    let unSub = artistColl.orderBy("name").onSnapshot((artistsSnapshot) => {
+      let artists = artistsSnapshot.docs.map(
+        (d) => ({ id: d.id, ...d.data() } as Artist)
+      );
+      setArtistAssignments(
+        fromPairs(
+          flatMap(artists, (artist) =>
+            flatMap(artist.itineraries, (it) =>
+              it.assignments.map((a) => [a.giftId, artist.name])
+            )
+          )
+        )
+      );
+    });
+    return () => {
+      unSub();
+    };
+  }, [artistColl]);
 
-  let getTableData = () => {
+  let getTableData = useCallback(() => {
     if (gifts.length === 0 || slots.length === 0) return [];
     let slotsById = groupBy(slots, (s) => s.id);
     return gifts.map((gift) => ({
       gift,
       slot: slotsById[gift.slotId!]?.[0] as Slot,
+      assignedArtist: artistAssignments[gift.id],
     }));
-  };
+  }, [gifts, slots, artistAssignments]);
 
   let onToggleDetails = useCallback((gift: Gift) => {
     setShowingDetails((d) => ({ ...d, [gift.id!]: !d[gift.id!] }));
@@ -77,13 +110,37 @@ export const Gifts: React.FC = () => {
     [giftColl]
   );
 
+  let onExportCSV = useCallback(() => {
+    csvExporter.generateCsv(
+      getTableData().map(({ gift, slot, assignedArtist }) => ({
+        giftId: gift.id,
+        slotId: slot.id,
+        date: slot && formatDate(slot.date),
+        time: slot && formatTime(slot.time),
+        region: slot?.region,
+        toName: gift.toName,
+        toAddress: gift.toAddress,
+        toLanguage: gift.toLanguage,
+        reason: gift.toSignificance,
+        fromName: gift.fromName,
+        fromEmail: gift.fromEmail,
+        fromPhoneNumber: gift.fromPhoneNumber,
+        message: gift.fromMessage,
+        photographyPermission: gift.fromPhotographyPermissionGiven || false,
+        status: gift.status,
+        assignedArtist: assignedArtist || "",
+        cancellationReason: gift.cancellationReason || "",
+      }))
+    );
+  }, [getTableData, csvExporter]);
+
   return (
     <div className="gifts">
       <Navigation currentPage="gifts" />
       <table className="slots--list">
         <thead></thead>
         <tbody>
-          {getTableData().map(({ gift, slot }) => (
+          {getTableData().map(({ gift, slot, assignedArtist }) => (
             <React.Fragment key={gift.id}>
               <tr onClick={() => onToggleDetails(gift)}>
                 <td>{slot && formatDate(slot.date)}</td>
@@ -99,6 +156,18 @@ export const Gifts: React.FC = () => {
                     )}
                   >
                     {gift.status || "pending"}
+                  </span>
+                </td>
+                <td style={{ whiteSpace: "nowrap" }}>
+                  <span
+                    className={classNames(
+                      "giftArtistStatus",
+                      assignedArtist ? "assigned" : "unassigned"
+                    )}
+                  >
+                    {gift.status === "confirmed"
+                      ? assignedArtist || "no artist"
+                      : ""}
                   </span>
                 </td>
                 <td>
@@ -170,6 +239,12 @@ export const Gifts: React.FC = () => {
                           <td>{gift.fromMessage}</td>
                         </tr>
                         <tr>
+                          <td>Permission to photograph:</td>
+                          <td>
+                            {gift.fromPhotographyPermissionGiven ? "yes" : "no"}
+                          </td>
+                        </tr>
+                        <tr>
                           <td>App link:</td>
                           <td>
                             <a
@@ -196,6 +271,7 @@ export const Gifts: React.FC = () => {
           ))}
         </tbody>
       </table>
+      <button onClick={onExportCSV}>Export as CSV</button>
     </div>
   );
 };

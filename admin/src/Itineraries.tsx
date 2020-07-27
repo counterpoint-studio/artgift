@@ -1,6 +1,6 @@
 import React, { useMemo, useEffect, useState, useCallback } from "react";
 import firebase from "firebase/app";
-import { last, flatMap, isEqual, padStart, fromPairs } from "lodash";
+import { last, flatMap, isEqual, padStart, fromPairs, sortBy } from "lodash";
 
 import { REGIONS, DATES, HOURS, MINUTES } from "./constants";
 import { Navigation } from "./Navigation";
@@ -85,10 +85,15 @@ const RegionItineraries: React.FC<RegionItinerariesProps> = ({
 }) => {
   let regionItineraries = useMemo(
     () =>
-      flatMap(artists, (artist) =>
-        artist.itineraries
-          .filter((i) => i.region === regionId)
-          .map((itinerary) => ({ artist, itinerary }))
+      sortBy(
+        flatMap(artists, (artist) =>
+          artist.itineraries
+            .filter((i) => i.region === regionId)
+            .map((itinerary) => ({ artist, itinerary }))
+        ),
+        (i) => i.itinerary.from.date,
+        (i) => i.itinerary.from.time,
+        (i) => i.artist.name
       ),
     [artists]
   );

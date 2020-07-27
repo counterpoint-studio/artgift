@@ -19,7 +19,6 @@ import { REGION_BOUNDING_BOX } from "../constants"
 import { useMounted, useGiftState } from "../hooks"
 import { getRegionGeoJSON } from "../services/regionLookup"
 import { initGift } from "../services/gifts"
-import GiftsPage from "./gifts"
 
 import "./to.scss"
 
@@ -154,6 +153,9 @@ const ToPage = () => {
             <Textbox
               maxLength={50}
               value={gift.toName}
+              attributesWrapper={{
+                id: "toName",
+              }}
               onBlur={() => {}}
               onChange={name => {
                 setGift({ ...gift, toName: name })
@@ -184,6 +186,9 @@ const ToPage = () => {
                   value={inputProps.value}
                   onChange={(v, evt) => inputProps.onChange(evt)}
                   onBlur={evt => onUpdateAddress(evt.currentTarget.value)}
+                  attributesWrapper={{
+                    id: "toAddress",
+                  }}
                   validationOption={{
                     required: false,
                   }}
@@ -203,12 +208,13 @@ const ToPage = () => {
               <span className="requiredField">*</span>
             </label>
             <select
+              id="toLanguage"
               value={gift.toLanguage}
               onChange={evt =>
-                setGift(gift => ({
+                setGift({
                   ...gift,
                   toLanguage: evt.currentTarget.value,
-                }))
+                })
               }
             >
               <option value="fi">
@@ -233,6 +239,9 @@ const ToPage = () => {
               placeholder={intl.formatMessage({
                 id: "toFormPlaceholderMessage",
               })}
+              attributesWrapper={{
+                id: "toSignificance",
+              }}
               onBlur={() => {}}
               onChange={significance =>
                 setGift(gift => ({ ...gift, toSignificance: significance }))
