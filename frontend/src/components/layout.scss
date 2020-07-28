@@ -50,10 +50,13 @@ body {
 
     @media (min-width: 768px) {
       display: block;
+      width: 250px;
       position: fixed;
       top: calc((2 * #{$frameMargin}) + #{$frameWidth});
       right: calc((2 * #{$frameMargin}) + #{$frameWidth});
-      width: 250px;
+      bottom: auto;
+      left: auto;
+      transform: none;
     }
   }
 
@@ -61,8 +64,14 @@ body {
     position: relative;
     height: 100%;
     display: grid;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: 100%;
     background: $colorBackground;
+    opacity: 0;
+    transition: opacity 2s ease;
+
+    &.isVisible {
+      opacity: 1;
+    }
 
     .scroll {
       overflow: auto;
@@ -94,10 +103,14 @@ body {
   }
 
   .footer {
+    display: none;
+
     @media (min-width: 768px) {
-      position: fixed;
+      top: auto;
       right: calc((2 * #{$frameMargin}) + #{$frameWidth});
       bottom: calc((2 * #{$frameMargin}) + #{$frameWidth});
+      left: auto;
+      transform: none;
     }
   }
 }

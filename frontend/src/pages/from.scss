@@ -1,11 +1,5 @@
 .from {
   .main {
-    opacity: 0;
-    &.isVisible {
-      opacity: 1;
-      transition: opacity 1s;
-    }
-
     .countdownTimer {
       background-color: red;
       padding: 1px 7px 3px 7px;

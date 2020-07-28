@@ -1,14 +1,6 @@
 @import "../components/variables.scss";
 
 .to {
-  .main {
-    opacity: 0;
-    &.isVisible {
-      opacity: 1;
-      transition: opacity 1s;
-    }
-  }
-
   .react-autosuggest__container {
     position: relative;
 

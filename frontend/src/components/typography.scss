@@ -30,10 +30,11 @@ h1,
   color: $colorFontBody;
   line-height: 1.2;
   text-transform: uppercase;
-  font-size: 6.75vw;
+  font-size: 22px;
   margin: 0 0 $fontSizeBaseMobileXS 0;
 
   @media (min-width: 360px) {
+    font-size: 26px;
     margin: 0 0 $fontSizeBaseMobile 0;
   }
 

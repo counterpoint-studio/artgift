@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react"
 import Helmet from "react-helmet"
-import { useIntl } from "gatsby-plugin-intl"
+import { useIntl, Link } from "gatsby-plugin-intl"
 import classNames from "classnames"
 
 import Layout from "../components/layout"
@@ -117,6 +117,14 @@ const IntroPage = () => {
               }}
             />
           )}
+          <div className="introFooter">
+            <Link to="/faqs" className="introLink introLink--faqs">
+              {intl.formatMessage({ id: "FAQsLink" })}
+            </Link>
+            <Link to="/privacy" className="introLink introLink--privacy">
+              {intl.formatMessage({ id: "privacyLink" })}
+            </Link>
+          </div>
         </div>
       </main>
     </Layout>

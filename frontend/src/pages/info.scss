@@ -1,12 +1,4 @@
 .info {
-  .main {
-    opacity: 0;
-    &.isVisible {
-      opacity: 1;
-      transition: opacity 1s;
-    }
-  }
-
   .checkboxes {
     margin-top: 20px;
   }

@@ -1,5 +1,5 @@
 import React from "react"
-import { useIntl, Link } from "gatsby-plugin-intl"
+import { useIntl } from "gatsby-plugin-intl"
 
 import HelsinginSanomatLogo from "../images/helsingin-sanomat.svg"
 import "./footer.scss"
@@ -9,9 +9,6 @@ const Footer = () => {
 
   return (
     <footer className="footer">
-      <Link to="/privacy" className="footerLink footerLink--privacy">
-        {intl.formatMessage({ id: "privacyLink" })}
-      </Link>
       <a
         className="footerLink footerLink--helsingin-sanomat"
         href="https://www.hs.fi"

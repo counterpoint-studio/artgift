@@ -2,25 +2,42 @@
 
 .intro {
   .heroImage {
+    display: block;
     width: 100%;
     object-fit: cover;
 
     height: 22.5vh;
     object-position: 0 10%;
-    margin: $frameMargin $frameMargin 0 $frameMargin;
+    margin: $frameWidth $frameWidth 0 $frameWidth;
 
     @media (min-width: 768px) {
-      height: 25vh;
-      object-position: 0 5%;
       margin: 0;
+    }
+
+    @media (min-width: 768px) and (max-height: 860px) {
+      display: none;
+    }
+  }
+
+  .header {
+    // Show Helsinki Fest logo during opening animation
+    @media (max-width: 768px) {
+      display: block;
+      width: 200px;
+      position: fixed;
+      top: 50px;
+      right: auto;
+      bottom: auto;
+      left: 50%;
+      transform: translateX(-50%);
     }
   }
 
   .main {
-    opacity: 0;
-    &.isVisible {
-      opacity: 1;
-      transition: opacity 1s;
+    grid-template-rows: auto 1fr;
+
+    @media (min-width: 768px) and (max-height: 860px) {
+      grid-template-rows: 100%;
     }
 
     .scroll {
@@ -41,6 +58,52 @@
       @media (min-width: 768px) {
         margin-bottom: $fontSizeBase;
       }
+    }
+
+    .introFooter {
+      margin-top: $fontSizeBaseMobileXS * 1.5;
+
+      @media (min-width: 360px) {
+        margin-top: $fontSizeBaseMobile * 2;
+      }
+
+      @media (min-width: 768px) {
+        margin-top: $fontSizeBase * 2;
+      }
+    }
+
+    .introLink {
+      text-decoration: none;
+      color: rgba(black, 0.5);
+      font-size: $fontSizeBaseMobileXS;
+
+      @media (min-width: 360px) {
+        font-size: $fontSizeBaseMobile;
+      }
+
+      @media (min-width: 768px) {
+        font-size: $fontSizeBase;
+      }
+
+      &:not(:last-child):after {
+        content: "•";
+        display: inline-block;
+        margin: 0 10px;
+      }
+    }
+  }
+
+  .footer {
+    // Show Helsingin Sanomat logo during opening animation
+    @media (max-width: 768px) {
+      z-index: -1;
+      display: block;
+      position: fixed;
+      top: auto;
+      right: auto;
+      bottom: 50px;
+      left: 50%;
+      transform: translateX(-50%);
     }
   }
 }

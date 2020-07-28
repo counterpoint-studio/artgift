@@ -13,10 +13,19 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 10px;
     text-transform: uppercase;
     text-decoration: none;
     margin-right: 15px;
+
+    font-size: $fontSizeBaseMobileXS * 0.8;
+
+    @media (min-width: 360px) {
+      font-size: $fontSizeBaseMobile * 0.8;
+    }
+
+    @media (min-width: 768px) {
+      font-size: $fontSizeBase * 0.8;
+    }
 
     &:last-child {
       margin-right: 0;
