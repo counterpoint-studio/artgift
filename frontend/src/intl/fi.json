@@ -93,6 +93,7 @@
   "artistGiftLanguage": "Kieli",
   "artistGiftReason": "Perustelu",
   "artistGiftMessage": "Viesti",
+  "artistGiftGoogleMapsLink": "Google Maps",
 
   "validationErrorEmpty": "Ei voi olla tyhjä",
   "validationErrorMissingBuildingNumber": "Täytäthän myös osoitenumeron",

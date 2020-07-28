@@ -197,6 +197,20 @@ function renderAssignment(
                 <td>{intl.formatMessage({ id: "artistGiftMessage" })}</td>
                 <td>{gift.fromMessage || "-"}</td>
               </tr>
+              {gift.toLocation?.point && (
+                <tr>
+                  <td></td>
+                  <td>
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${gift.toLocation.point[1]},${gift.toLocation.point[0]}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {intl.formatMessage({ id: "artistGiftGoogleMapsLink" })}
+                    </a>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
