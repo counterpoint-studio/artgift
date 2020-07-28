@@ -95,7 +95,15 @@ export const Gifts: React.FC = () => {
       toStatus: "confirmed" | "rejected",
       event: React.MouseEvent
     ) => {
-      giftColl.doc(gift.id).set({ status: toStatus }, { merge: true });
+      if (
+        window.confirm(
+          toStatus === "confirmed"
+            ? "Are you sure you want to confirm this gift, and send the gift giver a confirmation message?"
+            : "Are you sure you want to reject this gift, and send the gift giver a rejection message?"
+        )
+      ) {
+        giftColl.doc(gift.id).set({ status: toStatus }, { merge: true });
+      }
       event.stopPropagation();
     },
     [giftColl]
@@ -103,7 +111,11 @@ export const Gifts: React.FC = () => {
 
   let onDeleteGift = useCallback(
     (gift: Gift) => {
-      if (window.confirm("Are you sure you want to delete this gift?")) {
+      if (
+        window.confirm(
+          "Are you sure you want to delete this gift? This action is permanent and the gift giver will NOT be notified"
+        )
+      ) {
         giftColl.doc(gift.id).delete();
       }
     },
@@ -172,7 +184,8 @@ export const Gifts: React.FC = () => {
                 </td>
                 <td>
                   {gift.status !== "confirmed" &&
-                    gift.status !== "rejected" && (
+                    gift.status !== "rejected" &&
+                    gift.status !== "cancelled" && (
                       <button
                         onClick={(evt) =>
                           onUpdateGiftStatus(gift, "confirmed", evt)
@@ -181,15 +194,16 @@ export const Gifts: React.FC = () => {
                         Confirm
                       </button>
                     )}
-                  {gift.status !== "rejected" && (
-                    <button
-                      onClick={(evt) =>
-                        onUpdateGiftStatus(gift, "rejected", evt)
-                      }
-                    >
-                      Reject
-                    </button>
-                  )}
+                  {gift.status !== "rejected" &&
+                    gift.status !== "cancelled" && (
+                      <button
+                        onClick={(evt) =>
+                          onUpdateGiftStatus(gift, "rejected", evt)
+                        }
+                      >
+                        Reject
+                      </button>
+                    )}
                 </td>
                 <td>
                   <button onClick={() => onDeleteGift(gift)}>Delete</button>
