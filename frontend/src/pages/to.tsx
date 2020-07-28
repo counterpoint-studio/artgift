@@ -189,6 +189,11 @@ const ToPage = () => {
                   attributesWrapper={{
                     id: "toAddress",
                   }}
+                  attributesInput={{
+                    placeholder: intl.formatMessage({
+                      id: "toFormPlaceholderAddress",
+                    }),
+                  }}
                   validationOption={{
                     required: false,
                   }}

@@ -140,6 +140,9 @@ const FromPage = () => {
               attributesInput={{
                 type: "tel",
                 id: "fromPhoneNumber",
+                placeholder: intl.formatMessage({
+                  id: "fromFormPlaceholderPhone",
+                }),
               }}
               maxLength={25}
               value={gift.fromPhoneNumber}
