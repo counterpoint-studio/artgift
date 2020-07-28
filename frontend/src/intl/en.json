@@ -33,7 +33,6 @@
   "toFormLabelLanguage": "Who speaks",
   "toFormLabelLanguageFi": "Finnish",
   "toFormLabelLanguageEn": "English",
-  "toFormLabelLanguageSe": "Swedish",
   "toFormLabelMessage": "Who is special to me because",
   "toFormPlaceholderMessage": " ",
   "toButtonNext": "Next",
@@ -94,6 +93,7 @@
   "artistGiftLanguage": "Language",
   "artistGiftReason": "Reason",
   "artistGiftMessage": "Message",
+  "artistGiftGoogleMapsLink": "Google Maps",
 
   "validationErrorEmpty": "Cannot be empty",
   "validationErrorMissingBuildingNumber": "Please provide the building number",

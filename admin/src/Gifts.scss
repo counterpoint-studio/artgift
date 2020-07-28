@@ -1,4 +1,9 @@
 .gifts {
+  &--list {
+    width: 100%;
+    table-layout: fixed;
+    overflow-wrap: break-word;
+  }
   .giftStatus.pending {
     background-color: lightyellow;
   }

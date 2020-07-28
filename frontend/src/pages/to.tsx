@@ -228,9 +228,6 @@ const ToPage = () => {
               <option value="en">
                 {intl.formatMessage({ id: "toFormLabelLanguageEn" })}
               </option>
-              <option value="se">
-                {intl.formatMessage({ id: "toFormLabelLanguageSe" })}
-              </option>
             </select>
           </div>
           <div className="inputGroup">
