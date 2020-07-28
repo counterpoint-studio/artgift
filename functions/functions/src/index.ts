@@ -145,8 +145,12 @@ export const createGiftMessage = functions
         let eventId = context.eventId;
         if (document && previousDocument && document.status === 'pending' && previousDocument.status === 'creating') {
             await createMessage(change.after.id, document, 'giftCreated', eventId);
-        } else if (document && previousDocument && document.status === 'confirmed' && previousDocument.status === 'pending') {
+        } else if (document && previousDocument && document.status === 'confirmed' && previousDocument.status !== 'confirmed') {
             await createMessage(change.after.id, document, 'giftConfirmed', eventId);
+        } else if (document && previousDocument && document.status === 'rejected' && previousDocument.status !== 'rejected') {
+            await createMessage(change.after.id, document, 'giftRejected', eventId);
+        } else if (document && previousDocument && document.status === 'cancelled' && previousDocument.status !== 'cancelled') {
+            await createMessage(change.after.id, document, 'giftCancelled', eventId);
         }
         return Promise.resolve()
     });
@@ -225,15 +229,16 @@ export const sendArtistInvitation = functions
             let email = after.data().email;
             let name = after.data().name;
             if (phoneNumber || email) {
-                let emailSubject = getMessageTemplates()[DEFAULT_LANGUAGE].artistCreatedSubject({});
-                let bodyTemplate = getMessageTemplates()[DEFAULT_LANGUAGE].artistCreatedBody;
+                let emailSubject = getMessageTemplates()[DEFAULT_LANGUAGE].artistCreatedEmailSubject({});
+                let emailBodyTemplate = getMessageTemplates()[DEFAULT_LANGUAGE].artistCreatedEmailBody;
+                let smsTemplate = getMessageTemplates()[DEFAULT_LANGUAGE].artistCreatedSMS;
                 let baseUrl = functions.config().artgift.baseurl;
                 let url = `${baseUrl}/artist?id=${after.id}`;
-                let smsBody = bodyTemplate({
+                let smsBody = smsTemplate({
                     url: new Handlebars.SafeString(url)
                 });
-                let emailBody = bodyTemplate({
-                    url: new Handlebars.SafeString(`<a href="${url}">${url}</a>`)
+                let emailBody = emailBodyTemplate({
+                    url: new Handlebars.SafeString(url)
                 });
                 messageRef.set({
                     emailSubject,
@@ -389,19 +394,20 @@ async function createMessage(giftId: string, giftDocument: FirebaseFirestore.Doc
     let messageRef = db.collection('messages').doc(eventId);
     if (await shouldCreate(messageRef)) {
         let slot = await (await db.collection('slots').doc(giftDocument.slotId).get()).data();
-        let bodyTemplate = getMessageTemplates()[giftDocument.fromLanguage || 'en'][messageKey + 'Body'];
-        let emailSubject = getMessageTemplates()[giftDocument.fromLanguage || 'en'][messageKey + 'Subject']({})
+        let emailBodyTemplate = getMessageTemplates()[giftDocument.fromLanguage || 'en'][messageKey + 'EmailBody'];
+        let smsTemplate = getMessageTemplates()[giftDocument.fromLanguage || 'en'][messageKey + 'SMS'];
+        let emailSubject = getMessageTemplates()[giftDocument.fromLanguage || 'en'][messageKey + 'EmailSubject']({})
         let baseUrl = functions.config().artgift.baseurl;
         let url = `${baseUrl}/gift?id=${giftId}`;
-        let smsBody = bodyTemplate({
+        let smsBody = smsTemplate({
             dateTime: `${formatDate(slot!.date)} ${formatTime(slot!.time)}`,
             address: giftDocument.toAddress,
             url: new Handlebars.SafeString(url)
         });
-        let emailBody = bodyTemplate({
+        let emailBody = emailBodyTemplate({
             dateTime: `${formatDate(slot!.date)} ${formatTime(slot!.time)}`,
             address: giftDocument.toAddress,
-            url: new Handlebars.SafeString(`<a href="${url}">${url}</a>`)
+            url: new Handlebars.SafeString(url)
         });
         messageRef.set({
             emailSubject,
@@ -424,20 +430,18 @@ function shouldCreate(messageRef: FirebaseFirestore.DocumentReference) {
     });
 }
 
-export const sendMessages = functions.region('europe-west1').pubsub.schedule('every 2 minutes').onRun(async () => {
+export const sendMessages = functions.region('europe-west1').pubsub.schedule('every 1 minutes').onRun(async () => {
     let testMode = functions.config().artgift.testmode;
     if (testMode) {
         console.log('In test mode; skipping message sending');
     }
     let unsentMessages = await db.collection('messages').where('sent', '==', false).get();
     unsentMessages.forEach(async doc => {
-        let { emailSubject, emailBody, smsBody, toNumber, toEmail, toName, createdAt } = doc.data()!;
-        if (createdAt.toMillis() < Date.now() - 2 * 60 * 1000) {
-            let smsSend = toNumber && toNumber !== NOOP_PHONE_NUMBER ? sendSMS(smsBody, toNumber) : Promise.resolve();
-            let emailSend = toEmail ? sendEmail(emailSubject, emailBody, toEmail, toName) : Promise.resolve();
-            await Promise.all([smsSend, emailSend]);
-            doc.ref.set({ sent: true, sentAt: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
-        }
+        let { emailSubject, emailBody, smsBody, toNumber, toEmail, toName } = doc.data()!;
+        let smsSend = toNumber && toNumber !== NOOP_PHONE_NUMBER ? sendSMS(smsBody, toNumber) : Promise.resolve();
+        let emailSend = toEmail ? sendEmail(emailSubject, emailBody, toEmail, toName) : Promise.resolve();
+        await Promise.all([smsSend, emailSend]);
+        doc.ref.set({ sent: true, sentAt: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
     });
 });
 
