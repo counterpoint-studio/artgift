@@ -32,7 +32,7 @@
     "giftCancelledEmailSubject": "Art Gift Reservation Cancelled",
     "giftCancelledEmailBody": "<h2>We'e received your cancellation of your Art Gift for {{dateTime}} {{address}}</h2><p>Helsinki Fest will be held 21.–23.8., see the full programme at <a href=\"https://helsinkifest.fi/en\">helsinkifest.fi</a>.</p>",
     "giftCancelledSMS": "Your Art Gift for {{dateTime}} {{address}} has been cancelled.",
-    "giftReminderEmailSubject": "Your Art Gift will arrive tomorrow",
+    "giftReminderEmailSubject": "Reminder: Your Art Gift will arrive tomorrow",
     "giftReminderEmailBody": "<h2>Your Art Gift {{dateTime}} {{address}} will be delivered tomorrow!</h2><p>Please be there with the gift recipient at this time. Find gift details at <a href=\"{{url}}\">{{url}}</a></p><p>Helsinki Fest will be held 21.–23.8., see the full programme at <a href=\"https://helsinkifest.fi/en\">helsinkifest.fi</a>.</p>",
     "giftReminderSMS": "Your Art Gift {{dateTime}} {{address}} will be delivered tomorrow! Please be there with the gift recipient at this time. Find gift details at {{url}}",
     "artistCreatedEmailSubject": "Welcome, Art Gift Artist",
