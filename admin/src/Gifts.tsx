@@ -137,7 +137,7 @@ export const Gifts: React.FC = () => {
   return (
     <div className="gifts">
       <Navigation currentPage="gifts" />
-      <table className="slots--list">
+      <table className="gifts--list">
         <thead></thead>
         <tbody>
           {getTableData().map(({ gift, slot, assignedArtist }) => (
@@ -148,7 +148,7 @@ export const Gifts: React.FC = () => {
                 <td>{slot?.region}</td>
                 <td>{gift.toAddress}</td>
                 <td>{gift.fromEmail}</td>
-                <td style={{ whiteSpace: "nowrap" }}>
+                <td>
                   <span
                     className={classNames(
                       "giftStatus",
@@ -158,7 +158,7 @@ export const Gifts: React.FC = () => {
                     {gift.status || "pending"}
                   </span>
                 </td>
-                <td style={{ whiteSpace: "nowrap" }}>
+                <td>
                   <span
                     className={classNames(
                       "giftArtistStatus",
