@@ -1,18 +1,20 @@
 import React, { useCallback, useEffect } from "react"
 import Helmet from "react-helmet"
 import { useIntl, navigate } from "gatsby-plugin-intl"
+import classNames from "classnames"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
-import { useGiftState } from "../hooks"
+import { useGiftState, useMounted } from "../hooks"
 import { initGift } from "../services/gifts"
 
 import "./delivery.scss"
 
 const DeliveryPage = () => {
   let intl = useIntl()
+  let mounted = useMounted()
 
   let [gift] = useGiftState(initGift(intl.locale))
 
@@ -20,7 +22,7 @@ const DeliveryPage = () => {
     if (gift.toName === "") navigate("/")
   }, [gift])
 
-  useMapBackground({
+  let { isMoving: isMapMoving } = useMapBackground({
     focusPoint: gift.toLocation && {
       className: "deliveryPage",
       location: gift.toLocation.point,
@@ -43,7 +45,12 @@ const DeliveryPage = () => {
         }}
         key="helmet"
       />
-      <main className="main">
+      <main
+        className={classNames("main", {
+          isVisible: mounted && !isMapMoving,
+        })}
+      >
+        {" "}
         <div className="scroll">
           <h1>{intl.formatMessage({ id: "deliveryTitle" })}</h1>
           <p>{intl.formatMessage({ id: "deliveryDescription" })}</p>
