@@ -15,11 +15,13 @@ import * as gifts from "../services/gifts"
 import { formatDate, formatTime } from "../services/dates"
 
 import "./gift.scss"
+import { useMounted } from "../hooks"
 
 const emptyPoints = []
 
 const GiftPage: React.FC<PageProps> = ({ location }) => {
   let intl = useIntl()
+  let mounted = useMounted()
   let windowWidth = useWindowWidth()
   let [gift, setGift] = useState<Gift>()
   let [slot, setSlot] = useState<GiftSlot>()
@@ -49,7 +51,7 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
     }
   }, [location.search])
 
-  useMapBackground({
+  let { isMoving: isMapMoving } = useMapBackground({
     bounds: gift?.toLocation
       ? boundsAround(gift.toLocation.point)
       : REGION_BOUNDING_BOX,
@@ -81,7 +83,11 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
         }}
         key="helmet"
       />
-      <main className="main">
+      <main
+        className={classNames("main", {
+          isVisible: mounted && !isMapMoving,
+        })}
+      >
         <div className="scroll">
           {gift && slot && (
             <div className="giftInfo">

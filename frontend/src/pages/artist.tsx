@@ -6,6 +6,7 @@ import qs from "qs"
 import classNames from "classnames"
 import { camelCase, flatMap } from "lodash"
 import { useWindowWidth } from "@react-hook/window-size"
+import { useMounted } from "../hooks"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -21,6 +22,7 @@ const emptyPoints = []
 
 const ArtistPage: React.FC<PageProps> = ({ location }) => {
   let intl = useIntl()
+  let mounted = useMounted()
   let windowWidth = useWindowWidth()
   let [artist, setArtist] = useState<Artist>()
   let [giftsAndSlots, setGiftsAndSlots] = useState<{
@@ -88,7 +90,11 @@ const ArtistPage: React.FC<PageProps> = ({ location }) => {
         }}
         key="helmet"
       />
-      <main className="main">
+      <main
+        className={classNames("main", {
+          isVisible: mounted,
+        })}
+      >
         <div className="scroll">
           {artist && (
             <div className="artistInfo">
