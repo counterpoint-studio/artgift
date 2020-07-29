@@ -23,7 +23,7 @@ const PrivacyPage = () => {
         }}
         key="helmet"
       />
-      <main className="main">
+      <main className="main isVisible">
         <div className="scroll">
           <h1>{intl.formatMessage({ id: "privacyTitle" })}</h1>
           <div
