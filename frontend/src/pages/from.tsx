@@ -109,9 +109,10 @@ const FromPage = () => {
             {intl.formatMessage({ id: "fromReservedTimeStart" })}{" "}
             <span className="countdownTimer">
               {formatDuration(reservedFor)}
-            </span>
+            </span>{" "}
+            {intl.formatMessage({ id: "fromReservedTimeEnd" })}
           </p>
-          <p>{intl.formatMessage({ id: "fromReservedTimeEnd" })}</p>
+          <p>{intl.formatMessage({ id: "fromEnterDetails" })}</p>
           <div className="inputGroup">
             <label>
               {intl.formatMessage({ id: "fromFormLabelName" })}
