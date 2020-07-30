@@ -264,13 +264,16 @@ export const populateArtistItinerariesOnGiftUpdate = functions
     .document("gifts/{giftId}")
     .onWrite(async (change) => {
         let affectedSlotIds = new Set<string>();
-        if (change.before.exists) {
-            if (change.before.data()!.slotId) {
-                affectedSlotIds.add(change.before.data()!.slotId);
-            }
-            if (change.after.exists) {
-                if (change.after.data()!.slotId) {
-                    affectedSlotIds.add(change.after.data()!.slotId);
+        let involvesConfirmedGift = change.before.data()?.status === 'confirmed' || change.after.data()?.status === 'confirmed';
+        if (involvesConfirmedGift) {
+            if (change.before.exists) {
+                if (change.before.data()!.slotId) {
+                    affectedSlotIds.add(change.before.data()!.slotId);
+                }
+                if (change.after.exists) {
+                    if (change.after.data()!.slotId) {
+                        affectedSlotIds.add(change.after.data()!.slotId);
+                    }
                 }
             }
         }
