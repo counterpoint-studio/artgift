@@ -6,7 +6,7 @@ import mandrill from 'mandrill-api';
 import { URLSearchParams } from 'url';
 import { sortBy, last, pick, isEqual } from 'lodash';
 
-import { RESERVATION_PERIOD, REMINDER_PERIOD, TIME_ZONE_UTC_OFFSET, DEFAULT_LANGUAGE, NOOP_PHONE_NUMBER } from './constants';
+import { RESERVATION_PERIOD, REMINDER_PERIOD, TIME_ZONE_UTC_OFFSET, DEFAULT_LANGUAGE, NOOP_PHONE_NUMBER, BACKUP_BUCKET_NAME } from './constants';
 
 
 admin.initializeApp();
@@ -283,6 +283,20 @@ export const populateArtistItinerariesOnGiftUpdate = functions
         }
     });
 
+export const scheduledFirestoreBackup = functions
+    .pubsub
+    .schedule('every 1 hours')
+    .onRun(async (context) => {
+        let client = admin.firestore.v1.FirestoreAdminClient();
+        let projectId = process.env.GCP_PROJECT || process.env.GCLOUD_PROJECT;
+        let databaseName =
+            client.databasePath(projectId, '(default)');
+        await client.exportDocuments({
+            name: databaseName,
+            outputUriPrefix: BACKUP_BUCKET_NAME,
+            collectionIds: []
+        })
+    });
 
 function parseDateTime(date: any, time: any) {
     return new Date(
