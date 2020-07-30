@@ -32,7 +32,7 @@ const FAQsPage = () => {
             }}
           ></div>
         </div>
-        <BackButton text={intl.formatMessage({ id: "backButton" })} />
+        <BackButton to="/" text={intl.formatMessage({ id: "backButton" })} />
       </main>
     </Layout>
   )
