@@ -1,7 +1,10 @@
 import { Polygon, Feature, FeatureCollection } from "geojson"
 import { LngLatBoundsLike } from "mapbox-gl"
+import pointInPolygon from '@turf/boolean-point-in-polygon';
 
 import regionData from '../data/region_data.json';
+import visRegionLimit from '../data/point_visualisation_region_limit.json';
+
 import { Region, GiftSlot } from "../types";
 
 export function getRegionGeoJSON(): Region[] {
@@ -13,16 +16,22 @@ export function getRegionGeoJSON(): Region[] {
     }));
 }
 
-export function getRandomLocations(giftSlots: GiftSlot[]): { id: string, location: [number, number] }[] {
+export function getRandomLocationsForVisualisation(giftSlots: GiftSlot[]): { id: string, location: [number, number] }[] {
     let regionData = getRegionGeoJSON();
-    return giftSlots.map(slot => {
+    let res: { id: string, location: [number, number] }[] = [];
+    for (let slot of giftSlots) {
         let region = regionData.find(r => r.feature.properties.nimi_fi === slot.region);
         for (let i = 0; i < 10; i++) {
             let lng = region.bounds[0][0] + Math.random() * (region.bounds[1][0] - region.bounds[0][0]);
             let lat = region.bounds[0][1] + Math.random() * (region.bounds[1][1] - region.bounds[0][1]);
-            return { id: slot.id, location: [lng, lat] };
+            let pt = [lng, lat];
+            if (pointInPolygon(pt, region.feature.geometry as any) && pointInPolygon(pt, visRegionLimit.features[0].geometry as any)) {
+                res.push({ id: slot.id, location: [lng, lat] });
+                break;
+            }
         }
-    })
+    }
+    return res;
 }
 
 function getRegionBounds(region: Feature): LngLatBoundsLike {

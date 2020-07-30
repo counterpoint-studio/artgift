@@ -35,7 +35,9 @@ const IntroPage = () => {
 
   useEffect(() => {
     let unSub = gifts.subscribeToGiftSlotsOverview(giftSlots => {
-      mapContext.update({ points: regions.getRandomLocations(giftSlots) })
+      mapContext.update({
+        points: regions.getRandomLocationsForVisualisation(giftSlots),
+      })
       setPointsLoaded(true)
       let anySlotsAvailable = giftSlots.find(s => s.status === "available")
       if (anySlotsAvailable) {
