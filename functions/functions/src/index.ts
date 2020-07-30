@@ -3,6 +3,8 @@ import * as admin from 'firebase-admin';
 import Handlebars from 'handlebars';
 import fetch from 'node-fetch';
 import mandrill from 'mandrill-api';
+import { backOff } from 'exponential-backoff';
+
 import { URLSearchParams } from 'url';
 import { sortBy, last, pick, isEqual } from 'lodash';
 
@@ -213,7 +215,7 @@ export const populateArtistItinerariesOnArtistUpdate = functions
         }
         console.log('on artist update, populating itineraries for regions', Array.from(affectedRegions));
         for (let region of Array.from(affectedRegions)) {
-            await db.runTransaction(tx => populateArtistItineraries(region, tx));
+            await backOff(() => db.runTransaction(tx => populateArtistItineraries(region, tx)));
         }
     });
 
@@ -279,7 +281,7 @@ export const populateArtistItinerariesOnGiftUpdate = functions
 
         console.log('on gift update, populating itineraries for regions', Array.from(affectedRegions), 'based on slots', Array.from(affectedSlotIds));
         for (let region of Array.from(affectedRegions)) {
-            await db.runTransaction(tx => populateArtistItineraries(region, tx));
+            await backOff(() => db.runTransaction(tx => populateArtistItineraries(region, tx)));
         }
     });
 
