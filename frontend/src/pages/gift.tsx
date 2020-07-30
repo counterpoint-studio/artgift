@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import Helmet from "react-helmet"
-import { useIntl, navigate } from "gatsby-plugin-intl"
+import { useIntl, navigate, Link } from "gatsby-plugin-intl"
 import { PageProps } from "gatsby"
 import classNames from "classnames"
 import qs from "qs"
@@ -162,6 +162,9 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
                     __html: intl.formatMessage({ id: "giftSupportMessage" }),
                   }}
                 ></p>
+                <Link to="/faqs" className="introLink introLink--faqs">
+                  {intl.formatMessage({ id: "FAQsLink" })}
+                </Link>
               </div>
               {gift.status !== "cancelled" &&
                 gift.status !== "rejected" &&
