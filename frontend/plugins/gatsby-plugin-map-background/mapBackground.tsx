@@ -21,7 +21,11 @@ export interface MapBackgroundProps {
   bounds?: LngLatBoundsLike
   boundsPadding?: number
   isSplitScreen?: boolean
-  regions?: { feature: GeoJSON.Feature; bounds: mapboxgl.LngLatBoundsLike }[]
+  regions?: {
+    name: string
+    feature: GeoJSON.Feature
+    bounds: mapboxgl.LngLatBoundsLike
+  }[]
   points?: { id: string; location: [number, number] }[]
   focusPoint?: { className: string; location: [number, number] }
   onSetMoving: (moving: boolean) => void
@@ -115,46 +119,44 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
   useEffect(
     function updateRegions() {
       if (!map || !regions) return
-      let added = false
-      function add() {
-        added = true
-        if (map.getSource("regions")) {
-          let src = map.getSource("regions") as mapboxgl.GeoJSONSource
-          src.setData({
+      function add(name: string, region: GeoJSON.Feature) {
+        map.addSource(`region-${name}`, {
+          type: "geojson",
+          data: {
             type: "FeatureCollection",
-            features: regions.map(r => r.feature),
-          })
-        } else {
-          map.addSource("regions", {
-            type: "geojson",
-            data: {
-              type: "FeatureCollection",
-              features: regions.map(r => r.feature),
-            },
-          })
-          map.addLayer({
-            id: "regions",
-            type: "line",
-            source: "regions",
-            paint: {
-              "line-width": 3,
-              "line-color": "#ffffff",
-            },
-          })
-        }
+            features: [region],
+          },
+        })
+        map.addLayer({
+          id: `region-${name}`,
+          type: "line",
+          source: `region-${name}`,
+          paint: {
+            "line-width": 3,
+            "line-color": "#ffffff",
+          },
+        })
       }
-      if (map.isStyleLoaded()) {
-        add()
-      } else {
-        map.once("style.load", add)
+
+      let loadHandlers: (() => void)[] = []
+      let styleLoaded = map.isStyleLoaded()
+      for (let region of regions) {
+        if (styleLoaded) {
+          add(region.name, region.feature)
+        } else {
+          let loadHandler = () => add(region.name, region.feature)
+          map.once("style.load", loadHandler)
+          loadHandlers.push(loadHandler)
+        }
       }
 
       return () => {
-        if (added) {
-          map.removeLayer("regions")
-          map.removeSource("regions")
-        } else {
-          map.off("style.load", add)
+        loadHandlers.forEach(handler => map.off("style.load", handler))
+        for (let region of regions) {
+          if (map.getLayer(`region-${region.name}`)) {
+            map.removeLayer(`region-${region.name}`)
+            map.removeSource(`region-${region.name}`)
+          }
         }
       }
     },

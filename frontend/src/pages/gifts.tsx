@@ -41,7 +41,7 @@ const GiftsPage: React.FC<PageProps> = ({ location }) => {
       ? regions.find(r => r.name === gift.toLocation.region).bounds
       : REGION_BOUNDING_BOX,
     boundsPadding: 0,
-    regions,
+    regions: regions.filter(r => r.name === gift.toLocation.region),
     focusPoint: gift.toLocation && {
       className: "giftsPage",
       location: gift.toLocation.point,
