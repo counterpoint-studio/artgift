@@ -17,11 +17,12 @@ import HeroImage from "../images/heroImage.jpg"
 import "./index.scss"
 import { useGiftState } from "../hooks"
 import { useWindowWidth } from "@react-hook/window-size"
+import { AppState } from "../types"
 
 const IntroPage = () => {
   let intl = useIntl()
   let windowWidth = useWindowWidth()
-  let [appState, setAppState] = useState<"notOpenYet" | "open" | "closed">()
+  let [appState, setAppState] = useState<AppState>()
   let [pointsLoaded, setPointsLoaded] = useState(false)
 
   let mapContext = useContext(MapBackgroundContext)
@@ -34,23 +35,17 @@ const IntroPage = () => {
   let [gift, setGift] = useGiftState(gifts.initGift(intl.locale))
 
   useEffect(() => {
-    let unSub = gifts.subscribeToGiftSlotsOverview(giftSlots => {
+    let unSubState = gifts.subscribeToAppState(setAppState)
+    let unSubSlots = gifts.subscribeToGiftSlotsOverview(giftSlots => {
       mapContext.update({
         points: regions.getRandomLocationsForVisualisation(giftSlots),
       })
       setPointsLoaded(true)
-      let anySlotsAvailable = giftSlots.find(s => s.status === "available")
-      if (anySlotsAvailable) {
-        setAppState("open")
-      } else {
-        setAppState(
-          giftSlots.find(s => s.status === "notAvailable")
-            ? "notOpenYet"
-            : "closed"
-        )
-      }
     })
-    return unSub
+    return () => {
+      unSubState()
+      unSubSlots()
+    }
   }, [])
 
   let initialiseGift = () => {
@@ -105,17 +100,24 @@ const IntroPage = () => {
               onClick={initialiseGift}
             />
           )}
-          {appState === "notOpenYet" && (
+          {appState === "pre" && (
             <p
               dangerouslySetInnerHTML={{
                 __html: intl.formatMessage({ id: "introNotOpenYet" }),
               }}
             />
           )}
-          {appState === "closed" && (
+          {appState === "post" && (
             <p
               dangerouslySetInnerHTML={{
                 __html: intl.formatMessage({ id: "introClosed" }),
+              }}
+            />
+          )}
+          {appState === "paused" && (
+            <p
+              dangerouslySetInnerHTML={{
+                __html: intl.formatMessage({ id: "introPaused" }),
               }}
             />
           )}
