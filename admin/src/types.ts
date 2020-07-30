@@ -1,5 +1,7 @@
 import { Feature } from "geojson"
 
+export type AppState = 'pre' | 'open' | 'paused' | 'post';
+
 export type Slot = {
     id?: string;
     date: string;

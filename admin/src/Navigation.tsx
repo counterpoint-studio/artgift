@@ -4,12 +4,13 @@ import classNames from "classnames";
 import firebase from "firebase/app";
 
 import "./Navigation.scss";
+import { AppState } from "./types";
 
 interface NavigationProps {
   currentPage: "slots" | "gifts" | "artists" | "itineraries" | "admins";
 }
 export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
-  let [appState, setAppState] = useState<"open" | "closed">();
+  let [appState, setAppState] = useState<AppState>();
   let appStateDoc = useMemo(
     () => firebase.firestore().collection("appstates").doc("singleton"),
     []
@@ -20,12 +21,8 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
     );
   }, [appStateDoc]);
 
-  let openApp = () => {
-    appStateDoc.set({ state: "open" });
-  };
-
-  let closeApp = () => {
-    appStateDoc.set({ state: "closed" });
+  let updateAppState = (state: AppState) => {
+    appStateDoc.set({ state });
   };
 
   return (
@@ -61,9 +58,36 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
         admins
       </Link>
       <div className="appState">
-        Reservations are {appState}
-        {appState === "open" && <button onClick={closeApp}>Close</button>}
-        {appState === "closed" && <button onClick={openApp}>Open</button>}
+        {appState === "pre" && (
+          <>
+            Pre-reservations{" "}
+            <button onClick={() => updateAppState("open")}>&rarr;Open</button>
+          </>
+        )}
+        {appState === "open" && (
+          <>
+            Open{" "}
+            <button onClick={() => updateAppState("paused")}>
+              &rarr;Paused
+            </button>
+            <button onClick={() => updateAppState("post")}>&rarr;Closed</button>
+            <button onClick={() => updateAppState("pre")}>
+              &rarr;Pre-reservations
+            </button>
+          </>
+        )}
+        {appState === "paused" && (
+          <>
+            Paused{" "}
+            <button onClick={() => updateAppState("open")}>&rarr;Open</button>
+          </>
+        )}
+        {appState === "post" && (
+          <>
+            Closed{" "}
+            <button onClick={() => updateAppState("open")}>&rarr;Open</button>
+          </>
+        )}
       </div>
     </h1>
   );

@@ -8,7 +8,7 @@ import { useWindowWidth } from "@react-hook/window-size"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
-import { Gift, GiftSlot } from "../types"
+import { Gift, GiftSlot, AppState } from "../types"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
 import { REGION_BOUNDING_BOX } from "../constants"
 import * as gifts from "../services/gifts"
@@ -23,6 +23,7 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
   let intl = useIntl()
   let mounted = useMounted()
   let windowWidth = useWindowWidth()
+  let [appState, setAppState] = useState<AppState>()
   let [gift, setGift] = useState<Gift>()
   let [slot, setSlot] = useState<GiftSlot>()
   let [cancellationReason, setCancellationReason] = useState("")
@@ -30,7 +31,8 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
   useEffect(() => {
     let queryParams = qs.parse(location.search, { ignoreQueryPrefix: true })
     if (queryParams.id) {
-      let unSub = gifts.subscribeToGiftWithSlot(
+      let unSubAppState = gifts.subscribeToAppState(setAppState)
+      let unSubGift = gifts.subscribeToGiftWithSlot(
         queryParams.id as string,
         giftAndSlot => {
           if (giftAndSlot) {
@@ -43,7 +45,10 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
           }
         }
       )
-      return unSub
+      return () => {
+        unSubAppState()
+        unSubGift()
+      }
     } else {
       setGift(undefined)
       setSlot(undefined)
@@ -144,42 +149,46 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
                   }}
                 ></p>
               </div>
-              {gift.status !== "cancelled" && gift.status !== "rejected" && (
-                <form className="giftCancellation" onSubmit={cancelGift}>
-                  <h2>{intl.formatMessage({ id: "giftCancellation" })}</h2>
-                  <div className="inputGroup">
-                    <label>
+              {gift.status !== "cancelled" &&
+                gift.status !== "rejected" &&
+                appState !== "post" && (
+                  <form className="giftCancellation" onSubmit={cancelGift}>
+                    <h2>{intl.formatMessage({ id: "giftCancellation" })}</h2>
+                    <div className="inputGroup">
+                      <label>
+                        {intl.formatMessage({
+                          id: "giftCancellationFormLabelReason",
+                        })}
+                        <span className="requiredField">*</span>
+                      </label>
+                      <textarea
+                        id="cancellationReason"
+                        value={cancellationReason}
+                        placeholder={intl.formatMessage({
+                          id: "giftCancellationFormPlaceholderReason",
+                        })}
+                        onBlur={() => {}}
+                        onChange={evt =>
+                          setCancellationReason(evt.target.value)
+                        }
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className={classNames(
+                        "button button--small button--cancel",
+                        {
+                          disabled: cancellationReason.trim().length === 0,
+                        }
+                      )}
+                      disabled={cancellationReason.trim().length === 0}
+                    >
                       {intl.formatMessage({
-                        id: "giftCancellationFormLabelReason",
+                        id: "giftCancellationFormSubmit",
                       })}
-                      <span className="requiredField">*</span>
-                    </label>
-                    <textarea
-                      id="cancellationReason"
-                      value={cancellationReason}
-                      placeholder={intl.formatMessage({
-                        id: "giftCancellationFormPlaceholderReason",
-                      })}
-                      onBlur={() => {}}
-                      onChange={evt => setCancellationReason(evt.target.value)}
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className={classNames(
-                      "button button--small button--cancel",
-                      {
-                        disabled: cancellationReason.trim().length === 0,
-                      }
-                    )}
-                    disabled={cancellationReason.trim().length === 0}
-                  >
-                    {intl.formatMessage({
-                      id: "giftCancellationFormSubmit",
-                    })}
-                  </button>
-                </form>
-              )}
+                    </button>
+                  </form>
+                )}
               {gift.status === "cancelled" && (
                 <div className="giftCancelled">
                   <h2>{intl.formatMessage({ id: "giftCancelled" })}</h2>

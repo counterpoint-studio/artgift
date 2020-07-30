@@ -1,7 +1,15 @@
 import firebase from 'gatsby-plugin-firebase';
 import { nanoid } from 'nanoid';
 
-import { GiftSlot, Gift, Artist } from '../types';
+import { GiftSlot, Gift, Artist, AppState } from '../types';
+
+export function subscribeToAppState(callback: (appState: AppState) => void) {
+    let unSub = firebase.firestore()
+        .collection('appstates')
+        .doc('singleton')
+        .onSnapshot((appStateSnap) => callback(appStateSnap.data().state));
+    return unSub;
+}
 
 export function initGift(fromLanguage = 'fi'): Gift {
     return {

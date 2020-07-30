@@ -1,6 +1,8 @@
 import { Feature } from "geojson"
 import { LngLatBoundsLike } from "mapbox-gl"
 
+export type AppState = 'pre' | 'open' | 'paused' | 'post';
+
 export type GiftSlot = {
     id: string;
     region: string;
