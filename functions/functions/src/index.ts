@@ -3,10 +3,12 @@ import * as admin from 'firebase-admin';
 import Handlebars from 'handlebars';
 import fetch from 'node-fetch';
 import mandrill from 'mandrill-api';
+import { backOff } from 'exponential-backoff';
+
 import { URLSearchParams } from 'url';
 import { sortBy, last, pick, isEqual } from 'lodash';
 
-import { RESERVATION_PERIOD, REMINDER_PERIOD, TIME_ZONE_UTC_OFFSET, DEFAULT_LANGUAGE, NOOP_PHONE_NUMBER } from './constants';
+import { RESERVATION_PERIOD, REMINDER_PERIOD, TIME_ZONE_UTC_OFFSET, DEFAULT_LANGUAGE, NOOP_PHONE_NUMBER, BACKUP_BUCKET_NAME } from './constants';
 
 
 admin.initializeApp();
@@ -213,7 +215,7 @@ export const populateArtistItinerariesOnArtistUpdate = functions
         }
         console.log('on artist update, populating itineraries for regions', Array.from(affectedRegions));
         for (let region of Array.from(affectedRegions)) {
-            await db.runTransaction(tx => populateArtistItineraries(region, tx));
+            await backOff(() => db.runTransaction(tx => populateArtistItineraries(region, tx)));
         }
     });
 
@@ -262,10 +264,17 @@ export const populateArtistItinerariesOnGiftUpdate = functions
     .document("gifts/{giftId}")
     .onWrite(async (change) => {
         let affectedSlotIds = new Set<string>();
-        if (change.before.exists) {
-            affectedSlotIds.add(change.before.data()!.slotId);
-            if (change.after.exists) {
-                affectedSlotIds.add(change.after.data()!.slotId);
+        let involvesConfirmedGift = change.before.data()?.status === 'confirmed' || change.after.data()?.status === 'confirmed';
+        if (involvesConfirmedGift) {
+            if (change.before.exists) {
+                if (change.before.data()!.slotId) {
+                    affectedSlotIds.add(change.before.data()!.slotId);
+                }
+                if (change.after.exists) {
+                    if (change.after.data()!.slotId) {
+                        affectedSlotIds.add(change.after.data()!.slotId);
+                    }
+                }
             }
         }
 
@@ -279,10 +288,24 @@ export const populateArtistItinerariesOnGiftUpdate = functions
 
         console.log('on gift update, populating itineraries for regions', Array.from(affectedRegions), 'based on slots', Array.from(affectedSlotIds));
         for (let region of Array.from(affectedRegions)) {
-            await db.runTransaction(tx => populateArtistItineraries(region, tx));
+            await backOff(() => db.runTransaction(tx => populateArtistItineraries(region, tx)));
         }
     });
 
+export const scheduledFirestoreBackup = functions
+    .pubsub
+    .schedule('every 1 hours')
+    .onRun(async (context) => {
+        let client = new admin.firestore.v1.FirestoreAdminClient();
+        let projectId = process.env.GCP_PROJECT || process.env.GCLOUD_PROJECT;
+        let databaseName =
+            client.databasePath(projectId, '(default)');
+        await client.exportDocuments({
+            name: databaseName,
+            outputUriPrefix: BACKUP_BUCKET_NAME,
+            collectionIds: []
+        })
+    });
 
 function parseDateTime(date: any, time: any) {
     return new Date(

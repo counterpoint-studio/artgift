@@ -1,5 +1,7 @@
 import { Polygon, Feature, FeatureCollection } from "geojson"
 import { LngLatBoundsLike } from "mapbox-gl"
+import intersect from '@turf/intersect';
+import bbox from '@turf/bbox';
 import pointInPolygon from '@turf/boolean-point-in-polygon';
 import { memoize } from 'lodash';
 import regionData from '../data/region_data.json';
@@ -17,15 +19,21 @@ export function getRegionGeoJSON(): Region[] {
 }
 
 export let getRandomLocationsForVisualisation = memoize((giftSlots: GiftSlot[]): { id: string, location: [number, number] }[] => {
-    let regionData = getRegionGeoJSON();
+    let regionData = getRegionGeoJSON().map(region => {
+        let limitedGeometry = intersect(region.feature.geometry as any, visRegionLimit.features[0].geometry as any);
+        let limitedBbox = bbox(limitedGeometry);
+        return ({ ...region, limitedGeometry, limitedBbox })
+    });
+
+
     let res: { id: string, location: [number, number] }[] = [];
     for (let slot of giftSlots) {
         let region = regionData.find(r => r.feature.properties.nimi_fi === slot.region);
         for (let i = 0; i < 10; i++) {
-            let lng = region.bounds[0][0] + Math.random() * (region.bounds[1][0] - region.bounds[0][0]);
-            let lat = region.bounds[0][1] + Math.random() * (region.bounds[1][1] - region.bounds[0][1]);
+            let lng = region.limitedBbox[0] + Math.random() * (region.limitedBbox[2] - region.limitedBbox[0]);
+            let lat = region.limitedBbox[1] + Math.random() * (region.limitedBbox[3] - region.limitedBbox[1]);
             let pt = [lng, lat];
-            if (pointInPolygon(pt, region.feature.geometry as any) && pointInPolygon(pt, visRegionLimit.features[0].geometry as any)) {
+            if (pointInPolygon(pt, region.limitedGeometry)) {
                 res.push({ id: slot.id, location: [lng, lat] });
                 break;
             }

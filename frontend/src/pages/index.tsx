@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react"
 import Helmet from "react-helmet"
 import { useIntl, Link } from "gatsby-plugin-intl"
 import classNames from "classnames"
+import { every } from "lodash"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -23,6 +24,7 @@ const IntroPage = () => {
   let intl = useIntl()
   let windowWidth = useWindowWidth()
   let [appState, setAppState] = useState<AppState>()
+  let [allBooked, setAllBooked] = useState(false)
   let [pointsLoaded, setPointsLoaded] = useState(false)
 
   let mapContext = useContext(MapBackgroundContext)
@@ -41,6 +43,7 @@ const IntroPage = () => {
         points: regions.getRandomLocationsForVisualisation(giftSlots),
       })
       setPointsLoaded(true)
+      setAllBooked(every(giftSlots, s => s.status === "reserved"))
     })
     return () => {
       unSubState()
@@ -107,7 +110,7 @@ const IntroPage = () => {
               }}
             />
           )}
-          {appState === "post" && (
+          {(appState === "post" || allBooked) && (
             <p
               dangerouslySetInnerHTML={{
                 __html: intl.formatMessage({ id: "introClosed" }),
