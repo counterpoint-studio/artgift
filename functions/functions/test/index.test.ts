@@ -72,7 +72,7 @@ describe('store availability toggle', function () {
 
 
 describe('slot reservations', function () {
-    this.timeout(10000);
+    this.timeout(15000);
 
     beforeEach(async () => {
         await clearDatabase();
@@ -594,16 +594,17 @@ describe('artist itineraries', function () {
         ])
     });
 
-    it('redistributes slots when slot is updated', async function () {
+    it('redistributes slots when gift is updated', async function () {
         this.timeout(20000);
 
         await createSlots({
             one: { status: 'reserved', date: '20200726', time: '12:00', region: 'South' },
-            two: { status: 'available', date: '20200726', time: '12:30', region: 'South' },
+            two: { status: 'reserved', date: '20200726', time: '12:30', region: 'South' },
             three: { status: 'reserved', date: '20200726', time: '13:00', region: 'South' }
         });
         await createGifts({
             one: { slotId: 'one', status: 'confirmed' },
+            two: { slotId: 'two', status: 'pending' },
             three: { slotId: 'three', status: 'confirmed' },
         });
 
@@ -632,7 +633,6 @@ describe('artist itineraries', function () {
         ])
 
         await gift('two').set({ slotId: 'two', status: 'confirmed' });
-        await slot('two').set({ status: 'reserved' }, { merge: true });
         await sleep();
 
         artistA = await db.collection('artists').doc('a').get();
@@ -646,7 +646,7 @@ describe('artist itineraries', function () {
         ])
     });
 
-    it('redistributes slots when slot is deleted', async function () {
+    it('redistributes slots when gift is deleted', async function () {
         this.timeout(20000);
 
         await createSlots({
@@ -685,7 +685,7 @@ describe('artist itineraries', function () {
             { slotId: 'two', giftId: 'two' },
         ])
 
-        await slot('two').delete()
+        await gift('two').delete()
         await sleep();
 
         artistA = await db.collection('artists').doc('a').get();
@@ -875,6 +875,33 @@ describe('artist itineraries', function () {
             one: { slotId: 'one', status: 'rejected' },
             two: { slotId: 'two', status: 'confirmed' },
             three: { slotId: 'three', status: 'cancelled' },
+        });
+
+        await db.collection('artists').doc('a').set({
+            name: 'A',
+            itineraries: [
+                { region: 'South', from: { date: '20200726', time: '10:00' }, to: { date: '20200726', time: '16:00' } }
+            ]
+        });
+        await sleep();
+
+
+        let artist = await db.collection('artists').doc('a').get();
+        expect(artist.data()!.itineraries[0].assignments).to.deep.equal([
+            { slotId: 'two', giftId: 'two' },
+        ])
+    });
+
+    it('excludes gifts in pending and created status', async function () {
+        await createSlots({
+            one: { status: 'reserved', date: '20200726', time: '12:00', region: 'South' },
+            two: { status: 'reserved', date: '20200726', time: '12:30', region: 'South' },
+            three: { status: 'reserved', date: '20200726', time: '13:00', region: 'South' }
+        });
+        await createGifts({
+            one: { slotId: 'one', status: 'pending' },
+            two: { slotId: 'two', status: 'confirmed' },
+            three: { slotId: 'three', status: 'creating' },
         });
 
         await db.collection('artists').doc('a').set({

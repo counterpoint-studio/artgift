@@ -255,19 +255,28 @@ export const sendArtistInvitation = functions
         }
     });
 
-export const populateArtistItinerariesOnSlotUpdate = functions
+export const populateArtistItinerariesOnGiftUpdate = functions
     .region('europe-west1')
     .firestore
-    .document("slots/{slotId}")
+    .document("gifts/{giftId}")
     .onWrite(async (change) => {
-        let affectedRegions = new Set<string>();
+        let affectedSlotIds = new Set<string>();
         if (change.before.exists) {
-            affectedRegions.add(change.before.data()!.region);
+            affectedSlotIds.add(change.before.data()!.slotId);
             if (change.after.exists) {
-                affectedRegions.add(change.after.data()!.region);
+                affectedSlotIds.add(change.after.data()!.slotId);
             }
         }
-        console.log('on slot update, populating itineraries for regions', Array.from(affectedRegions));
+
+        let affectedRegions = new Set<string>();
+        for (let slotId of Array.from(affectedSlotIds)) {
+            let slot = await db.collection('slots').doc(slotId).get()
+            if (slot.exists) {
+                affectedRegions.add(slot.data()!.region);
+            }
+        }
+
+        console.log('on gift update, populating itineraries for regions', Array.from(affectedRegions), 'based on slots', Array.from(affectedSlotIds));
         for (let region of Array.from(affectedRegions)) {
             await db.runTransaction(tx => populateArtistItineraries(region, tx));
         }
@@ -306,7 +315,7 @@ async function populateArtistItineraries(region: string, tx: FirebaseFirestore.T
         [];
     let affectedGiftRefs: admin.firestore.DocumentReference[] = [];
     gifts.forEach(gift => {
-        if (gift.data().status !== 'rejected' && gift.data().status !== 'cancelled') {
+        if (gift.data().status === 'confirmed') {
             affectedGiftRefs.push(gift.ref);
         }
     });
