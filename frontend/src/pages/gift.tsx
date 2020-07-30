@@ -118,6 +118,20 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
                             id: "giftStatus" + (gift.status || "pending"),
                           })}
                         </span>
+                        {gift.status === "confirmed" && (
+                          <p className="giftStatusInfo">
+                            {intl.formatMessage({
+                              id: "giftStatusconfirmedInfo",
+                            })}
+                          </p>
+                        )}
+                        {gift.status === "rejected" && (
+                          <p className="giftStatusInfo">
+                            {intl.formatMessage({
+                              id: "giftStatusrejectedInfo",
+                            })}
+                          </p>
+                        )}
                       </td>
                     </tr>
                     <tr>
