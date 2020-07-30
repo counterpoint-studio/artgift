@@ -1,6 +1,6 @@
 import React, { useMemo, useEffect, useState, useCallback } from "react";
 import firebase from "firebase/app";
-import { groupBy, fromPairs, flatMap, pick } from "lodash";
+import { groupBy, fromPairs, flatMap, pick, add } from "lodash";
 import classNames from "classnames";
 import { ExportToCsv } from "export-to-csv";
 
@@ -12,6 +12,8 @@ import {
   formatDateFromComponents,
   formatTimeFromComponents,
 } from "./util/dateUtils";
+import { locateAddress, getRegionGeoJSON } from "./util/mapboxUtils";
+
 import { MAIN_APP_HOST } from "./constants";
 
 import "./Gifts.scss";
@@ -127,6 +129,7 @@ export const Gifts: React.FC = () => {
             "toName",
             "toLanguage",
             "toAddress",
+            "toLocation",
             "toSignificance",
             "fromMessage",
             "fromPhotographyPermissionGiven"
@@ -264,6 +267,10 @@ interface GiftDetailsProps {
 }
 const GiftDetails: React.FC<GiftDetailsProps> = ({ gift, onUpdateGift }) => {
   let [editingGift, setEditingGift] = useState<Gift>();
+  let [addressValidationStatus, setAddressValidationStatus] = useState<
+    "ok" | "validating" | "notFound" | "notInRegion"
+  >("ok");
+  let regions = useMemo(() => getRegionGeoJSON(), []);
 
   let edit = () => {
     setEditingGift(gift);
@@ -275,6 +282,29 @@ const GiftDetails: React.FC<GiftDetailsProps> = ({ gift, onUpdateGift }) => {
   let cancelEdit = () => {
     setEditingGift(undefined);
   };
+
+  useEffect(() => {
+    if (!editingGift) return;
+    let stillInEffect = true;
+    setAddressValidationStatus("validating");
+    if (editingGift.toAddress.trim().length === 0) {
+      setAddressValidationStatus("notFound");
+    } else {
+      locateAddress(editingGift.toAddress, regions).then((loc) => {
+        if (loc && loc.region === gift.toLocation?.region) {
+          setEditingGift((e) => ({ ...e!, toLocation: loc }));
+          setAddressValidationStatus("ok");
+        } else if (loc && loc.region) {
+          setAddressValidationStatus("notInRegion");
+        } else {
+          setAddressValidationStatus("notFound");
+        }
+      });
+    }
+    return () => {
+      stillInEffect = false;
+    };
+  }, [gift?.toLocation?.region, editingGift?.toAddress, regions]);
 
   return (
     <table>
@@ -380,16 +410,28 @@ const GiftDetails: React.FC<GiftDetailsProps> = ({ gift, onUpdateGift }) => {
           <td>Location:</td>
           <td>
             {editingGift ? (
-              <input
-                type="text"
-                value={editingGift.toAddress}
-                onChange={(e) =>
-                  setEditingGift({
-                    ...editingGift!,
-                    toAddress: e.target.value,
-                  })
-                }
-              />
+              <>
+                <input
+                  type="text"
+                  value={editingGift.toAddress}
+                  onChange={(e) =>
+                    setEditingGift({
+                      ...editingGift!,
+                      toAddress: e.target.value,
+                    })
+                  }
+                />
+                {addressValidationStatus === "notFound" && (
+                  <div className="giftDetails--validationError">
+                    Address not found
+                  </div>
+                )}
+                {addressValidationStatus === "notInRegion" && (
+                  <div className="giftDetails--validationError">
+                    Address not in same region as original
+                  </div>
+                )}
+              </>
             ) : (
               <a
                 href={`https://www.google.com/maps/search/?api=1&query=${gift.toLocation?.point[1]},${gift.toLocation?.point[0]}`}
@@ -481,7 +523,12 @@ const GiftDetails: React.FC<GiftDetailsProps> = ({ gift, onUpdateGift }) => {
             {editingGift ? (
               <>
                 <button onClick={cancelEdit}>Cancel</button>{" "}
-                <button onClick={update}>Update</button>
+                <button
+                  onClick={update}
+                  disabled={addressValidationStatus !== "ok"}
+                >
+                  Update
+                </button>
               </>
             ) : (
               <button onClick={edit}>Edit gift</button>
