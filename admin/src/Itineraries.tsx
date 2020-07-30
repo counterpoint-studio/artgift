@@ -192,6 +192,7 @@ const RegionItineraries: React.FC<RegionItinerariesProps> = ({
           <div className="itineraries--fieldLabel">Assign artist</div>
           <div className="itineraries--fieldInput">
             <select
+              className="itineraries--artistInput"
               value={newItineraryArtistId}
               onChange={(evt) => setNewItineraryArtistId(evt.target.value)}
             >
