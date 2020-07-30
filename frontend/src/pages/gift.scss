@@ -67,7 +67,8 @@
       background: orange;
     }
 
-    &.cancelled {
+    &.cancelled,
+    &.rejected {
       background: red;
       color: white;
     }
@@ -75,7 +76,8 @@
 
   &Details,
   &Support,
-  &Cancellation {
+  &Cancellation,
+  &Cancelled {
     margin-top: 15px;
 
     @media (min-width: 768px) {

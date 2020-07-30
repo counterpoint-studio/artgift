@@ -180,6 +180,18 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
                   </button>
                 </form>
               )}
+              {gift.status === "cancelled" && (
+                <div className="giftCancelled">
+                  <h2>{intl.formatMessage({ id: "giftCancelled" })}</h2>
+                  <p
+                    dangerouslySetInnerHTML={{
+                      __html: intl.formatMessage({
+                        id: "giftCancelledMessage",
+                      }),
+                    }}
+                  ></p>
+                </div>
+              )}
             </div>
           )}
         </div>

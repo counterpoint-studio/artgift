@@ -86,6 +86,8 @@
   "giftCancellationFormPlaceholderReason": "E.g. can't make it due to illness",
   "giftCancellationFormSubmit": "Cancel Gift",
   "giftCancellationConfirm": "Are you sure you want to cancel this gift?",
+  "giftCancelled": "This Art Gift has been cancelled",
+  "giftCancelledMessage": "Helsinki Fest will be held 21.–23.8., see the full programme at <a href=\"https://helsinkifest.fi/en\">helsinkifest.fi</a>.",
 
   "artistSEOTitle": "Art Gift Artist Page",
   "artistSEODescription": "Art Gift Artist Page",

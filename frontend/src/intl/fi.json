@@ -86,6 +86,8 @@
   "giftCancellationFormPlaceholderReason": "Esim. sairastapauksen vuoksi",
   "giftCancellationFormSubmit": "Peruuta lahja",
   "giftCancellationConfirm": "Haluatko varmasti peruuttaa tämän lahjan?",
+  "giftCancelled": "Taidelahja on peruutettu",
+  "giftCancelledMessage": "Helsingin juhlaviikonloppua vietetään 21.–23.8., katso koko ohjelma osoitteesta <a href=\"https://helsinkifest.fi/\">helsinkifest.fi</a>.",
 
   "artistSEOTitle": "Taidelahja: Taiteilijasivu",
   "artistSEODescription": "Taidelahja: Taiteilijasivu",
