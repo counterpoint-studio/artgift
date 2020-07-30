@@ -6,7 +6,7 @@ import Layout from "../components/layout"
 import SEO from "../components/seo"
 import BackButton from "../components/backButton"
 
-import "./faqs.scss"
+import "./page.scss"
 
 const FAQsPage = () => {
   let intl = useIntl()
@@ -19,7 +19,7 @@ const FAQsPage = () => {
       />
       <Helmet
         bodyAttributes={{
-          class: "faqs",
+          class: "page faqs",
         }}
         key="helmet"
       />
@@ -32,7 +32,9 @@ const FAQsPage = () => {
             }}
           ></div>
         </div>
-        <BackButton to="/" text={intl.formatMessage({ id: "backButton" })} />
+        <div className="pageFooter">
+          <BackButton to="/" text={intl.formatMessage({ id: "backButton" })} />
+        </div>
       </main>
     </Layout>
   )
