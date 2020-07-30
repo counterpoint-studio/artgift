@@ -1,6 +1,6 @@
 import React, { useMemo, useEffect, useState, useCallback } from "react";
 import firebase from "firebase/app";
-import { groupBy, fromPairs, flatMap } from "lodash";
+import { groupBy, fromPairs, flatMap, pick } from "lodash";
 import classNames from "classnames";
 import { ExportToCsv } from "export-to-csv";
 
@@ -114,6 +114,29 @@ export const Gifts: React.FC = () => {
     [giftColl]
   );
 
+  let onUpdateGiftDetails = useCallback(
+    (updatedGift: Gift) => {
+      giftColl
+        .doc(updatedGift.id)
+        .set(
+          pick(
+            updatedGift,
+            "fromName",
+            "fromEmail",
+            "fromPhoneNumber",
+            "toName",
+            "toLanguage",
+            "toAddress",
+            "toSignificance",
+            "fromMessage",
+            "fromPhotographyPermissionGiven"
+          ),
+          { merge: true }
+        );
+    },
+    [giftColl]
+  );
+
   let onDeleteGift = useCallback(
     (gift: Gift) => {
       if (
@@ -219,77 +242,10 @@ export const Gifts: React.FC = () => {
                   <td></td>
                   <td></td>
                   <td colSpan={4}>
-                    <table>
-                      <thead></thead>
-                      <tbody>
-                        <tr>
-                          <td>Created at:</td>
-                          <td>
-                            {gift.reservedAt &&
-                              formatTimestamp(gift.reservedAt.seconds)}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>From:</td>
-                          <td>
-                            {gift.fromName} &lt;{gift.fromEmail}&gt;{" / "}
-                            {gift.fromPhoneNumber}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>To:</td>
-                          <td>{gift.toName}</td>
-                        </tr>
-                        <tr>
-                          <td>Language:</td>
-                          <td>{gift.toLanguage} </td>
-                        </tr>
-                        <tr>
-                          <td>Location:</td>
-                          <td>
-                            <a
-                              href={`https://www.google.com/maps/search/?api=1&query=${gift.toLocation?.point[1]},${gift.toLocation?.point[0]}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {gift.toAddress}
-                            </a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Reason:</td>
-                          <td>{gift.toSignificance}</td>
-                        </tr>
-                        <tr>
-                          <td>Notes:</td>
-                          <td>{gift.fromMessage}</td>
-                        </tr>
-                        <tr>
-                          <td>Permission to photograph:</td>
-                          <td>
-                            {gift.fromPhotographyPermissionGiven ? "yes" : "no"}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>App link:</td>
-                          <td>
-                            <a
-                              href={`${MAIN_APP_HOST}/gift?id=${gift.id}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {`${MAIN_APP_HOST}/gift?id=${gift.id}`}
-                            </a>
-                          </td>
-                        </tr>
-                        {gift.status === "cancelled" && (
-                          <tr>
-                            <td>Cancellation reason:</td>
-                            <td>{gift.cancellationReason}</td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
+                    <GiftDetails
+                      gift={gift}
+                      onUpdateGift={onUpdateGiftDetails}
+                    />
                   </td>
                 </tr>
               )}
@@ -299,6 +255,241 @@ export const Gifts: React.FC = () => {
       </table>
       <button onClick={onExportCSV}>Export as CSV</button>
     </div>
+  );
+};
+
+interface GiftDetailsProps {
+  gift: Gift;
+  onUpdateGift: (newGift: Gift) => void;
+}
+const GiftDetails: React.FC<GiftDetailsProps> = ({ gift, onUpdateGift }) => {
+  let [editingGift, setEditingGift] = useState<Gift>();
+
+  let edit = () => {
+    setEditingGift(gift);
+  };
+  let update = () => {
+    onUpdateGift(editingGift!);
+    setEditingGift(undefined);
+  };
+  let cancelEdit = () => {
+    setEditingGift(undefined);
+  };
+
+  return (
+    <table>
+      <thead></thead>
+      <tbody>
+        <tr>
+          <td>Created at:</td>
+          <td>{gift.reservedAt && formatTimestamp(gift.reservedAt.seconds)}</td>
+        </tr>
+        <tr>
+          <td>From:</td>
+          <td>
+            {editingGift ? (
+              <input
+                type="text"
+                value={editingGift.fromName}
+                onChange={(e) =>
+                  setEditingGift({ ...editingGift!, fromName: e.target.value })
+                }
+              />
+            ) : (
+              gift.fromName
+            )}
+          </td>
+        </tr>
+        <tr>
+          <td>Email:</td>
+          <td>
+            {editingGift ? (
+              <input
+                type="email"
+                value={editingGift.fromEmail}
+                onChange={(e) =>
+                  setEditingGift({ ...editingGift!, fromEmail: e.target.value })
+                }
+              />
+            ) : (
+              gift.fromEmail
+            )}
+          </td>
+        </tr>
+        <tr>
+          <td>Phone number:</td>
+          <td>
+            {" "}
+            {editingGift ? (
+              <input
+                type="tel"
+                value={editingGift.fromPhoneNumber}
+                onChange={(e) =>
+                  setEditingGift({
+                    ...editingGift!,
+                    fromPhoneNumber: e.target.value,
+                  })
+                }
+              />
+            ) : (
+              gift.fromPhoneNumber
+            )}
+          </td>
+        </tr>
+        <tr>
+          <td>To:</td>
+          <td>
+            {editingGift ? (
+              <input
+                type="text"
+                value={editingGift.toName}
+                onChange={(e) =>
+                  setEditingGift({
+                    ...editingGift!,
+                    toName: e.target.value,
+                  })
+                }
+              />
+            ) : (
+              gift.toName
+            )}
+          </td>
+        </tr>
+        <tr>
+          <td>Language:</td>
+          <td>
+            {editingGift ? (
+              <select
+                value={editingGift.toLanguage}
+                onChange={(e) =>
+                  setEditingGift({
+                    ...editingGift!,
+                    toLanguage: e.target.value,
+                  })
+                }
+              >
+                <option value="fi">Finnish</option>
+                <option value="en">English</option>
+              </select>
+            ) : (
+              gift.toLanguage
+            )}
+          </td>
+        </tr>
+        <tr>
+          <td>Location:</td>
+          <td>
+            {editingGift ? (
+              <input
+                type="text"
+                value={editingGift.toAddress}
+                onChange={(e) =>
+                  setEditingGift({
+                    ...editingGift!,
+                    toAddress: e.target.value,
+                  })
+                }
+              />
+            ) : (
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${gift.toLocation?.point[1]},${gift.toLocation?.point[0]}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {gift.toAddress}
+              </a>
+            )}
+          </td>
+        </tr>
+        <tr>
+          <td>Reason:</td>
+          <td>
+            {editingGift ? (
+              <textarea
+                value={editingGift.toSignificance}
+                onChange={(e) =>
+                  setEditingGift({
+                    ...editingGift!,
+                    toSignificance: e.target.value,
+                  })
+                }
+              />
+            ) : (
+              gift.toSignificance
+            )}
+          </td>
+        </tr>
+        <tr>
+          <td>Notes:</td>
+          <td>
+            {editingGift ? (
+              <textarea
+                value={editingGift.fromMessage}
+                onChange={(e) =>
+                  setEditingGift({
+                    ...editingGift!,
+                    fromMessage: e.target.value,
+                  })
+                }
+              />
+            ) : (
+              gift.fromMessage
+            )}
+          </td>
+        </tr>
+        <tr>
+          <td>Permission to photograph:</td>
+          <td>
+            {editingGift ? (
+              <input
+                type="checkbox"
+                checked={editingGift.fromPhotographyPermissionGiven}
+                onChange={(e) =>
+                  setEditingGift({
+                    ...editingGift!,
+                    fromPhotographyPermissionGiven: e.target.checked,
+                  })
+                }
+              />
+            ) : gift.fromPhotographyPermissionGiven ? (
+              "yes"
+            ) : (
+              "no"
+            )}
+          </td>
+        </tr>
+        <tr>
+          <td>App link:</td>
+          <td>
+            <a
+              href={`${MAIN_APP_HOST}/gift?id=${gift.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {`${MAIN_APP_HOST}/gift?id=${gift.id}`}
+            </a>
+          </td>
+        </tr>
+        {gift.status === "cancelled" && (
+          <tr>
+            <td>Cancellation reason:</td>
+            <td>{gift.cancellationReason}</td>
+          </tr>
+        )}
+        <tr>
+          <td colSpan={2}>
+            {editingGift ? (
+              <>
+                <button onClick={cancelEdit}>Cancel</button>{" "}
+                <button onClick={update}>Update</button>
+              </>
+            ) : (
+              <button onClick={edit}>Edit gift</button>
+            )}
+          </td>
+        </tr>
+      </tbody>
+    </table>
   );
 };
 
