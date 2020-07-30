@@ -1,5 +1,3 @@
-import { Gift } from "./types";
-
 export const MAPBOX_COUNTRY_CODE = 'FI';
 export const MAPBOX_LANGUAGE_CODE = 'fi';
 export const MAPBOX_REGION_PLACE_NAME = 'Helsinki';

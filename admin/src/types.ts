@@ -1,3 +1,4 @@
+import { Feature } from "geojson"
 
 export type Slot = {
     id?: string;
@@ -44,3 +45,8 @@ export type ArtistItinerary = {
     to: { date: string, time: string };
     assignments: { slotId: string, giftId: string }[];
 }
+
+export type Region = {
+    name: string;
+    feature: Feature;
+};
