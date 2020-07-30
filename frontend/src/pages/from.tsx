@@ -66,7 +66,7 @@ const FromPage = () => {
       ? boundsAround(gift.toLocation.point)
       : REGION_BOUNDING_BOX,
     boundsPadding: 0,
-    regions: regions.filter(r => r.name === gift.toLocation.region),
+    regions: regions.filter(r => r.name === gift?.toLocation?.region),
     points: emptyPoints,
     focusPoint: gift.toLocation && {
       className: "fromPage",
