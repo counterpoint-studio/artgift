@@ -1,7 +1,7 @@
 import { Polygon, Feature, FeatureCollection } from "geojson"
 import { LngLatBoundsLike } from "mapbox-gl"
 import pointInPolygon from '@turf/boolean-point-in-polygon';
-
+import { memoize } from 'lodash';
 import regionData from '../data/region_data.json';
 import visRegionLimit from '../data/point_visualisation_region_limit.json';
 
@@ -16,7 +16,7 @@ export function getRegionGeoJSON(): Region[] {
     }));
 }
 
-export function getRandomLocationsForVisualisation(giftSlots: GiftSlot[]): { id: string, location: [number, number] }[] {
+export let getRandomLocationsForVisualisation = memoize((giftSlots: GiftSlot[]): { id: string, location: [number, number] }[] => {
     let regionData = getRegionGeoJSON();
     let res: { id: string, location: [number, number] }[] = [];
     for (let slot of giftSlots) {
@@ -32,7 +32,7 @@ export function getRandomLocationsForVisualisation(giftSlots: GiftSlot[]): { id:
         }
     }
     return res;
-}
+}, (slots: GiftSlot[]) => slots.map(s => s.id).join('-'))
 
 function getRegionBounds(region: Feature): LngLatBoundsLike {
     let poly = region.geometry as Polygon
