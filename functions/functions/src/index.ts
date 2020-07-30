@@ -265,9 +265,13 @@ export const populateArtistItinerariesOnGiftUpdate = functions
     .onWrite(async (change) => {
         let affectedSlotIds = new Set<string>();
         if (change.before.exists) {
-            affectedSlotIds.add(change.before.data()!.slotId);
+            if (change.before.data()!.slotId) {
+                affectedSlotIds.add(change.before.data()!.slotId);
+            }
             if (change.after.exists) {
-                affectedSlotIds.add(change.after.data()!.slotId);
+                if (change.after.data()!.slotId) {
+                    affectedSlotIds.add(change.after.data()!.slotId);
+                }
             }
         }
 
