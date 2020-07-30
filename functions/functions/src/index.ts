@@ -293,7 +293,7 @@ export const scheduledFirestoreBackup = functions
     .pubsub
     .schedule('every 1 hours')
     .onRun(async (context) => {
-        let client = admin.firestore.v1.FirestoreAdminClient();
+        let client = new admin.firestore.v1.FirestoreAdminClient();
         let projectId = process.env.GCP_PROJECT || process.env.GCLOUD_PROJECT;
         let databaseName =
             client.databasePath(projectId, '(default)');
