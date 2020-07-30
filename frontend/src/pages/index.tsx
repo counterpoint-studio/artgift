@@ -39,8 +39,9 @@ const IntroPage = () => {
   useEffect(() => {
     let unSubState = gifts.subscribeToAppState(setAppState)
     let unSubSlots = gifts.subscribeToGiftSlotsOverview(giftSlots => {
+      let availableSlots = giftSlots.filter(s => s.status !== "reserved")
       mapContext.update({
-        points: regions.getRandomLocationsForVisualisation(giftSlots),
+        points: regions.getRandomLocationsForVisualisation(availableSlots),
       })
       setPointsLoaded(true)
       setAllBooked(every(giftSlots, s => s.status === "reserved"))

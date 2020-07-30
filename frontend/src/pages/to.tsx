@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useMemo, useEffect } from "react"
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  useContext,
+} from "react"
 import Helmet from "react-helmet"
 import { useIntl, IntlShape, navigate } from "gatsby-plugin-intl"
 import { Textbox, Textarea } from "react-inputs-validation"
@@ -14,10 +20,14 @@ import BackButton from "../components/backButton"
 import * as addresses from "../services/streetAddressLookup"
 import * as gifts from "../services/gifts"
 
+import { MapBackgroundContext } from "../../plugins/gatsby-plugin-map-background/mapBackgroundContext"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
 import { REGION_BOUNDING_BOX } from "../constants"
 import { useMounted, useGiftState } from "../hooks"
-import { getRegionGeoJSON } from "../services/regionLookup"
+import {
+  getRegionGeoJSON,
+  getRandomLocationsForVisualisation,
+} from "../services/regionLookup"
 import { initGift } from "../services/gifts"
 
 import "./to.scss"
@@ -26,6 +36,7 @@ const ToPage = () => {
   let intl = useIntl()
   let mounted = useMounted()
   let regions = useMemo(() => getRegionGeoJSON(), [])
+  let mapContext = useContext(MapBackgroundContext)
   let { isMoving: isMapMoving } = useMapBackground({
     bounds: REGION_BOUNDING_BOX,
     boundsPadding: 0,
@@ -43,6 +54,18 @@ const ToPage = () => {
     gift.toName.trim().length > 0 &&
     gift.toSignificance.trim().length > 0 &&
     !addressValidationResult.error
+
+  useEffect(() => {
+    let unSubSlots = gifts.subscribeToGiftSlotsOverview(giftSlots => {
+      let availableSlots = giftSlots.filter(s => s.status !== "reserved")
+      mapContext.update({
+        points: getRandomLocationsForVisualisation(availableSlots),
+      })
+    })
+    return () => {
+      unSubSlots()
+    }
+  }, [])
 
   useEffect(() => {
     if (gift.status === "pending") {

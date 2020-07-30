@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import Helmet from "react-helmet"
 import { useIntl, Link } from "gatsby-plugin-intl"
 import { PageProps } from "gatsby"
@@ -11,8 +11,10 @@ import NextButton from "../components/nextButton"
 import BackButton from "../components/backButton"
 
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
+import { MapBackgroundContext } from "../../plugins/gatsby-plugin-map-background/mapBackgroundContext"
 import { MAP_INIT_CENTER, REGION_BOUNDING_BOX } from "../constants"
-import { initGift } from "../services/gifts"
+import { initGift, subscribeToGiftSlotsOverview } from "../services/gifts"
+import * as regions from "../services/regionLookup"
 
 import { useMounted, useGiftState } from "../hooks"
 
@@ -22,6 +24,8 @@ const InfoPage: React.FC<PageProps> = () => {
   let mounted = useMounted()
   let intl = useIntl()
   let windowWidth = useWindowWidth()
+
+  let mapContext = useContext(MapBackgroundContext)
   let { isMoving: isMapMoving } = useMapBackground({
     initPoint: MAP_INIT_CENTER,
     bounds: REGION_BOUNDING_BOX,
@@ -31,6 +35,18 @@ const InfoPage: React.FC<PageProps> = () => {
   let [attendanceAccepted, setAttendanceAccepted] = useState(false)
   let [gdprAccepted, setGdprAccepted] = useState(false)
   let [gift, setGift] = useGiftState(initGift(intl.locale))
+
+  useEffect(() => {
+    let unSubSlots = subscribeToGiftSlotsOverview(giftSlots => {
+      let availableSlots = giftSlots.filter(s => s.status !== "reserved")
+      mapContext.update({
+        points: regions.getRandomLocationsForVisualisation(availableSlots),
+      })
+    })
+    return () => {
+      unSubSlots()
+    }
+  }, [])
 
   return (
     <Layout>
