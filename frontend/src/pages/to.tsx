@@ -30,6 +30,7 @@ const ToPage = () => {
     bounds: REGION_BOUNDING_BOX,
     boundsPadding: 0,
     regions,
+    focusPoint: undefined,
   })
   let [gift, setGift] = useGiftState(initGift(intl.locale))
   let [addressSuggestions, setAddressSuggestions] = useState<string[]>([])

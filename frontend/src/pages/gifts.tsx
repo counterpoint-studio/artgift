@@ -42,6 +42,10 @@ const GiftsPage: React.FC<PageProps> = ({ location }) => {
       : REGION_BOUNDING_BOX,
     boundsPadding: 0,
     regions,
+    focusPoint: gift.toLocation && {
+      className: "giftsPage",
+      location: gift.toLocation.point,
+    },
   })
 
   useEffect(() => {
