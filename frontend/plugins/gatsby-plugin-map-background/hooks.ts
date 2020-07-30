@@ -13,7 +13,7 @@ export function useMapBackground(props: Partial<MapBackgroundProps>) {
         props?.bounds?.[0][1],
         props?.bounds?.[1][0],
         props?.bounds?.[1][1],
-        props?.regions,
+        props?.regions?.map(r => `${r.name}${r.status}`).join('-'),
         props?.focusedRegion,
         props?.points,
         props?.focusPoint?.location,

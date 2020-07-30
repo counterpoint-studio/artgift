@@ -1,9 +1,15 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react"
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useContext,
+} from "react"
 import { PageProps } from "gatsby"
 import Helmet from "react-helmet"
 import { useIntl, navigate } from "gatsby-plugin-intl"
 import classNames from "classnames"
-import { camelCase, omit } from "lodash"
+import { camelCase, omit, groupBy, fromPairs, toPairs, sumBy } from "lodash"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -13,9 +19,14 @@ import {
   reserveSlot,
   saveGift,
   initGift,
+  subscribeToGiftSlotsOverview,
 } from "../services/gifts"
 
-import { getRegionGeoJSON } from "../services/regionLookup"
+import {
+  getRegionGeoJSON,
+  getRandomLocationsForVisualisation,
+} from "../services/regionLookup"
+import { MapBackgroundContext } from "../../plugins/gatsby-plugin-map-background/mapBackgroundContext"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
 import { useMounted, useGiftState } from "../hooks"
 import { REGION_BOUNDING_BOX } from "../constants"
@@ -35,13 +46,12 @@ const GiftsPage: React.FC<PageProps> = ({ location }) => {
   let [gift, setGift] = useGiftState(initGift(intl.locale))
   let [reservingSlotId, setReservingSlotId] = useState<string>()
   let [failedToReserve, setFailedToReserve] = useState(false)
-
+  let mapContext = useContext(MapBackgroundContext)
   let { isMoving: isMapMoving } = useMapBackground({
     bounds: gift?.toLocation
       ? regions.find(r => r.name === gift.toLocation.region).bounds
       : REGION_BOUNDING_BOX,
     boundsPadding: 0,
-    regions,
     focusPoint: gift.toLocation && {
       className: "giftsPage",
       location: gift.toLocation.point,
@@ -67,6 +77,31 @@ const GiftsPage: React.FC<PageProps> = ({ location }) => {
       }
     }
   }, [gift])
+
+  useEffect(() => {
+    let unSubSlots = subscribeToGiftSlotsOverview(giftSlots => {
+      let availableSlots = giftSlots.filter(s => s.status !== "reserved")
+      let slotsByRegion = groupBy(giftSlots, s => s.region)
+      let availabilityByRegion = fromPairs(
+        toPairs(slotsByRegion).map(([region, slots]) => [
+          region,
+          sumBy(slots, slot => (slot.status !== "reserved" ? 1 : 0)),
+        ])
+      )
+      mapContext.update({
+        points: getRandomLocationsForVisualisation(availableSlots),
+        regions: regions
+          .filter(r => r.name === gift?.toLocation?.region)
+          .map(r => ({
+            ...r,
+            status: availabilityByRegion[r.name] ? "available" : "unavailable",
+          })),
+      })
+    })
+    return () => {
+      unSubSlots()
+    }
+  }, [])
 
   let onPickSlot = useCallback(
     async (slot: GiftSlot) => {

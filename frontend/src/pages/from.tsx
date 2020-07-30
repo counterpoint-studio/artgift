@@ -11,7 +11,6 @@ import NextButton from "../components/nextButton"
 import BackButton from "../components/backButton"
 
 import { useMounted, useGiftState } from "../hooks"
-import { getRegionGeoJSON } from "../services/regionLookup"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
 import { REGION_BOUNDING_BOX, PHONE_NUMBER_REGEX } from "../constants"
 import { getGiftSlot, initGift, saveGift } from "../services/gifts"
@@ -25,7 +24,6 @@ const emptyPoints = []
 const FromPage = () => {
   let intl = useIntl()
   let mounted = useMounted()
-  let regions = useMemo(() => getRegionGeoJSON(), [])
   let [gift, setGift] = useGiftState(initGift(intl.locale))
   let [giftSlot, setGiftSlot] = useState<GiftSlot>()
   let [reservedFor, setReservedFor] = useState<number>()
@@ -66,7 +64,7 @@ const FromPage = () => {
       ? boundsAround(gift.toLocation.point)
       : REGION_BOUNDING_BOX,
     boundsPadding: 0,
-    regions,
+    regions: [],
     points: emptyPoints,
     focusPoint: gift.toLocation && {
       className: "fromPage",
