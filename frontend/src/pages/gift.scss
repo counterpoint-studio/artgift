@@ -51,11 +51,6 @@
       &:first-child {
         padding-right: 15px;
       }
-
-      .giftStatusInfo {
-        text-transform: none;
-        margin-top: 15px;
-      }
     }
   }
 
@@ -76,6 +71,20 @@
     &.rejected {
       background: red;
       color: white;
+
+      ~ .giftStatusInfo {
+        color: red;
+      }
+    }
+
+    &Info {
+      margin: 5px 0;
+      text-transform: none;
+      font-size: 10px;
+
+      @media (min-width: 768px) {
+        font-size: 12px;
+      }
     }
   }
 
