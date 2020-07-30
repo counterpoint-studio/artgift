@@ -9,7 +9,7 @@ import { PageProps } from "gatsby"
 import Helmet from "react-helmet"
 import { useIntl, navigate } from "gatsby-plugin-intl"
 import classNames from "classnames"
-import { camelCase, omit } from "lodash"
+import { camelCase, omit, groupBy, fromPairs, toPairs, sumBy } from "lodash"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -52,7 +52,6 @@ const GiftsPage: React.FC<PageProps> = ({ location }) => {
       ? regions.find(r => r.name === gift.toLocation.region).bounds
       : REGION_BOUNDING_BOX,
     boundsPadding: 0,
-    regions: regions.filter(r => r.name === gift?.toLocation?.region),
     focusPoint: gift.toLocation && {
       className: "giftsPage",
       location: gift.toLocation.point,
@@ -82,8 +81,21 @@ const GiftsPage: React.FC<PageProps> = ({ location }) => {
   useEffect(() => {
     let unSubSlots = subscribeToGiftSlotsOverview(giftSlots => {
       let availableSlots = giftSlots.filter(s => s.status !== "reserved")
+      let slotsByRegion = groupBy(giftSlots, s => s.region)
+      let availabilityByRegion = fromPairs(
+        toPairs(slotsByRegion).map(([region, slots]) => [
+          region,
+          sumBy(slots, slot => (slot.status !== "reserved" ? 1 : 0)),
+        ])
+      )
       mapContext.update({
         points: getRandomLocationsForVisualisation(availableSlots),
+        regions: regions
+          .filter(r => r.name === gift?.toLocation?.region)
+          .map(r => ({
+            ...r,
+            status: availabilityByRegion[r.name] ? "available" : "unavailable",
+          })),
       })
     })
     return () => {

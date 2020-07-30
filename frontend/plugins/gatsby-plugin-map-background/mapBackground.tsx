@@ -23,8 +23,8 @@ export interface MapBackgroundProps {
   isSplitScreen?: boolean
   regions?: {
     name: string
+    status: "available" | "unavailable"
     feature: GeoJSON.Feature
-    bounds: mapboxgl.LngLatBoundsLike
   }[]
   points?: { id: string; location: [number, number] }[]
   focusPoint?: { className: string; location: [number, number] }
@@ -119,7 +119,11 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
   useEffect(
     function updateRegions() {
       if (!map || !regions) return
-      function add(name: string, region: GeoJSON.Feature) {
+      function add(
+        name: string,
+        status: "available" | "unavailable",
+        region: GeoJSON.Feature
+      ) {
         map.addSource(`region-${name}`, {
           type: "geojson",
           data: {
@@ -127,31 +131,48 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
             features: [region],
           },
         })
-        map.addLayer({
-          id: `region-${name}`,
-          type: "line",
-          source: `region-${name}`,
-          paint: {
-            "line-width": 3,
-            "line-color": "#ffffff",
-          },
-        })
+        if (status === "available") {
+          map.addLayer({
+            id: `region-${name}`,
+            type: "line",
+            source: `region-${name}`,
+            paint: {
+              "line-width": 3,
+              "line-color": "#ffffff",
+            },
+          })
+        } else {
+          map.addLayer({
+            id: `region-${name}`,
+            type: "fill",
+            source: `region-${name}`,
+            paint: {
+              "fill-opacity": 0.2,
+              "fill-color": "#000000",
+            },
+          })
+        }
       }
 
-      let loadHandlers: (() => void)[] = []
-      let styleLoaded = map.isStyleLoaded()
+      let addTimeouts: number[] = []
+      let loaded = map.isStyleLoaded()
       for (let region of regions) {
-        if (styleLoaded) {
-          add(region.name, region.feature)
+        if (loaded) {
+          add(region.name, region.status, region.feature)
         } else {
-          let loadHandler = () => add(region.name, region.feature)
-          map.once("style.load", loadHandler)
-          loadHandlers.push(loadHandler)
+          let waiting = () => {
+            if (!map.isStyleLoaded()) {
+              addTimeouts.push(setTimeout(waiting, 200))
+            } else {
+              add(region.name, region.status, region.feature)
+            }
+          }
+          waiting()
         }
       }
 
       return () => {
-        loadHandlers.forEach(handler => map.off("style.load", handler))
+        addTimeouts.forEach(clearTimeout)
         for (let region of regions) {
           if (map.getLayer(`region-${region.name}`)) {
             map.removeLayer(`region-${region.name}`)

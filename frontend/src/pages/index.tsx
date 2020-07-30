@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useContext } from "react"
+import React, { useEffect, useState, useContext, useMemo } from "react"
 import Helmet from "react-helmet"
 import { useIntl, Link } from "gatsby-plugin-intl"
 import classNames from "classnames"
-import { every } from "lodash"
+import { every, groupBy, fromPairs, toPairs, sumBy } from "lodash"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -11,7 +11,6 @@ import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hoo
 import { MapBackgroundContext } from "../../plugins/gatsby-plugin-map-background/mapBackgroundContext"
 import { REGION_BOUNDING_BOX, MAP_INIT_CENTER } from "../constants"
 import * as gifts from "../services/gifts"
-import * as regions from "../services/regionLookup"
 import NextButton from "../components/nextButton"
 import HeroImage from "../images/heroImage.jpg"
 
@@ -19,6 +18,10 @@ import "./index.scss"
 import { useGiftState } from "../hooks"
 import { useWindowWidth } from "@react-hook/window-size"
 import { AppState } from "../types"
+import {
+  getRegionGeoJSON,
+  getRandomLocationsForVisualisation,
+} from "../services/regionLookup"
 
 const IntroPage = () => {
   let intl = useIntl()
@@ -26,13 +29,13 @@ const IntroPage = () => {
   let [appState, setAppState] = useState<AppState>()
   let [allBooked, setAllBooked] = useState(false)
   let [pointsLoaded, setPointsLoaded] = useState(false)
+  let regions = useMemo(() => getRegionGeoJSON(), [])
 
   let mapContext = useContext(MapBackgroundContext)
   let { isMoving: isMapMoving } = useMapBackground({
     initPoint: MAP_INIT_CENTER,
     bounds: REGION_BOUNDING_BOX,
     boundsPadding: windowWidth < 768 ? 0 : 150,
-    regions: undefined,
   })
   let [gift, setGift] = useGiftState(gifts.initGift(intl.locale))
 
@@ -40,8 +43,18 @@ const IntroPage = () => {
     let unSubState = gifts.subscribeToAppState(setAppState)
     let unSubSlots = gifts.subscribeToGiftSlotsOverview(giftSlots => {
       let availableSlots = giftSlots.filter(s => s.status !== "reserved")
+      let slotsByRegion = groupBy(giftSlots, s => s.region)
+      let availabilityByRegion = fromPairs(
+        toPairs(slotsByRegion).map(([region, slots]) => [
+          region,
+          sumBy(slots, slot => (slot.status !== "reserved" ? 1 : 0)),
+        ])
+      )
       mapContext.update({
-        points: regions.getRandomLocationsForVisualisation(availableSlots),
+        points: getRandomLocationsForVisualisation(availableSlots),
+        regions: regions
+          .filter(r => !availabilityByRegion[r.name])
+          .map(r => ({ ...r, status: "unavailable" })),
       })
       setPointsLoaded(true)
       setAllBooked(every(giftSlots, s => s.status === "reserved"))
@@ -50,7 +63,7 @@ const IntroPage = () => {
       unSubState()
       unSubSlots()
     }
-  }, [])
+  }, [regions])
 
   let initialiseGift = () => {
     setGift(gifts.initGift(intl.locale))

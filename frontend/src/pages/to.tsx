@@ -11,7 +11,7 @@ import { Textbox, Textarea } from "react-inputs-validation"
 import AutoSuggest from "react-autosuggest"
 import { useDebounceCallback } from "@react-hook/debounce"
 import classNames from "classnames"
-import { omit } from "lodash"
+import { omit, groupBy, fromPairs, toPairs, sumBy } from "lodash"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -40,7 +40,6 @@ const ToPage = () => {
   let { isMoving: isMapMoving } = useMapBackground({
     bounds: REGION_BOUNDING_BOX,
     boundsPadding: 0,
-    regions,
     focusPoint: undefined,
   })
   let [gift, setGift] = useGiftState(initGift(intl.locale))
@@ -58,14 +57,25 @@ const ToPage = () => {
   useEffect(() => {
     let unSubSlots = gifts.subscribeToGiftSlotsOverview(giftSlots => {
       let availableSlots = giftSlots.filter(s => s.status !== "reserved")
+      let slotsByRegion = groupBy(giftSlots, s => s.region)
+      let availabilityByRegion = fromPairs(
+        toPairs(slotsByRegion).map(([region, slots]) => [
+          region,
+          sumBy(slots, slot => (slot.status !== "reserved" ? 1 : 0)),
+        ])
+      )
       mapContext.update({
         points: getRandomLocationsForVisualisation(availableSlots),
+        regions: regions.map(r => ({
+          ...r,
+          status: availabilityByRegion[r.name] ? "available" : "unavailable",
+        })),
       })
     })
     return () => {
       unSubSlots()
     }
-  }, [])
+  }, [regions])
 
   useEffect(() => {
     if (gift.status === "pending") {
