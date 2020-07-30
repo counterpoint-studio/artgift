@@ -18,6 +18,10 @@ export function formatDate(dateS: string) {
     return `${dayOfWeek} ${d}.${m}.`
 }
 
+export function formatDateFromComponents(year: number, month: number, day: number) {
+    return `${day}.${month + 1}.${year}`;
+}
+
 export function formatTime(time: string) {
     let [hours, minutes] = time.split(":").map(t => +t)
     let h = hours < 10 ? `0${hours}` : `${hours}`

@@ -6,7 +6,12 @@ import { ExportToCsv } from "export-to-csv";
 
 import { Navigation } from "./Navigation";
 import { Gift, Slot, Artist } from "./types";
-import { formatDate, formatTime } from "./util/dateUtils";
+import {
+  formatDate,
+  formatTime,
+  formatDateFromComponents,
+  formatTimeFromComponents,
+} from "./util/dateUtils";
 import { MAIN_APP_HOST } from "./constants";
 
 import "./Gifts.scss";
@@ -218,6 +223,13 @@ export const Gifts: React.FC = () => {
                       <thead></thead>
                       <tbody>
                         <tr>
+                          <td>Created at:</td>
+                          <td>
+                            {gift.reservedAt &&
+                              formatTimestamp(gift.reservedAt.seconds)}
+                          </td>
+                        </tr>
+                        <tr>
                           <td>From:</td>
                           <td>
                             {gift.fromName} &lt;{gift.fromEmail}&gt;{" / "}
@@ -289,3 +301,12 @@ export const Gifts: React.FC = () => {
     </div>
   );
 };
+
+function formatTimestamp(seconds: number) {
+  let date = new Date(seconds * 1000);
+  return `${formatDateFromComponents(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate()
+  )} ${formatTimeFromComponents(date.getHours(), date.getMinutes())}`;
+}

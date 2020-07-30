@@ -11,6 +11,7 @@ export type Gift = {
     id: string;
     slotId: string;
     status: 'creating' | 'pending' | 'confirmed' | 'rejected' | 'cancelled';
+    reservedAt?: { seconds: number };
     toName: string;
     toAddress: string;
     toLocation?: GiftLocation;

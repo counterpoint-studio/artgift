@@ -71,7 +71,8 @@ export const processSlotReservation = functions
                 await tx.set(giftRef, {
                     slotId,
                     processedReservationId: document.id,
-                    reservedUntil: Date.now() + RESERVATION_PERIOD
+                    reservedUntil: Date.now() + RESERVATION_PERIOD,
+                    reservedAt: admin.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
                 // Set previous slot as available again.
                 if (prevSlot) {
