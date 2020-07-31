@@ -7,7 +7,13 @@ import "./Navigation.scss";
 import { AppState } from "./types";
 
 interface NavigationProps {
-  currentPage: "slots" | "gifts" | "artists" | "itineraries" | "admins";
+  currentPage:
+    | "slots"
+    | "gifts"
+    | "artists"
+    | "itineraries"
+    | "admins"
+    | "auditLog";
 }
 export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
   let [appState, setAppState] = useState<AppState>();
@@ -56,6 +62,12 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
         className={classNames({ isCurrent: currentPage === "admins" })}
       >
         admins
+      </Link>
+      <Link
+        to="/auditlog"
+        className={classNames({ isCurrent: currentPage === "auditLog" })}
+      >
+        log
       </Link>
       <div className="appState">
         {appState === "pre" && (

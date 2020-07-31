@@ -1,0 +1,22 @@
+.auditLog {
+  table-layout: fixed;
+
+  .timestamp {
+    width: 400px;
+    padding: 0 auto 0 0;
+  }
+
+  td {
+    vertical-align: top;
+  }
+
+  .auditLogDetails {
+    margin-left: 40px;
+    font-size: 12px;
+    td,
+    th {
+      padding: 0;
+      margin: 0;
+    }
+  }
+}

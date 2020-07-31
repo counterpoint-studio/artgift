@@ -307,6 +307,51 @@ export const scheduledFirestoreBackup = functions
         })
     });
 
+export const appStateUpdateAudit = functions.region('europe-west1')
+    .firestore
+    .document("appstates/{appStateId}")
+    .onWrite(async change => {
+        if (change.after.exists) {
+            db.collection('auditlogs').add({
+                message: `App state set to ${change.after.data()!.state}`,
+                timestamp: Date.now()
+            });
+        } else {
+            db.collection('auditlogs').add({
+                message: `App state deleted`,
+                timestamp: Date.now()
+            });
+        }
+    });
+
+export const giftUpdateAudit = functions.region('europe-west1')
+    .firestore
+    .document("gifts/{giftId}")
+    .onWrite(async change => {
+        if (change.after.exists) {
+            if (change.before.exists) {
+                db.collection('auditlogs').add({
+                    message: `Gift updated`,
+                    beforeData: change.before.data(),
+                    afterData: change.after.data(),
+                    timestamp: Date.now()
+                });
+            } else {
+                db.collection('auditlogs').add({
+                    message: `Gift created`,
+                    afterData: change.after.data(),
+                    timestamp: Date.now()
+                });
+            }
+        } else {
+            db.collection('auditlogs').add({
+                message: `Gift deleted`,
+                beforeData: change.before.data(),
+                timestamp: Date.now()
+            });
+        }
+    });
+
 function parseDateTime(date: any, time: any) {
     return new Date(
         +date.substring(0, 4),
