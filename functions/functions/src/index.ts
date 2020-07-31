@@ -43,7 +43,7 @@ export const makeSlotsAvailableBasedOnAppState = functions.region('europe-west1'
                 batch.set(slot.ref, { status: 'available' }, { merge: true });
             })
             await batch.commit();
-        } else if (appState === 'closed') {
+        } else {
             let slotsToUpdate = await db.collection('slots').where('status', '==', 'available').get();
             let batch = db.batch();
             slotsToUpdate.forEach(slot => {

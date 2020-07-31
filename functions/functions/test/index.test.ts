@@ -51,7 +51,7 @@ describe('store availability toggle', function () {
         expect((await slot('three').get()).data()?.status).to.equal('reserved');
     });
 
-    it('flips available slots to notAvailable when closed', async () => {
+    it('flips available slots to notAvailable when post', async () => {
         await db.collection('appstates').doc('singleton').set({ state: 'open' });
 
         await createSlots({
@@ -60,7 +60,41 @@ describe('store availability toggle', function () {
             three: { status: 'reserved', date: '20200726', time: '12:30', region: 'South' },
         });
 
-        await db.collection('appstates').doc('singleton').set({ state: 'closed' });
+        await db.collection('appstates').doc('singleton').set({ state: 'post' });
+        await sleep();
+
+        expect((await slot('one').get()).data()?.status).to.equal('notAvailable');
+        expect((await slot('two').get()).data()?.status).to.equal('notAvailable');
+        expect((await slot('three').get()).data()?.status).to.equal('reserved');
+    });
+
+    it('flips available slots to notAvailable when pre', async () => {
+        await db.collection('appstates').doc('singleton').set({ state: 'open' });
+
+        await createSlots({
+            one: { status: 'available', date: '20200726', time: '12:00', region: 'South' },
+            two: { status: 'available', date: '20200726', time: '12:30', region: 'South' },
+            three: { status: 'reserved', date: '20200726', time: '12:30', region: 'South' },
+        });
+
+        await db.collection('appstates').doc('singleton').set({ state: 'pre' });
+        await sleep();
+
+        expect((await slot('one').get()).data()?.status).to.equal('notAvailable');
+        expect((await slot('two').get()).data()?.status).to.equal('notAvailable');
+        expect((await slot('three').get()).data()?.status).to.equal('reserved');
+    });
+
+    it('flips available slots to notAvailable when paused', async () => {
+        await db.collection('appstates').doc('singleton').set({ state: 'open' });
+
+        await createSlots({
+            one: { status: 'available', date: '20200726', time: '12:00', region: 'South' },
+            two: { status: 'available', date: '20200726', time: '12:30', region: 'South' },
+            three: { status: 'reserved', date: '20200726', time: '12:30', region: 'South' },
+        });
+
+        await db.collection('appstates').doc('singleton').set({ state: 'paused' });
         await sleep();
 
         expect((await slot('one').get()).data()?.status).to.equal('notAvailable');
