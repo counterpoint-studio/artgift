@@ -45,15 +45,7 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "reservedAt",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "toAddress",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "fromName",
+          "fieldPath": "reservedAt.seconds",
           "order": "ASCENDING"
         }
       ]

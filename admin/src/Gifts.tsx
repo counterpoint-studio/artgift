@@ -43,9 +43,7 @@ export const Gifts: React.FC = () => {
   useEffect(() => {
     let unSub = giftColl
       .where("status", "in", ["pending", "confirmed", "rejected", "cancelled"])
-      .orderBy("reservedAt")
-      .orderBy("toAddress")
-      .orderBy("fromName")
+      .orderBy("reservedAt.seconds")
       .onSnapshot((giftsSnapshot) => {
         setGifts(
           giftsSnapshot.docs.map((d) => ({ ...d.data(), id: d.id } as Gift))
