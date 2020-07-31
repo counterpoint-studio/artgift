@@ -122,7 +122,10 @@ const GiftsPage: React.FC<PageProps> = ({ location }) => {
 
   let isAvailable = useCallback(
     (slot: GiftSlot) => {
-      return slot.status === "available" || gift.slotId === slot.id
+      return (
+        slot.status === "available" ||
+        (slot.status === "reserved" && gift.slotId === slot.id)
+      )
     },
     [gift]
   )
