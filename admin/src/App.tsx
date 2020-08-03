@@ -68,9 +68,19 @@ function App() {
 function PrivateRoute({ children, ...rest }: RouteProps) {
   let [isSignedIn, setIsSignedIn] = useState<boolean | null>(null);
   useEffect(() => {
-    let unSub = firebase
-      .auth()
-      .onAuthStateChanged((user) => setIsSignedIn(!!user));
+    let unSub = firebase.auth().onAuthStateChanged((user) => {
+      if (user && user.email) {
+        firebase
+          .firestore()
+          .collection("admins")
+          .doc(user.email)
+          .get()
+          .then(() => setIsSignedIn(true))
+          .catch(() => setIsSignedIn(false)); // User can't read the admins coll if they're not an admin; will throw
+      } else {
+        setIsSignedIn(false);
+      }
+    });
     return () => {
       unSub();
     };
