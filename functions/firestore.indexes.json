@@ -46,7 +46,7 @@
         },
         {
           "fieldPath": "reservedAt.seconds",
-          "order": "ASCENDING"
+          "order": "DESCENDING"
         }
       ]
     }
