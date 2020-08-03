@@ -378,13 +378,15 @@ async function populateArtistItineraries(region: string, tx: FirebaseFirestore.T
     let affectedSlotRefs: admin.firestore.DocumentReference[] = [];
     slots.forEach(slot => affectedSlotRefs.push(slot.ref));
 
-    let gifts = affectedSlotRefs.length > 0 ? await db.collection('gifts')
-        .where('slotId', 'in', affectedSlotRefs.map(r => r.id))
-        .get() :
-        [];
+    let gifts: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>[] = [];
+    for (let slotRef of affectedSlotRefs) {
+        gifts.push(await db.collection('gifts')
+            .where('slotId', '==', slotRef.id)
+            .get().then(d => d.docs[0]))
+    }
     let affectedGiftRefs: admin.firestore.DocumentReference[] = [];
     gifts.forEach(gift => {
-        if (gift.data().status === 'confirmed') {
+        if (gift.exists && gift.data()!.status === 'confirmed') {
             affectedGiftRefs.push(gift.ref);
         }
     });

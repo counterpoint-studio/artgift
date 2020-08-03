@@ -178,13 +178,17 @@ export const Gifts: React.FC = () => {
     );
   }, [getTableData, csvExporter]);
 
+  let tableData = getTableData();
   return (
     <div className="gifts">
       <Navigation currentPage="gifts" />
+      <h2>Summary</h2>
+      <GiftsSummary data={tableData} />
+      <h2>All Gifts</h2>
       <table className="gifts--list">
         <thead></thead>
         <tbody>
-          {getTableData().map(({ gift, slot, assignedArtist }) => (
+          {tableData.map(({ gift, slot, assignedArtist }) => (
             <React.Fragment key={gift.id}>
               <tr onClick={() => onToggleDetails(gift)}>
                 <td>{slot && formatDate(slot.date)}</td>
@@ -537,6 +541,50 @@ const GiftDetails: React.FC<GiftDetailsProps> = ({ gift, onUpdateGift }) => {
           </td>
         </tr>
       </tbody>
+    </table>
+  );
+};
+
+interface GiftsSummaryProps {
+  data: { gift: Gift; slot: Slot; assignedArtist: string }[];
+}
+const GiftsSummary: React.FC<GiftsSummaryProps> = ({ data }) => {
+  let byRegion = groupBy(data, (d) => d.slot.region);
+  let allByStatus = groupBy(data, (r) => r.gift.status);
+  return (
+    <table className="giftsSummary">
+      <thead>
+        <tr>
+          <th>Region</th>
+          <th>Confirmed</th>
+          <th>Pending</th>
+          <th>Rejected</th>
+          <th>Cancelled</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      {Object.keys(byRegion).map((r) => {
+        let byStatus = groupBy(byRegion[r], (r) => r.gift.status);
+        return (
+          <tr key={r}>
+            <td>{r}</td>
+            <td>{(byStatus["confirmed"] || []).length}</td>
+            <td>{(byStatus["pending"] || []).length}</td>
+            <td>{(byStatus["rejected"] || []).length}</td>
+            <td>{(byStatus["cancelled"] || []).length}</td>
+            <td>{byRegion[r].length}</td>
+          </tr>
+        );
+      })}
+      <tr>
+        <td>All regions</td>
+        <td>{(allByStatus["confirmed"] || []).length}</td>
+        <td>{(allByStatus["pending"] || []).length}</td>
+        <td>{(allByStatus["rejected"] || []).length}</td>
+        <td>{(allByStatus["cancelled"] || []).length}</td>
+        <td>{data.length}</td>
+      </tr>
     </table>
   );
 };
