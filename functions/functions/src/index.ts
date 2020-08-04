@@ -380,12 +380,14 @@ async function populateArtistItineraries(region: string, tx: FirebaseFirestore.T
 
     let gifts: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>[] = [];
     for (let slotRef of affectedSlotRefs) {
-        gifts.push(await db.collection('gifts')
+        gifts.push(...await db.collection('gifts')
             .where('slotId', '==', slotRef.id)
-            .get().then(d => d.docs[0]))
+            .get().then(d => d.docs))
     }
     let affectedGiftRefs: admin.firestore.DocumentReference[] = [];
+    console.log('in slots have', gifts.length, 'gifts');
     gifts.forEach(gift => {
+        console.log('gift', gift.id, 'status', gift.exists && gift.data()!.status);
         if (gift.exists && gift.data()!.status === 'confirmed') {
             affectedGiftRefs.push(gift.ref);
         }
@@ -395,7 +397,7 @@ async function populateArtistItineraries(region: string, tx: FirebaseFirestore.T
     let affectedSlots = affectedSlotRefs.length > 0 ? await tx.getAll(...affectedSlotRefs) : [];
     let affectedGifts = affectedGiftRefs.length > 0 ? await tx.getAll(...affectedGiftRefs) : [];
 
-    console.log('populating', affectedGifts.length, 'gifts amongst', affectedArtists.length, 'artists in ', region);
+    console.log('populating', affectedGifts.length, 'gifts from', slots.docs.length, ' slots amongst', affectedArtists.length, 'artists in ', region);
 
     let slotsInTimeOrder = sortBy(
         affectedSlots
@@ -436,13 +438,10 @@ async function populateArtistItineraries(region: string, tx: FirebaseFirestore.T
                 let itFrom = parseDateTime(it.from.date, it.from.time);
                 let itTo = parseDateTime(it.to.date, it.to.time);
                 if (slotDate.getTime() >= itFrom.getTime() && slotDate.getTime() < itTo.getTime()) {
-                    console.log('matching artist itinerary', artistData[i].data, j);
                     let lastSlotId = getLastAssignedSlotId(artistData[i].data, region);
                     let lastSlot = lastSlotId ? slotsInTimeOrder.find(s => s.id === lastSlotId)?.data : null;
                     let gapSinceLastSlot = lastSlot ? slotDate.getTime() - parseDateTime(lastSlot.date, lastSlot.time).getTime() : Number.MAX_VALUE;
-                    console.log('gap since last', gapSinceLastSlot);
                     if (gapSinceLastSlot > bestItineraryGapSincePrevious) {
-                        console.log('is best so far');
                         bestArtistIdx = i;
                         bestItineraryIdx = j;
                         bestItineraryGapSincePrevious = gapSinceLastSlot;
@@ -456,7 +455,6 @@ async function populateArtistItineraries(region: string, tx: FirebaseFirestore.T
     }
 
     for (let a of artistData) {
-        console.log('artist update', a.ref.id);
         await tx.set(a.ref, a.data);
     }
 }
