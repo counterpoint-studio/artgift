@@ -126,11 +126,14 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
                           </p>
                         )}
                         {gift.status === "rejected" && (
-                          <p className="giftStatusInfo">
-                            {intl.formatMessage({
-                              id: "giftStatusrejectedInfo",
-                            })}
-                          </p>
+                          <p
+                            className="giftStatusInfo"
+                            dangerouslySetInnerHTML={{
+                              __html: intl.formatMessage({
+                                id: "giftStatusrejectedInfo",
+                              }),
+                            }}
+                          />
                         )}
                       </td>
                     </tr>
