@@ -76,7 +76,7 @@
   "giftStatusconfirmed": "Vahvistettu",
   "giftStatusconfirmedInfo": "Olethan ajoissa paikalla. Taiteilija on sinuun yhteydessä juuri ennen Taidelahjaa.",
   "giftStatusrejected": "Hylätty",
-  "giftStatusrejectedInfo": "Valitettavasti emme voi toteuttaa tätä Taidelahjaa.",
+  "giftStatusrejectedInfo": "Valitettavasti Taidelahjaasi ei voida toteuttaa. Voit etsiä lisätietoja <a href=\"https://taidelahja.helsinkifest.fi/fi/faqs/\">Usein Kysytyistä Kysymyksistä</a>. Jos et löydä vastausta, voit olla yhteydessä sähköpostitse: <a href=\"mailto:pihat@helsinkifestival.fi\">pihat@helsinkifestival.fi</a>.",
   "giftStatuscancelled": "Peruutettu",
   "giftTime": "Aika",
   "giftPlace": "Paikka",

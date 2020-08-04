@@ -76,7 +76,7 @@
   "giftStatusconfirmed": "Confirmed",
   "giftStatusconfirmedInfo": "Please be there on time. The artist will contact you moments before the Art Gift delivery.",
   "giftStatusrejected": "Rejected",
-  "giftStatusrejectedInfo": "Unfortunately we're not able to fulfill this Art Gift.",
+  "giftStatusrejectedInfo": "Unfortunately we're not able to fulfill this Art Gift. You can find more information in the <a href=\"https://taidelahja.helsinkifest.fi/en/faqs/\">Frequently Asked Questions</a>. If you cannot find an answer, please contact us by email: <a href=\"mailto:pihat@helsinkifestival.fi\">pihat@helsinkifestival.fi</a>.",
   "giftStatuscancelled": "Cancelled",
   "giftTime": "Time",
   "giftPlace": "Place",
