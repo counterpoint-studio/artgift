@@ -114,10 +114,16 @@ const ArtistPage: React.FC<PageProps> = ({ location }) => {
                     {it.assignments.map(a => (
                       <div
                         key={a.giftId}
-                        className={classNames("artistAssignment", {
-                          detailsOpen:
-                            detailedAssignment === giftsAndSlots[a.giftId],
-                        })}
+                        className={classNames(
+                          "artistAssignment",
+                          `status${
+                            giftsAndSlots[a.giftId]?.gift?.status ?? ""
+                          }`,
+                          {
+                            detailsOpen:
+                              detailedAssignment === giftsAndSlots[a.giftId],
+                          }
+                        )}
                         onClick={() =>
                           setDetailedAssignment(giftsAndSlots[a.giftId])
                         }
@@ -163,6 +169,11 @@ function renderAssignment(
         </svg>
         <div className="time">{formatTime(slot.time)}</div>{" "}
         <div className="address">{gift.toAddress}</div>
+        {(gift.status === "cancelled" || gift.status === "rejected") && (
+          <div>
+            <span className="cancelled">Cancelled</span>
+          </div>
+        )}
       </div>
       {withDetails && (
         <div className="artistAssignmentDetails">

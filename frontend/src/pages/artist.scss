@@ -67,6 +67,12 @@
         background: rgba($colorHFGrey, 0.25);
       }
 
+      &.statusrejected,
+      &.statuscancelled {
+        color: #aaa;
+        text-decoration: line-through;
+      }
+
       &Header {
         display: grid;
         grid-auto-flow: column;
@@ -81,6 +87,14 @@
           gap: 15px;
           padding: 15px 0;
           font-size: 13px;
+        }
+
+        .cancelled,
+        .rejected {
+          display: inline;
+          background: red;
+          color: white;
+          text-decoration: none;
         }
       }
 
