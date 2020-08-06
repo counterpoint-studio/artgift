@@ -169,17 +169,27 @@ export const createGiftReminderMessages = functions.region('europe-west1').pubsu
             let giftMessages = await db.collection('messages').where('giftId', '==', gift.id).get();
             let existingReminder = giftMessages.docs.find(d => d.data().messageKey === 'giftReminder');
             if (!existingReminder) {
-                let template = getMessageTemplates()[giftData.fromLanguage || 'en'].giftReminderBody;
+                let emailSubject = getMessageTemplates()[giftData.fromLanguage || 'en'].giftReminderEmailSubject({});
+                let emailBodyTemplate = getMessageTemplates()[giftData.fromLanguage || 'en'].giftReminderEmailBody;
+                let smsTemplate = getMessageTemplates()[giftData.fromLanguage || 'en'].giftReminderSMS;
                 let baseUrl = functions.config().artgift.baseurl;
-                let message = template({
+                let emailBody = emailBodyTemplate({
+                    dateTime: `${formatDate(date)} ${formatTime(time)}`,
+                    address: giftData.toAddress,
+                    url: new Handlebars.SafeString(`${baseUrl}/gift?id=${gift.id}`)
+                });
+                let smsBody = smsTemplate({
                     dateTime: `${formatDate(date)} ${formatTime(time)}`,
                     address: giftData.toAddress,
                     url: new Handlebars.SafeString(`${baseUrl}/gift?id=${gift.id}`)
                 });
                 db.collection('messages').add({
-                    message,
+                    emailSubject,
+                    emailBody,
+                    smsBody,
                     toNumber: giftData.fromPhoneNumber,
-                    giftId: gift.id,
+                    toEmail: giftData.fromEmail,
+                    toName: giftData.fromName,
                     messageKey: 'giftReminder',
                     sent: false,
                     createdAt: admin.firestore.FieldValue.serverTimestamp()
