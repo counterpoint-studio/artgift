@@ -117,6 +117,22 @@ body {
   }
 }
 
+.badge {
+  padding: 2px 4px 3px 4px;
+  border-radius: 2px;
+  font-size: 9px;
+
+  @media (min-width: 768px) {
+    font-size: 10px;
+  }
+
+  &--cancelled,
+  &--rejected {
+    background: red;
+    color: white;
+  }
+}
+
 .button {
   display: flex;
   flex-flow: row nowrap;

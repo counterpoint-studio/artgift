@@ -168,11 +168,14 @@ function renderAssignment(
           />
         </svg>
         <div className="time">{formatTime(slot.time)}</div>{" "}
-        <div className="address">{gift.toAddress}</div>
-        {(gift.status === "cancelled" || gift.status === "rejected") && (
+        {gift.status === "cancelled" || gift.status === "rejected" ? (
           <div>
-            <span className="cancelled">Cancelled</span>
+            <span className="badge badge--cancelled">
+              {intl.formatMessage({ id: "giftStatuscancelled" })}
+            </span>
           </div>
+        ) : (
+          <div className="address">{gift.toAddress}</div>
         )}
       </div>
       {withDetails && (

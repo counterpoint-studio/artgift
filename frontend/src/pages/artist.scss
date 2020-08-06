@@ -51,6 +51,7 @@
 
     .timeLocation {
       font-size: 10px;
+      line-height: 1.25;
 
       @media (min-width: 768px) {
         font-size: 13px;
@@ -69,8 +70,15 @@
 
       &.statusrejected,
       &.statuscancelled {
-        color: #aaa;
-        text-decoration: line-through;
+        color: rgba(black, 0.25);
+
+        a {
+          color: rgba(black, 0.25);
+        }
+
+        .arrow {
+          opacity: 0.25;
+        }
       }
 
       &Header {
