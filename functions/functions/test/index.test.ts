@@ -899,6 +899,58 @@ describe('artist itineraries', function () {
         ])
     });
 
+    it('does not redistribute slots when appstate is post', async function () {
+        this.timeout(20000);
+
+        await createSlots({
+            one: { status: 'reserved', date: '20200726', time: '12:00', region: 'South' },
+            two: { status: 'reserved', date: '20200726', time: '12:30', region: 'South' },
+            three: { status: 'reserved', date: '20200726', time: '13:00', region: 'South' }
+        });
+        await createGifts({
+            one: { slotId: 'one', status: 'confirmed' },
+            two: { slotId: 'two', status: 'pending' },
+            three: { slotId: 'three', status: 'confirmed' },
+        });
+
+        await db.collection('artists').doc('a').set({
+            name: 'A',
+            itineraries: [
+                { region: 'South', from: { date: '20200726', time: '11:00' }, to: { date: '20200726', time: '15:00' } }
+            ]
+        });
+        await db.collection('artists').doc('b').set({
+            name: 'B',
+            itineraries: [
+                { region: 'South', from: { date: '20200726', time: '11:00' }, to: { date: '20200726', time: '15:00' } }
+            ]
+        });
+        await sleep();
+
+
+        let artistA = await db.collection('artists').doc('a').get();
+        let artistB = await db.collection('artists').doc('b').get();
+        expect(artistA.data()!.itineraries[0].assignments).to.deep.equal([
+            { slotId: 'one', giftId: 'one' }
+        ])
+        expect(artistB.data()!.itineraries[0].assignments).to.deep.equal([
+            { slotId: 'three', giftId: 'three' },
+        ])
+
+        await db.collection('appstates').doc('singleton').set({ state: 'post' });
+        await gift('two').set({ slotId: 'two', status: 'confirmed' });
+        await sleep();
+
+        artistA = await db.collection('artists').doc('a').get();
+        artistB = await db.collection('artists').doc('b').get();
+        expect(artistA.data()!.itineraries[0].assignments).to.deep.equal([
+            { slotId: 'one', giftId: 'one' }
+        ])
+        expect(artistB.data()!.itineraries[0].assignments).to.deep.equal([
+            { slotId: 'three', giftId: 'three' },
+        ])
+    });
+
     it('excludes gifts in rejected and cancelled status', async function () {
         await createSlots({
             one: { status: 'reserved', date: '20200726', time: '12:00', region: 'South' },

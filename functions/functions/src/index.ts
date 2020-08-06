@@ -204,6 +204,12 @@ export const populateArtistItinerariesOnArtistUpdate = functions
     .firestore
     .document("artists/{artistId}")
     .onWrite(async (change) => {
+        let appState = (await db.collection('appstates').doc('singleton').get()).data()
+        if (appState?.state === 'post') {
+            console.log('Not doing itinerary updates in post state');
+            return;
+        }
+
         let affectedRegions = new Set<string>();
         let itinerariesBefore = change.before.exists ?
             sortBy(change.before.data()!.itineraries.map((it: any) => pick(it, 'region', 'from', 'to')), it => it.from.date, it => it.from.time) :
@@ -273,6 +279,11 @@ export const populateArtistItinerariesOnGiftUpdate = functions
     .firestore
     .document("gifts/{giftId}")
     .onWrite(async (change) => {
+        let appState = (await db.collection('appstates').doc('singleton').get()).data()
+        if (appState?.state === 'post') {
+            console.log('Not doing itinerary updates in post state');
+            return;
+        }
         let affectedSlotIds = new Set<string>();
         let involvesConfirmedGift = change.before.data()?.status === 'confirmed' || change.after.data()?.status === 'confirmed';
         if (involvesConfirmedGift) {
