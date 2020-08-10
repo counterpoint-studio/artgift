@@ -25,6 +25,9 @@ async function initDatabase() {
     await auditLogs.listDocuments().then(docs => Promise.all(docs.map(d => d.delete())));
 
     let batch = db.batch();
+    if (!storeStatus) {
+        batch.set(db.collection('appstates').doc('singleton'), { state: 'pre' })
+    }
     for (let region of Object.keys(seedData.slots)) {
         for (let date of Object.keys(seedData.slots[region])) {
             for (let time of seedData.slots[region][date]) {
