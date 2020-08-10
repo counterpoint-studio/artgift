@@ -160,12 +160,13 @@ export const createGiftMessage = functions
 
 export const createGiftReminderMessages = functions.region('europe-west1').pubsub.schedule('every 1 hours').onRun(async () => {
     let confirmedGifts = await db.collection('gifts').where('status', '==', 'confirmed').get();
-    confirmedGifts.forEach(async (gift) => {
+    for (let gift of confirmedGifts.docs) {
         let giftData = gift.data();
         let { date, time } = await (await db.collection('slots').doc(giftData.slotId).get()).data()!;
         let giftDate = parseDateTime(date, time);
         let giftTimestamp = giftDate.getTime() - TIME_ZONE_UTC_OFFSET * 60 * 60 * 1000;
-        if (giftTimestamp - Date.now() < REMINDER_PERIOD) {
+        let timeFromNow = giftTimestamp - Date.now();
+        if (timeFromNow < REMINDER_PERIOD && timeFromNow > REMINDER_PERIOD / 2) {
             let giftMessages = await db.collection('messages').where('giftId', '==', gift.id).get();
             let existingReminder = giftMessages.docs.find(d => d.data().messageKey === 'giftReminder');
             if (!existingReminder) {
@@ -183,7 +184,7 @@ export const createGiftReminderMessages = functions.region('europe-west1').pubsu
                     address: giftData.toAddress,
                     url: new Handlebars.SafeString(`${baseUrl}/gift?id=${gift.id}`)
                 });
-                db.collection('messages').add({
+                await db.collection('messages').add({
                     emailSubject,
                     emailBody,
                     smsBody,
@@ -192,11 +193,12 @@ export const createGiftReminderMessages = functions.region('europe-west1').pubsu
                     toName: giftData.fromName,
                     messageKey: 'giftReminder',
                     sent: false,
-                    createdAt: admin.firestore.FieldValue.serverTimestamp()
+                    createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                    giftId: gift.id
                 })
             }
         }
-    })
+    }
 });
 
 export const populateArtistItinerariesOnArtistUpdate = functions
