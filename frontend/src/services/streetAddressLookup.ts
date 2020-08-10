@@ -18,7 +18,7 @@ export async function findAddresses(query: string) {
 }
 
 export async function locateAddress(address: string, fromRegions: Region[]): Promise<GiftLocation | undefined> {
-    let [addressPrefix] = /.*\d+/.exec(address);
+    let [addressPrefix] = /.*?\d+/.exec(address);
     let res = await geocodingService.forwardGeocode({
         query: addressPrefix,
         countries: [MAPBOX_COUNTRY_CODE],

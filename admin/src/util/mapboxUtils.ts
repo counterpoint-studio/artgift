@@ -11,7 +11,7 @@ export const geocodingService = mbxGeocoding({ accessToken: process.env.REACT_AP
 
 
 export async function locateAddress(address: string, fromRegions: Region[]): Promise<GiftLocation | undefined> {
-    let addressPrefixMatch = /.*\d+/.exec(address);
+    let addressPrefixMatch = /.*?\d+/.exec(address);
     if (!addressPrefixMatch) {
         return;
     }
