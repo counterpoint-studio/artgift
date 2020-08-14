@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react"
-import mapboxgl, { LngLatBoundsLike, LngLatLike } from "mapbox-gl"
+import mapboxgl, { LngLatBoundsLike } from "mapbox-gl"
 import { useWindowSize } from "@react-hook/window-size"
 
 import "./mapBackground.scss"
@@ -17,7 +17,6 @@ const MAX_POINT_ENTER_INTERVAL_MS = 20
 const LAST_POINT_ENTER_DELAY_MS = 1_000
 
 export interface MapBackgroundProps {
-  initPoint?: LngLatLike
   bounds?: LngLatBoundsLike
   boundsPadding?: number
   isSplitScreen?: boolean
@@ -32,7 +31,6 @@ export interface MapBackgroundProps {
 }
 
 const MapBackground: React.FC<MapBackgroundProps> = ({
-  initPoint,
   bounds,
   boundsPadding,
   isSplitScreen,
@@ -71,13 +69,6 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
       })
     },
     [map, windowWidth, windowHeight, isSplitScreen]
-  )
-  useEffect(
-    function centerMap() {
-      if (!map || !initPoint) return
-      map.jumpTo({ center: initPoint })
-    },
-    [map, initPoint]
   )
 
   useEffect(() => {

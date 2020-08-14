@@ -9,7 +9,6 @@ import SEO from "../components/seo"
 import Language from "../components/language"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
 import { MapBackgroundContext } from "../../plugins/gatsby-plugin-map-background/mapBackgroundContext"
-import { REGION_BOUNDING_BOX, MAP_INIT_CENTER } from "../constants"
 import * as gifts from "../services/gifts"
 import NextButton from "../components/nextButton"
 import HeroImage from "../images/heroImage.jpg"
@@ -21,6 +20,7 @@ import { AppState } from "../types"
 import {
   getRegionGeoJSON,
   getRandomLocationsForVisualisation,
+  getWholeRegionBounds,
 } from "../services/regionLookup"
 
 const IntroPage = () => {
@@ -33,8 +33,7 @@ const IntroPage = () => {
 
   let mapContext = useContext(MapBackgroundContext)
   let { isMoving: isMapMoving } = useMapBackground({
-    initPoint: MAP_INIT_CENTER,
-    bounds: REGION_BOUNDING_BOX,
+    bounds: getWholeRegionBounds(),
     boundsPadding: windowWidth < 768 ? 0 : 150,
   })
   let [gift, setGift] = useGiftState(gifts.initGift(intl.locale))

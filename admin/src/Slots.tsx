@@ -24,7 +24,7 @@ function initSlot(appState: "open" | "closed"): Slot {
   return {
     date: DATES[0],
     time: "11:00",
-    region: REGIONS[0].id,
+    region: REGIONS[0],
     status: appState === "open" ? "available" : "notAvailable",
   };
 }
@@ -100,16 +100,16 @@ export const Slots: React.FC = () => {
           <div className="slots--fieldLabel">Region</div>
           <div className="slots--fieldInput">
             {REGIONS.map((r) => (
-              <label key={r.id} className="slots--radioLabel">
+              <label key={r} className="slots--radioLabel">
                 <input
                   type="radio"
-                  value={r.id}
-                  checked={newSlot.region === r.id}
+                  value={r}
+                  checked={newSlot.region === r}
                   onChange={(evt: React.FormEvent<HTMLInputElement>) =>
                     setNewSlot({ ...newSlot, region: evt.currentTarget.value })
                   }
                 />
-                {r.id}
+                {r}
               </label>
             ))}
           </div>

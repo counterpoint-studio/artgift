@@ -52,6 +52,14 @@ Artists are sent invitations into the app, from which they may see the gifts ass
 
 Artists deliver the gifts, following the itineraries they were assigned.
 
+PHOTO OF AN ART GIFT?
+
+## Development
+
+The code as provided here was used for Art Gifts in Helsinki in August 2020. We believe it should localise to other cities and regions easily, and this guide provides the instructions for doing so.
+
+We do, however, expect some further development work to be needed when the software is used in new kinds of circumstances. We hope you find the source code malleable to your situation, and we do also appreciate contributions in the form of Pull Requests and Issue reports to this repository.
+
 ## Technical Overview
 
 ![system diagram](/docs-assets/artgift-system-diagram.png)
@@ -77,7 +85,7 @@ This technical setup keeps you in the original Helsinki geographic region, local
 
 ### Clone this repository and install
 
-1. Clone this code repository onto your local machine, using the clone URL provided by Github.
+1. Make yourself a (public or private) clone of the repository on Github, and then clone it onto your local machine.
 2. Make sure you have [Node.js](https://nodejs.org/en/) and [Yarn](https://yarnpkg.com/) installed on your local development machine.
 
 ### Prerequisites
@@ -199,20 +207,68 @@ We now have everything ready to run locally.
 
 ## Localisation Guide
 
+After completing the steps in the Setup Guide, you should have fully functioning Art Gift system running locally, with a Firebase backend in the cloud. In this guide, you will customise the app to match the local circumstances of your Art Gift event.
+
 ### Geographic Regions
 
-GeoJSON for the regions in your city
+As described above, Art Gift Slots are divided into geographic regions within a city. These regions should be small enough that artists can move around in them from one gift location to the next. In Helsinki, we divided the city into its seven administrative regions, and you should find a similar division for your city.
 
-### Constants
+Once you've decided on the regions, you'll need to obtain the geometries of these regions as a GeoJSON FeatureCollection. Many city authorities make such data openly available, and it can also be obtained from commercial providers. If you can't find anything else, you can draw your regions on a map yourself using the drawing tools at [geojson.io](https://geojson.io/).
 
-Schedules
-Mapbox country/language codes, address/phone number regexes...
-Date/time formats?
+When you've obtained your GeoJSON data, place it in the file `frontend/src/data/region_data.json`, replacing the Helsinki data.
+
+Then inspect the data, and see which property in the "properties" section contains the name of the region. Make sure this property name matches the value of `REGION_NAME_PROPERTY` in `frontend/src/constants.ts`. For example, if the GeoJSON properties look like this:
+
+```json
+"properties": {
+    "OBJECTID": 50,
+    "Name": "South Boston",
+    "Acres": 1439.8888073099999,
+    "Neighborhood_ID": "17",
+    "SqMiles": 2.25,
+    "ShapeSTArea": 62721306.143917084,
+    "ShapeSTLength": 64998.420282952466
+},
+```
+
+The constant should be define like this:
+
+```ts
+export const REGION_NAME_PROPERTY = "Name";
+```
+
+Once you've done this, you should see the frontpage of the frontend app zoom into your city region.
+
+On the admin side, also make sure the region names in `admin/src/constants.ts` match those found in your GeoJSON - e.g.
+
+```ts
+export const REGIONS = [
+  "Roslindale",
+  "Jamaica Plain",
+  "Mission Hill",
+  "Longwood",
+  "Bay Village",
+  "Leather District",
+  "Chinatown",
+  "North End",
+  "Roxbury",
+  "South End",
+  "Back Bay",
+];
+```
+
+### Schedule
 
 ### Language Strings
 
 Definining language choices, translation files.
 Also the sms/email messages.
+
+### Other Constants
+
+Schedules
+Mapbox country/language codes, address/phone number regexes...
+Date/time formats?
 
 ### Visual Styles
 

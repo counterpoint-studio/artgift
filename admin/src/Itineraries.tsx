@@ -57,10 +57,10 @@ export const Itineraries: React.FC = () => {
     <div className="itineraries">
       <Navigation currentPage="itineraries" />
       {REGIONS.map((r) => (
-        <div key={r.id}>
-          <h2>{r.name.fi}</h2>
+        <div key={r}>
+          <h2>{r}</h2>
           <RegionItineraries
-            regionId={r.id}
+            regionId={r}
             artists={artists}
             onAddItinerary={addItinerary}
             onDeleteItinerary={deleteItinerary}
