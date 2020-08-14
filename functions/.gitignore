@@ -66,3 +66,5 @@ node_modules/
 
 # credentials files
 *credentials.json
+
+.firebaserc
