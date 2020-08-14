@@ -1,7 +1,9 @@
 import * as fs from 'fs';
 import * as admin from 'firebase-admin';
 
-admin.initializeApp();
+admin.initializeApp({
+
+});
 
 let db = admin.firestore();
 
@@ -15,12 +17,14 @@ async function initDatabase() {
     let slots = db.collection('slots');
     let reservations = db.collection('reservations');
     let artists = db.collection('artists');
+    let admins = db.collection('admins');
 
     await messages.listDocuments().then(docs => Promise.all(docs.map(d => d.delete())));
     await reservations.listDocuments().then(docs => Promise.all(docs.map(d => d.delete())));
     await gifts.listDocuments().then(docs => Promise.all(docs.map(d => d.delete())));
     await slots.listDocuments().then(docs => Promise.all(docs.map(d => d.delete())));
     await artists.listDocuments().then(docs => Promise.all(docs.map(d => d.delete())));
+    await admins.listDocuments().then(docs => Promise.all(docs.map(d => d.delete())));
 
     let batch = db.batch();
     if (!storeStatus) {
@@ -38,6 +42,9 @@ async function initDatabase() {
             it.assignments = [];
         }
         batch.set(artists.doc(), artist);
+    }
+    for (let adminEmail of seedData.admins) {
+        batch.set(admins.doc(adminEmail), { email: adminEmail });
     }
 
     await batch.commit();
