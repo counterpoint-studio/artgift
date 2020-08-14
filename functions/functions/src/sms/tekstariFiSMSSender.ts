@@ -2,6 +2,11 @@ import * as functions from 'firebase-functions';
 import fetch from 'node-fetch';
 import { URLSearchParams } from 'url';
 
+/**
+ * This SMS provider uses the HTTP API of https://tekstari.fi/ to send SMS messages within Finland.
+ * You can use it as an example for creating your own SMS sender.
+ */
+
 export function sendSMS(message: string, toNumber: string) {
     let cfg = functions.config();
     let smsApiUrl = cfg.artgift.smsapi.url;
