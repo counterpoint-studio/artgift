@@ -1,12 +1,11 @@
 import GeoJsonGeometriesLookup from 'geojson-geometries-lookup';
 
 import { geocodingService } from "./mapbox";
-import { MAPBOX_COUNTRY_CODE, MAPBOX_REGION_PLACE_NAME } from "../constants";
+import { MAPBOX_COUNTRY_CODE, MAPBOX_REGION_PLACE_NAME, ADDRESS_GEOCODING_PREFIX } from "../constants";
 import { Region, GiftLocation } from "../types";
 import { getWholeRegionBounds } from './regionLookup';
 
 export async function findAddresses(query: string, language: string) {
-    console.log(getWholeRegionBounds());
     let res = await geocodingService.forwardGeocode({
         query,
         countries: [MAPBOX_COUNTRY_CODE],
@@ -20,7 +19,7 @@ export async function findAddresses(query: string, language: string) {
 }
 
 export async function locateAddress(address: string, fromRegions: Region[], language: string): Promise<GiftLocation | undefined> {
-    let [addressPrefix] = /.*?\d+/.exec(address);
+    let [addressPrefix] = ADDRESS_GEOCODING_PREFIX.exec(address);
     let res = await geocodingService.forwardGeocode({
         query: addressPrefix,
         countries: [MAPBOX_COUNTRY_CODE],

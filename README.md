@@ -354,9 +354,30 @@ Finally, add a new section to `functions/functions/lib/messages.json` for the ne
 
 ### Other Constants
 
-Schedules
-Mapbox country/language codes, address/phone number regexes...
-Date/time formats?
+#### Mapbox Geocoding Parameters
+
+To help Mapbox autocomplete and geocode street addresses when users type them in, find the following constants in `frontend/src/constants.ts` and edit them to match the geographic region:
+
+```ts
+export const MAPBOX_COUNTRY_CODE = "US";
+export const MAPBOX_REGION_PLACE_NAME = "Boston";
+```
+
+Also find the same constants in `admin/src/constants.src` to apply the same change to address lookup in the admin application as well.
+
+#### Address And Phone Number Validation
+
+To localise the input validation for phone numbers and addresses, open `frontend/src/constants.ts`.
+
+Edit `PHONE_NUMBER_REGEX` into a regular expression that matches phone numbers in your local format.
+
+Edit `ADRESSS_STREET_NUMBER_MATCH` into a regular expression that successfully tests whether a street address contains the necessary street number for the artist to find the address.
+
+Edit `ADDRESS_GEOCODING_PREFIX` into a regular expression that extracts from a street address the part of it that is suitable for geocoordinate lookup. Although the Mapbox geocoding API generally accepts any form of valid street address, we've found that including apartment numbers, zip codes, and such may make it misfire, and it is safer to extract the street name and number only, when possible.
+
+#### Date and Time Formats
+
+If you want to change the format in which dates and times are shown, make the edits you want in `frontend/src/services/dates.ts` for the frontend application,, and `admin/src/util/dateUtils.ts` for the Admin UI.
 
 ### Visual Styles
 

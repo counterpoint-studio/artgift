@@ -34,6 +34,7 @@ import {
   getWholeRegionBounds,
 } from "../services/regionLookup"
 import { initGift } from "../services/gifts"
+import { ADDRESS_STREET_NUMBER_MATCH } from "../constants"
 
 import "./to.scss"
 
@@ -132,7 +133,7 @@ const ToPage = () => {
           error: true,
           message: intl.formatMessage({ id: "validationErrorEmpty" }),
         })
-      } else if (!/\d/.test(address)) {
+      } else if (!ADDRESS_STREET_NUMBER_MATCH.test(address)) {
         setAddressValidationResult({
           error: true,
           message: intl.formatMessage({

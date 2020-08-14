@@ -17,6 +17,7 @@ import { formatDate, formatTime } from "../services/dates"
 
 import "./artist.scss"
 import { getWholeRegionBounds } from "../services/regionLookup"
+import { PHONE_NUMBER_PRIVACY_PREFIX } from "../constants"
 
 const emptyPoints = []
 
@@ -197,7 +198,9 @@ function renderAssignment(
                   </a>
                   <br />
                   <a className="phone" href={`tel:#31#${gift.fromPhoneNumber}`}>
-                    <span className="phonePrivacyPrefix">#31#</span>
+                    <span className="phonePrivacyPrefix">
+                      {PHONE_NUMBER_PRIVACY_PREFIX}
+                    </span>
                     {gift.fromPhoneNumber}
                   </a>
                 </td>
