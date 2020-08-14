@@ -5,28 +5,29 @@ import { MAPBOX_COUNTRY_CODE, MAPBOX_REGION_PLACE_NAME } from "../constants";
 import { Region, GiftLocation } from "../types";
 import { getWholeRegionBounds } from './regionLookup';
 
-export async function findAddresses(query: string) {
+export async function findAddresses(query: string, language: string) {
+    console.log(getWholeRegionBounds());
     let res = await geocodingService.forwardGeocode({
         query,
         countries: [MAPBOX_COUNTRY_CODE],
         types: ['address'],
         autocomplete: true,
-        language: [MAPBOX_LANGUAGE_CODE],
         bbox: getWholeRegionBounds(),
+        language: [language],
         limit: 10
     }).send()
     return res.body.features.filter(isInGeneralRegion).map(f => f.text);
 }
 
-export async function locateAddress(address: string, fromRegions: Region[]): Promise<GiftLocation | undefined> {
+export async function locateAddress(address: string, fromRegions: Region[], language: string): Promise<GiftLocation | undefined> {
     let [addressPrefix] = /.*?\d+/.exec(address);
     let res = await geocodingService.forwardGeocode({
         query: addressPrefix,
         countries: [MAPBOX_COUNTRY_CODE],
         types: ['address'],
         autocomplete: false,
-        language: [MAPBOX_LANGUAGE_CODE],
         bbox: getWholeRegionBounds(),
+        language: [language],
         limit: 1
     }).send()
     if (res.body.features.length > 0) {

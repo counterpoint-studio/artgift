@@ -91,7 +91,11 @@ const ToPage = () => {
   let onUpdateAddressLocation = useDebounceCallback(
     useCallback(
       async (address: string) => {
-        let addressLoc = await addresses.locateAddress(address, regions)
+        let addressLoc = await addresses.locateAddress(
+          address,
+          regions,
+          intl.locale
+        )
         if (addressLoc) {
           let slots = await gifts.getGiftSlotsInRegion(addressLoc.region)
           let availableSlots = slots.filter(s => s.status === "available")
@@ -114,7 +118,7 @@ const ToPage = () => {
           setGift(gift => ({ ...gift, toLocation: undefined }))
         }
       },
-      [regions]
+      [regions, intl.locale]
     ),
     400
   )
@@ -150,12 +154,14 @@ const ToPage = () => {
           !/\d/.test(address) &&
           (!suggestionSelected || address.length < 4)
         ) {
-          addresses.findAddresses(address).then(setAddressSuggestions)
+          addresses
+            .findAddresses(address, intl.locale)
+            .then(setAddressSuggestions)
         } else {
           setAddressSuggestions([])
         }
       },
-      [suggestionSelected]
+      [suggestionSelected, intl.locale]
     ),
     300
   )
