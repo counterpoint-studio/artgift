@@ -13,7 +13,6 @@ import BackButton from "../components/backButton"
 
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
 import { MapBackgroundContext } from "../../plugins/gatsby-plugin-map-background/mapBackgroundContext"
-import { MAP_INIT_CENTER, REGION_BOUNDING_BOX } from "../constants"
 import { initGift, subscribeToGiftSlotsOverview } from "../services/gifts"
 
 import { useMounted, useGiftState } from "../hooks"
@@ -22,6 +21,7 @@ import "./info.scss"
 import {
   getRandomLocationsForVisualisation,
   getRegionGeoJSON,
+  getWholeRegionBounds,
 } from "../services/regionLookup"
 
 const InfoPage: React.FC<PageProps> = () => {
@@ -32,8 +32,7 @@ const InfoPage: React.FC<PageProps> = () => {
 
   let mapContext = useContext(MapBackgroundContext)
   let { isMoving: isMapMoving } = useMapBackground({
-    initPoint: MAP_INIT_CENTER,
-    bounds: REGION_BOUNDING_BOX,
+    bounds: getWholeRegionBounds(),
     boundsPadding: windowWidth < 768 ? 0 : 150,
   })
   let [attendanceAccepted, setAttendanceAccepted] = useState(false)

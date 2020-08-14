@@ -12,11 +12,11 @@ import Layout from "../components/layout"
 import SEO from "../components/seo"
 import { Gift, GiftSlot, Artist } from "../types"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
-import { REGION_BOUNDING_BOX } from "../constants"
 import * as gifts from "../services/gifts"
 import { formatDate, formatTime } from "../services/dates"
 
 import "./artist.scss"
+import { getWholeRegionBounds } from "../services/regionLookup"
 
 const emptyPoints = []
 
@@ -68,7 +68,7 @@ const ArtistPage: React.FC<PageProps> = ({ location }) => {
   useMapBackground({
     bounds: detailedAssignment?.gift?.toLocation
       ? boundsAround(detailedAssignment?.gift.toLocation.point)
-      : REGION_BOUNDING_BOX,
+      : getWholeRegionBounds(),
     boundsPadding: 0,
     isSplitScreen: windowWidth < 768,
     points: emptyPoints,

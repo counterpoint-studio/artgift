@@ -10,12 +10,12 @@ import Layout from "../components/layout"
 import SEO from "../components/seo"
 import { Gift, GiftSlot, AppState } from "../types"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
-import { REGION_BOUNDING_BOX } from "../constants"
 import * as gifts from "../services/gifts"
 import { formatDate, formatTime } from "../services/dates"
 
 import "./gift.scss"
 import { useMounted } from "../hooks"
+import { getWholeRegionBounds } from "../services/regionLookup"
 
 const emptyPoints = []
 
@@ -59,7 +59,7 @@ const GiftPage: React.FC<PageProps> = ({ location }) => {
   let { isMoving: isMapMoving } = useMapBackground({
     bounds: gift?.toLocation
       ? boundsAround(gift.toLocation.point)
-      : REGION_BOUNDING_BOX,
+      : getWholeRegionBounds(),
     boundsPadding: 0,
     isSplitScreen: windowWidth < 768,
     points: emptyPoints,

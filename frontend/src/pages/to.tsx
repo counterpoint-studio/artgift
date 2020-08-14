@@ -22,11 +22,11 @@ import * as gifts from "../services/gifts"
 
 import { MapBackgroundContext } from "../../plugins/gatsby-plugin-map-background/mapBackgroundContext"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
-import { REGION_BOUNDING_BOX } from "../constants"
 import { useMounted, useGiftState } from "../hooks"
 import {
   getRegionGeoJSON,
   getRandomLocationsForVisualisation,
+  getWholeRegionBounds,
 } from "../services/regionLookup"
 import { initGift } from "../services/gifts"
 
@@ -38,7 +38,7 @@ const ToPage = () => {
   let regions = useMemo(() => getRegionGeoJSON(), [])
   let mapContext = useContext(MapBackgroundContext)
   let { isMoving: isMapMoving } = useMapBackground({
-    bounds: REGION_BOUNDING_BOX,
+    bounds: getWholeRegionBounds(),
     boundsPadding: 0,
     focusPoint: undefined,
   })

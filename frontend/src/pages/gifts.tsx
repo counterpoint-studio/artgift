@@ -25,11 +25,11 @@ import {
 import {
   getRegionGeoJSON,
   getRandomLocationsForVisualisation,
+  getWholeRegionBounds,
 } from "../services/regionLookup"
 import { MapBackgroundContext } from "../../plugins/gatsby-plugin-map-background/mapBackgroundContext"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
 import { useMounted, useGiftState } from "../hooks"
-import { REGION_BOUNDING_BOX } from "../constants"
 import { GiftSlot } from "../types"
 
 import "./gifts.scss"
@@ -50,7 +50,7 @@ const GiftsPage: React.FC<PageProps> = ({ location }) => {
   let { isMoving: isMapMoving } = useMapBackground({
     bounds: gift?.toLocation
       ? regions.find(r => r.name === gift.toLocation.region).bounds
-      : REGION_BOUNDING_BOX,
+      : getWholeRegionBounds(),
     boundsPadding: 0,
     focusPoint: gift.toLocation && {
       className: "giftsPage",

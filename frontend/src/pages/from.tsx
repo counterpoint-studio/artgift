@@ -12,12 +12,13 @@ import BackButton from "../components/backButton"
 
 import { useMounted, useGiftState } from "../hooks"
 import { useMapBackground } from "../../plugins/gatsby-plugin-map-background/hooks"
-import { REGION_BOUNDING_BOX, PHONE_NUMBER_REGEX } from "../constants"
+import { PHONE_NUMBER_REGEX } from "../constants"
 import { getGiftSlot, initGift, saveGift } from "../services/gifts"
 import { GiftSlot } from "../types"
 import { formatTime, formatDate, formatDuration } from "../services/dates"
 
 import "./from.scss"
+import { getWholeRegionBounds } from "../services/regionLookup"
 
 const emptyPoints = []
 
@@ -62,7 +63,7 @@ const FromPage = () => {
   let { isMoving: isMapMoving } = useMapBackground({
     bounds: gift.toLocation
       ? boundsAround(gift.toLocation.point)
-      : REGION_BOUNDING_BOX,
+      : getWholeRegionBounds(),
     boundsPadding: 0,
     regions: [],
     points: emptyPoints,
