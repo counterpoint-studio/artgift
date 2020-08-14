@@ -3,6 +3,7 @@ import mapboxgl, { LngLatBoundsLike } from "mapbox-gl"
 import { useWindowSize } from "@react-hook/window-size"
 
 import "./mapBackground.scss"
+import { MAPBOX_STYLE_URL } from "../../src/constants"
 
 mapboxgl.accessToken = process.env.GATSBY_MAPBOX_ACCESS_TOKEN
 
@@ -51,7 +52,7 @@ const MapBackground: React.FC<MapBackgroundProps> = ({
   useEffect(function initMap() {
     let map = new mapboxgl.Map({
       container: mapEl.current,
-      style: "mapbox://styles/teropa/ckbc1rriu0mcx1inu9wlkna38",
+      style: MAPBOX_STYLE_URL,
       zoom: INITIAL_ZOOM_LEVEL,
       pitch: INITIAL_PITCH_ANGLE,
       attributionControl: false,

@@ -1,5 +1,6 @@
 export const MAPBOX_COUNTRY_CODE = 'US';
 export const MAPBOX_REGION_PLACE_NAME = 'Boston';
+export const MAPBOX_STYLE_URL = "mapbox://styles/teropa/ckbc1rriu0mcx1inu9wlkna38";
 
 export const REGION_NAME_PROPERTY = 'Name';
 

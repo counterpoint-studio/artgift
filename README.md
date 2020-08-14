@@ -381,8 +381,27 @@ If you want to change the format in which dates and times are shown, make the ed
 
 ### Visual Styles
 
-Where to find the CSS to change. Where to put assets like logos and how to use them...
-Designing mapbox map style.
+Modifying the visual style of the Art Gift frontend app is done primarily via three routes: Imagery, UI styles, and map styles.
+
+### Customising Imagery
+
+You'll find the image assets used in the app, including the logo and hero images, from `frontend/src/images`. Replace your own brand assets here.
+
+As a special case, the head sponsor (which in Helsinki was [Helsingin Sanomat](https://hs.fi)) link and logo reference can be found in `frontend/src/components/footer.tsx`. You'll want to update both the image reference and the link target for this, or remove them if you don't wish to display a sponsor.
+
+### Customising UI Styles
+
+You'll find all the CSS for the application in modular `.scss` files for each page and component. However, the most important customisation points you may need have been extracted to two master stylesheets:
+
+- `frontend/src/components/variables.scss` for default fonts, colour palette, sizing, and animation timings.
+- `frontend/src/component/typography.scss` for font definitions.
+
+### Customising Map Styles
+
+Since the map is one of the most dominant visual elements in the application, you may want to customise it to match your visual style.
+
+Go to [Mapbox Studio](https://studio.mapbox.com/) with your Mapbox account, and author a style to your liking.
+Then copy the style URL of your new style, and replace the constant `MAPBOX_STYLE_URL` in `frontend/src/constants.ts` with it.
 
 ## Deployment Guide
 
