@@ -15,14 +15,12 @@ async function initDatabase() {
     let slots = db.collection('slots');
     let reservations = db.collection('reservations');
     let artists = db.collection('artists');
-    let auditLogs = db.collection('auditlogs');
 
     await messages.listDocuments().then(docs => Promise.all(docs.map(d => d.delete())));
     await reservations.listDocuments().then(docs => Promise.all(docs.map(d => d.delete())));
     await gifts.listDocuments().then(docs => Promise.all(docs.map(d => d.delete())));
     await slots.listDocuments().then(docs => Promise.all(docs.map(d => d.delete())));
     await artists.listDocuments().then(docs => Promise.all(docs.map(d => d.delete())));
-    await auditLogs.listDocuments().then(docs => Promise.all(docs.map(d => d.delete())));
 
     let batch = db.batch();
     if (!storeStatus) {

@@ -19,7 +19,6 @@ import { Gifts } from "./Gifts";
 import { Artists } from "./Artists";
 import { Itineraries } from "./Itineraries";
 import { Admins } from "./Admins";
-import { AuditLog } from "./AuditLog";
 
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -52,9 +51,6 @@ function App() {
         </PrivateRoute>
         <PrivateRoute exact path="/admins">
           <Admins />
-        </PrivateRoute>
-        <PrivateRoute exact path="/auditlog">
-          <AuditLog />
         </PrivateRoute>
         <Route exact path="/">
           <Redirect to="/slots" />
