@@ -405,9 +405,69 @@ Then copy the style URL of your new style, and replace the constant `MAPBOX_STYL
 
 ## Deployment Guide
 
-Can be anywhere, recommend easy deployment on Netlify.
-Build environment variables.
-DNS: Two domains. Firebase auth domain. Firebase config domain.
+Since all the backend functionality of the Art Gift system is deployed on Firebase, your only deployment concern is getting the two applications - the frontend and the admin - deployed to a publicly accessible server.
+
+### Netlify Deployment
+
+We hosted the Helsinki applications on [Netlify](https://www.netlify.com/) and can recommend it. It is easy to setup, reliable, and free.
+
+Sign up to Netlify, and follow their instructions to create two new sites from Git, and when prompted choose your clone of this repository on Github. For the frontend app, apply the following build settings:
+
+- Base directory: `frontend`
+- Build command: `gatsby build`
+- Publish directory: `frontend/public/`
+
+For the admin app:
+
+- Base directory: `admin`
+- Build command: `CI="" yarn build`
+- Publish directory: `admin/build`
+
+For both apps, add Environment Variables that match all of those in the local `.env.development` files for frontend and admin, respectively. This allows Netlify to have access to the configuration for Firebase and Mapbox when it builds the applications.
+
+Once set up in this way, Netlify will automatically build and deploy a new version of the apps when you push changes to Github.
+
+### Manual Deployment
+
+If you want to host the apps on a static file server of your own, you can build them locally and then copy the files over to the server.
+
+For the frontend, first make a copy of the dev environment variables to use the same ones for the production build:
+
+```
+cp frontend/.env.development frontend/.env.production
+```
+
+```
+cd frontend
+yarn build
+```
+
+Once the build is finished all the application assets will be in the `public` directory. Copy them to your server.
+
+For the admin, again, make a copy of the environment variables:
+
+```
+cp admin/.env.development admin/.env.production
+```
+
+Then build the admin app:
+
+```
+cd admin
+yarn build
+```
+
+Once the build is finished all the application assets will be in the `build` directory. Copy them to your server.
+
+### Domain Configuration
+
+Whether the apps are hosted on Netlify or elsewhere, we recommend using two separate domains for the two applications. (In Helsinki we used `taidelahja.helsinkifest.fi` and `taidelahja-admin.helsinkifest.fi`.)
+
+Once you know what your domains are, remember to also configure them to
+
+1. Firebase Authentication as described above in the Firebase setup.
+2. Firebase Functions configuration variable `artgift.baseurl` as described above in the Firebase deployment.
+3. The `MAIN_APP_HOST` constant in `admin/src/constants.ts` so that the Admin UI can render links to the frontend app correctly.
 
 ## Administration Guide
 
