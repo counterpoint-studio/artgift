@@ -1,14 +1,5 @@
 @import "variables.scss";
 
-/* Trio Grotesk Medium */
-@font-face {
-  font-family: "Trio Grotesk";
-  font-style: normal;
-  font-weight: normal;
-  src: url("../fonts/TrioGrotesk-Medium.woff2") format("woff2"),
-    url("../fonts/TrioGrotesk-Medium.woff") format("woff");
-}
-
 body {
   font-kerning: normal;
   font-variant-ligatures: common-ligatures contextual;

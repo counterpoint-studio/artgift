@@ -11,8 +11,10 @@ $fontSizeBase: 15px;
 $fontSizeBaseMobile: 13px;
 $fontSizeBaseMobileXS: 12px;
 
-$fontStackHeader: "Trio Grotesk", -apple-system, "Helvetica Neue", sans-serif;
-$fontStackBody: "Trio Grotesk", -apple-system, "Helvetica Neue", sans-serif;
+$fontStackHeader: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+  Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+$fontStackBody: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+  Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 
 // Transitions
 
