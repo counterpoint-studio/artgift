@@ -259,10 +259,98 @@ export const REGIONS = [
 
 ### Schedule
 
-### Language Strings
+To specify the dates and times during which your Art Gift event runs, open `admin/src/constants.ts`, and find the `DATES` constant. Edit it to include all the dates you'll be running Art Gifts on in `YYYYMMDD` format, e.g.
 
-Definining language choices, translation files.
-Also the sms/email messages.
+```ts
+export const DATES = ["20200910", "20200911", "20200912", "20200913"];
+```
+
+To specify what times of day you will be creating slots for, find the `HOURS` and `MINUTES` constants in the same file. In `HOURS`, specify the hours of day you'll be running Art Gifts, and in `MINUTES` the minutes of each hour.
+
+For example, to support slots between 10AM and 6PM, every hour, on the hour, specify:
+
+```ts
+export const HOURS = [10, 11, 12, 13, 14, 15, 16, 17, 18];
+export const MINUTES = [0];
+```
+
+Or to support slots between 12PM and 3PM, one every fifteen minutes:
+
+```ts
+export const HOURS = [12, 13, 14];
+export const MINUTES = [0, 15, 30, 45];
+```
+
+Note that changing these constants do not automatically generate any bookable gift slots. They merely specify the parameters by which admin users may create slots using the Admin UI.
+
+### Language Strings and i18n
+
+The frontend application and the outgoing email and SMS messages support multilingual use, and two languages are included out of the box: English (UK) and Finnnish.
+
+You will certainly want to edit the language strings provided, as many of them contain information specific to the individual Art Gift event.
+
+#### Editing UI Strings
+
+To edit UI strings to match the specifics of your event and your preferred Tone of Voice, find the existing i18n files in `frontend/src/intl` and make any edits you want. Pay special attention to any URLs, email addresses, dates, and times included in them, to match the messaging of your event.
+
+Note that after making edits, you'll need to restart the frontend app server (the `yarn start` command) before you can see them in your local development environment.
+
+#### Editing Outgoing Email and SMS content
+
+To edit the content of the outgoing messaging, find the file `functions/functions/lib/messages.json` and make your edits there.
+
+Then redeploy the Firebase Functions to apply these changes:
+
+```
+cd functions
+firebase deploy --only=functions
+```
+
+#### Removing a language
+
+To remove a language you don't want to include (when e.g. you dont want Finnish to be included in the language choices), open `frontend/gatsby-config.js` and find the section for `gatsby-plugin-intl`. Edit it to contain only the languages you want, e.g.
+
+```js
+{
+    resolve: `gatsby-plugin-intl`,
+    options: {
+    path: `${__dirname}/src/intl`,
+    languages: [`en`],
+    defaultLanguage: `en`,
+    redirect: true,
+    },
+},
+```
+
+#### Adding a language
+
+To add a new language, first add it to the `gatsby-plugin-intl` section of `frontend/gatsby-config.js`, e.g.:
+
+```js
+{
+    resolve: `gatsby-plugin-intl`,
+    options: {
+    path: `${__dirname}/src/intl`,
+    languages: [`en`, `is`],
+    defaultLanguage: `en`,
+    redirect: true,
+    },
+},
+```
+
+Then add a new language file to `frontend/src/intl`. We recommend you copy one of the existing language files, and then edit it to translate to the new language:
+
+```
+cp frontend/src/intl/en.json frontend/src/intl/is.json
+```
+
+Then edit _all_ the language files in `frontend/src/intl` to include a translation for the name of the new language. (We use this when letting users choose the language of the gift receiver - which may be different than the UI language of the gift giver.)
+
+```json
+  "toFormLabelLanguageis": "Icelandic",
+```
+
+Finally, add a new section to `functions/functions/lib/messages.json` for the new language, again first copying the section of one of the existing languages, and then translating it.
 
 ### Other Constants
 
