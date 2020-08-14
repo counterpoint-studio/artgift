@@ -4,11 +4,6 @@ import classNames from "classnames"
 
 import "./language.scss"
 
-const languageName = {
-  en: "En",
-  fi: "Fi",
-}
-
 const Language = () => (
   <div className="language">
     <IntlContextConsumer>
@@ -21,7 +16,7 @@ const Language = () => (
             key={language}
             onClick={() => changeLocale(language)}
           >
-            {languageName[language]}
+            {language}
           </a>
         ))
       }
