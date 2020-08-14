@@ -3,7 +3,7 @@ import GeoJsonGeometriesLookup from 'geojson-geometries-lookup';
 import { FeatureCollection } from 'geojson';
 
 import { Region, GiftLocation } from '../types';
-import { MAPBOX_COUNTRY_CODE, MAPBOX_LANGUAGE_CODE, REGION_BOUNDING_BOX } from '../constants';
+import { MAPBOX_COUNTRY_CODE } from '../constants';
 
 import regionData from '../data/region_data.json';
 
@@ -23,8 +23,7 @@ export async function locateAddress(address: string, fromRegions: Region[]): Pro
         countries: [MAPBOX_COUNTRY_CODE],
         types: ['address'],
         autocomplete: false,
-        bbox: [...REGION_BOUNDING_BOX[0], ...REGION_BOUNDING_BOX[1]] as any,
-        language: [MAPBOX_LANGUAGE_CODE],
+        language: ['en'],
         limit: 1
     }).send()
     if (res.body.features.length > 0) {
