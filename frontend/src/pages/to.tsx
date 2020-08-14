@@ -6,7 +6,12 @@ import React, {
   useContext,
 } from "react"
 import Helmet from "react-helmet"
-import { useIntl, IntlShape, navigate } from "gatsby-plugin-intl"
+import {
+  useIntl,
+  IntlShape,
+  navigate,
+  IntlContextConsumer,
+} from "gatsby-plugin-intl"
 import { Textbox, Textarea } from "react-inputs-validation"
 import AutoSuggest from "react-autosuggest"
 import { useDebounceCallback } from "@react-hook/debounce"
@@ -246,23 +251,28 @@ const ToPage = () => {
               {intl.formatMessage({ id: "toFormLabelLanguage" })}
               <span className="requiredField">*</span>
             </label>
-            <select
-              id="toLanguage"
-              value={gift.toLanguage}
-              onChange={evt =>
-                setGift({
-                  ...gift,
-                  toLanguage: evt.currentTarget.value,
-                })
-              }
-            >
-              <option value="fi">
-                {intl.formatMessage({ id: "toFormLabelLanguageFi" })}
-              </option>
-              <option value="en">
-                {intl.formatMessage({ id: "toFormLabelLanguageEn" })}
-              </option>
-            </select>
+            <IntlContextConsumer>
+              {({ languages }) => (
+                <select
+                  id="toLanguage"
+                  value={gift.toLanguage}
+                  onChange={evt =>
+                    setGift({
+                      ...gift,
+                      toLanguage: evt.currentTarget.value,
+                    })
+                  }
+                >
+                  {languages.map(language => (
+                    <option key={language} value={language}>
+                      {intl.formatMessage({
+                        id: `toFormLabelLanguage${language}`,
+                      })}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </IntlContextConsumer>
           </div>
           <div className="inputGroup">
             <label>
