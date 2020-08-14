@@ -471,8 +471,64 @@ Once you know what your domains are, remember to also configure them to
 
 ## Administration Guide
 
-Store lifecycle.
-Admin features overview.
+Once everything up and running, localized, and customised, the administration of the system mainly happens through the Admin UI. The admin is divided into a handful of functional areas:
+
+### Store State Management
+
+In the top left corner of the admin, you will see the current store state, and buttons for changing it.
+
+![Admin store states](/docs-assets/admin-store-states.png)
+
+The store states are:
+
+- _Pre-reservations_: Bookings are not yet open. The frontend app does not allow gift bookings, and instead shows a message instructing users to come back later.
+- _Open_: Bookings are open, and people may use the frontend app to book gifts.
+- _Paused_: Bookings are temporarily closed (e.g. because of a technical or administrative problem). Bookings are not possible, and the frontend app shows a message about the fact.
+- _Closed_: Bookings are no longer open, and cannot be made via the frontend app. The frontpage shows a message about the fact. Note: That same message is also displayed even if the store state has not been set to Closed, if every single slot has been booked.
+
+### Slot Management
+
+In the _Slots_ section, you can manage Slots that may then be booked by people. This should generally be done before the store is opened, according to how many artists you plan to assign to each region.
+
+The page lists all the slots that have been added to the system, as well as their reservation state - whether they currently have a gift attached to them or not. Slots that are still available may also be deleted.
+
+At the bottom of the page, there is a form that may be used to add new Slots to the system, by choosing a region, date, and time.
+
+### Gift Management & Approval
+
+In the _Gifts_ section, you see all the Gifts people have booked. They are shown in reverse chronological order.
+
+This is where most of your time will be spent when the store is open. People will make bookings, which will turn up on this list in real time in the "Pending" state. Review each one to see whether it is appropriate and take one of two actions:
+
+- _Approve_ the gift: The slot will be permanently reserved for this gift, and added to an Artist's itinerary. The gift giver is sent a notification email/SMS that their gift has been confirmed.
+- _Reject_ the gift: The slot will be released back for someone else to book. The gift giver is sent a notification email/SMS that their gift has been rejected.
+
+You may also _Delete_ a gift, which releases the reserved slot back, but does _not_ send messages to anyone. It is meant for special cases and testing only.
+
+### Artist Management
+
+In the _Artists_ section, you manage the Artists that will deliver gifts: their names and contact information. You can add, edit and delete artists at will.
+
+Each artist will have an automatically generated page in the frontend application, which will list all their itineraries and gift details. You'll find the link to each artist's Artist page here, and you can use the Send Invitation button to send them a link to their own page over email and SMS.
+
+### Artist Itinerary Management
+
+In the _Itineraries_ section, you assign the artists itineraries, for when they should be at a given region delivering gifts.
+
+There is a subheading for each geographic region, and under it a list of Artist time windows, which you can add and delete. Once you have done so, _the system will automatically assign gifts to the artists in real time_, and this is done again whenever a new Gift is confirmed or cancelled. You can see which gifts are under each itinerary by clicking to expand it. The _Gifts_ page also shows which artist each gift has been assigned.
+
+The idea behind the itinerary assignment process is:
+
+1. You assign artists to regions for specific dates and time windows. You ensure that this is done so that there are enough artists within each region for the amount of slots you have added there.
+2. The system automatically generates itineraries for the artists, by assiggning them gifts from within the time windows and regions, in real time, as they are booked. The system tries to divide gifts evenly between artists, and to maximise the time between gifts for each artists to allow them time to move from ono location to another.
+
+This automated process is run again when new new gifts are booked, which means that artist itineraries may change dramatically while bookings are open. Artists should know that the scheulds they can see are not final ones, until the bookings close.
+
+Once the store state is set to "Closed", the automated itinerary generation is no longer done, and artist itineraries are final. You may still reject gifts on the Gift page, but this will not release the Slot anymore, but mark it as a "late rejection" which shows up on the artist's schedule page as a cancelled gift.
+
+### Admin Management
+
+In the _Admin_ section you specify the email addresses of the people who are allowed to access the Admin interface. Only emails on this list will pass through to the admin from Google Authentication.
 
 ## License
 
