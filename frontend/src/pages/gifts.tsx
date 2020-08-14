@@ -151,6 +151,7 @@ const GiftsPage: React.FC<PageProps> = ({ location }) => {
           {intl.formatMessage({ id: "giftsTitle" })}:{" "}
           {intl.formatMessage({
             id: `region${camelCase(gift.toLocation?.region.toLowerCase())}`,
+            defaultMessage: gift.toLocation?.region,
           })}
         </h1>
         {(location?.state as any)?.reservationExpired && (

@@ -107,6 +107,7 @@ const ArtistPage: React.FC<PageProps> = ({ location }) => {
                       {formatTime(it.from.time)} - {formatTime(it.to.time)} /{" "}
                       {intl.formatMessage({
                         id: `region${camelCase(it.region.toLowerCase())}`,
+                        defaultMessage: it.region,
                       })}
                     </div>
                   </div>
