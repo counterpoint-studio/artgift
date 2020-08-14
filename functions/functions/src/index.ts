@@ -1,15 +1,13 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import Handlebars from 'handlebars';
-import fetch from 'node-fetch';
-import mandrill from 'mandrill-api';
 import { backOff } from 'exponential-backoff';
 
-import { URLSearchParams } from 'url';
 import { sortBy, last, pick, isEqual } from 'lodash';
 
 import { RESERVATION_PERIOD, REMINDER_PERIOD, TIME_ZONE_UTC_OFFSET, DEFAULT_LANGUAGE, NOOP_PHONE_NUMBER, BACKUP_BUCKET_NAME } from './constants';
-
+import { sendSMS } from './sms';
+import { sendEmail } from './email';
 
 admin.initializeApp();
 
@@ -546,85 +544,7 @@ export const sendMessages = functions.region('europe-west1').pubsub.schedule('ev
     });
 });
 
-function sendSMS(message: string, toNumber: string) {
-    let cfg = functions.config();
-    let smsApiUrl = cfg.artgift.smsapi.url;
-    let smsApiUsername = cfg.artgift.smsapi.username;
-    let smsApiPassword = cfg.artgift.smsapi.password;
-    let params = new URLSearchParams();
-    params.append('sms_username', smsApiUsername);
-    params.append('sms_password', smsApiPassword);
-    params.append('sms_dest', normalisePhoneNumber(toNumber));
-    params.append('sms_unicode', hexEncode(message));
-    return fetch(smsApiUrl, {
-        method: 'POST',
-        body: params
-    }).then(res => res.text()).then(resText => {
-        let [status, message] = resText.split('\n');
-        if (status === 'OK') {
-            return true;
-        } else {
-            throw new Error('SMS API error: ' + message);
-        }
-    })
-}
 
-function sendEmail(subject: string, body: string, toEmail: string, toName: string) {
-    let cfg = functions.config();
-    let fromEmail = cfg.artgift.emailapi.fromaddress;
-    let fromName = cfg.artgift.emailapi.fromname;
-    let mandrillClient = new mandrill.Mandrill(functions.config().artgift.emailapi.apikey);
-    return new Promise((res) => mandrillClient.messages.send({
-        message: {
-            subject,
-            html: body,
-            from_email: fromEmail,
-            from_name: fromName,
-            to: [{
-                email: toEmail,
-                name: toName,
-                type: 'to'
-            }],
-            auto_text: true
-        }
-    }, result => {
-        console.log('Email API response', result, 'for request', {
-            message: {
-                subject,
-                html: body,
-                from_email: fromEmail,
-                from_name: fromName,
-                to: [{
-                    email: toEmail,
-                    name: toName,
-                    type: 'to'
-                }],
-                auto_text: true
-            }
-        });
-        res();
-    }));
-}
-
-function normalisePhoneNumber(number: string) {
-    number = number.replace(/\s+/g, '');
-    if (number.startsWith('0')) {
-        return '+358' + number.substring(1);
-    } else if (number.startsWith('358')) {
-        return '+' + number;
-    } else {
-        return number;
-    }
-}
-
-function hexEncode(str: string) {
-    let result = "";
-    for (let i = 0; i < str.length; i++) {
-        let hex = str.charCodeAt(i).toString(16);
-        result += ("000" + hex).slice(-4);
-    }
-    return result
-}
 
 function formatDate(dateS: string) {
     let m = +dateS.substring(4, 6)
