@@ -75,104 +75,110 @@ export const Artists: React.FC = () => {
 
   return (
     <div className="artists">
-      <Navigation currentPage="artists" />
-      <table className="artists--list">
-        <thead></thead>
-        <tbody>
-          {artists.map((artist, idx) => (
-            <tr key={idx}>
-              <td>{artist.name}</td>
-              <td>
-                {artist.phoneNumber} {artist.email}
-              </td>
-              <td>
-                {artist.invitationTrigger
-                  ? `Invitation sent ${getTriggerInvitationTime(
-                      artist.invitationTrigger
-                    )}`
-                  : "No invitation sent"}
-                <button
-                  onClick={() => onTriggerInvitation(artist)}
-                  disabled={!artist.email && !artist.phoneNumber}
-                  title={
-                    !artist.email && !artist.phoneNumber
-                      ? "Add an email address and/or phone number first"
-                      : ""
-                  }
-                >
-                  Send
-                </button>
-              </td>
-              <td>
-                <a
-                  href={`${MAIN_APP_HOST}/artist?id=${artist.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Artist page link
-                </a>
-              </td>
-              <td>
-                <button onClick={() => setEditingArtist(artist)}>Edit</button>
-                <button onClick={() => onDeleteArtist(artist)}>Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <form className="artists--editArtist" onSubmit={onSaveArtist}>
-        <h1>{editingArtist.id ? "Edit" : "Add"} Artist</h1>
-        <div className="artists--field">
-          <div className="artists--fieldLabel">Name</div>
-          <div className="artists--fieldInput">
-            <input
-              type="text"
-              value={editingArtist.name}
-              onChange={(e) =>
-                setEditingArtist({ ...editingArtist, name: e.target.value })
-              }
-            />
+      <header className="header">
+        <Navigation currentPage="artists" />
+      </header>
+
+      <main className="main">
+        <h2>All Artists</h2>
+        <table className="artists--list">
+          <thead></thead>
+          <tbody>
+            {artists.map((artist, idx) => (
+              <tr key={idx}>
+                <td>{artist.name}</td>
+                <td>
+                  {artist.phoneNumber} {artist.email}
+                </td>
+                <td>
+                  {artist.invitationTrigger
+                    ? `Invitation sent ${getTriggerInvitationTime(
+                        artist.invitationTrigger
+                      )}`
+                    : "No invitation sent"}
+                  <button
+                    onClick={() => onTriggerInvitation(artist)}
+                    disabled={!artist.email && !artist.phoneNumber}
+                    title={
+                      !artist.email && !artist.phoneNumber
+                        ? "Add an email address and/or phone number first"
+                        : ""
+                    }
+                  >
+                    Send
+                  </button>
+                </td>
+                <td>
+                  <a
+                    href={`${MAIN_APP_HOST}/artist?id=${artist.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Artist page link
+                  </a>
+                </td>
+                <td>
+                  <button onClick={() => setEditingArtist(artist)}>Edit</button>
+                  <button onClick={() => onDeleteArtist(artist)}>Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <form className="artists--editArtist" onSubmit={onSaveArtist}>
+          <h2>{editingArtist.id ? "Edit" : "Add"} Artist</h2>
+          <div className="artists--field">
+            <div className="artists--fieldLabel">Name</div>
+            <div className="artists--fieldInput">
+              <input
+                type="text"
+                value={editingArtist.name}
+                onChange={(e) =>
+                  setEditingArtist({ ...editingArtist, name: e.target.value })
+                }
+              />
+            </div>
           </div>
-        </div>
-        <div className="artists--field">
-          <div className="artists--fieldLabel">Phone number</div>
-          <div className="artists--fieldInput">
-            <input
-              type="tel"
-              value={editingArtist.phoneNumber}
-              onChange={(e) =>
-                setEditingArtist({
-                  ...editingArtist,
-                  phoneNumber: e.target.value,
-                })
-              }
-            />
+          <div className="artists--field">
+            <div className="artists--fieldLabel">Phone number</div>
+            <div className="artists--fieldInput">
+              <input
+                type="tel"
+                value={editingArtist.phoneNumber}
+                onChange={(e) =>
+                  setEditingArtist({
+                    ...editingArtist,
+                    phoneNumber: e.target.value,
+                  })
+                }
+              />
+            </div>
           </div>
-        </div>
-        <div className="artists--field">
-          <div className="artists--fieldLabel">Email</div>
-          <div className="artists--fieldInput">
-            <input
-              type="email"
-              value={editingArtist.email}
-              onChange={(e) =>
-                setEditingArtist({ ...editingArtist, email: e.target.value })
-              }
-            />
+          <div className="artists--field">
+            <div className="artists--fieldLabel">Email</div>
+            <div className="artists--fieldInput">
+              <input
+                type="email"
+                value={editingArtist.email}
+                onChange={(e) =>
+                  setEditingArtist({ ...editingArtist, email: e.target.value })
+                }
+              />
+            </div>
           </div>
-        </div>
-        <button type="submit" className="artists--action">
-          {editingArtist.id ? "Update" : "Add"}
-        </button>
-        {editingArtist.id && (
-          <button
-            className="artists--action"
-            onClick={() => setEditingArtist(INIT_ARTIST)}
-          >
-            Cancel
+          <button type="submit" className="artists--action">
+            {editingArtist.id ? "Update" : "Add"}
           </button>
-        )}
-      </form>
+          {editingArtist.id && (
+            <button
+              className="artists--action"
+              onClick={() => setEditingArtist(INIT_ARTIST)}
+            >
+              Cancel
+            </button>
+          )}
+        </form>
+      </main>
     </div>
   );
 };

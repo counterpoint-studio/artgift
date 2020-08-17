@@ -56,7 +56,6 @@ function App() {
           <Redirect to="/slots" />
         </Route>
       </Switch>
-      <SignOut />
     </Router>
   );
 }
@@ -82,23 +81,25 @@ function PrivateRoute({ children, ...rest }: RouteProps) {
     };
   }, []);
   return (
-    <Route
-      {...rest}
-      render={({ location }) =>
-        isSignedIn === null ? (
-          <></>
-        ) : isSignedIn ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: "/signin",
-              state: { from: location },
-            }}
-          />
-        )
-      }
-    />
+    <div className="wrapper">
+      <Route
+        {...rest}
+        render={({ location }) =>
+          isSignedIn === null ? (
+            <></>
+          ) : isSignedIn ? (
+            children
+          ) : (
+            <Redirect
+              to={{
+                pathname: "/signin",
+                state: { from: location },
+              }}
+            />
+          )
+        }
+      />
+    </div>
   );
 }
 

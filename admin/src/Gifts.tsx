@@ -181,87 +181,92 @@ export const Gifts: React.FC = () => {
   let tableData = getTableData();
   return (
     <div className="gifts">
-      <Navigation currentPage="gifts" />
-      <h2>Summary</h2>
-      <GiftsSummary data={tableData} />
-      <h2>All Gifts</h2>
-      <table className="gifts--list">
-        <thead></thead>
-        <tbody>
-          {tableData.map(({ gift, slot, assignedArtist }) => (
-            <React.Fragment key={gift.id}>
-              <tr onClick={() => onToggleDetails(gift)}>
-                <td>{slot && formatDate(slot.date)}</td>
-                <td>{slot && formatTime(slot.time)}</td>
-                <td>{slot?.region}</td>
-                <td>{gift.toAddress}</td>
-                <td>{gift.fromEmail}</td>
-                <td>
-                  <span
-                    className={classNames(
-                      "giftStatus",
-                      gift.status || "pending"
-                    )}
-                  >
-                    {gift.status || "pending"}
-                  </span>
-                </td>
-                <td>
-                  <span
-                    className={classNames(
-                      "giftArtistStatus",
-                      assignedArtist ? "assigned" : "unassigned"
-                    )}
-                  >
-                    {gift.status === "confirmed"
-                      ? assignedArtist || "no artist"
-                      : ""}
-                  </span>
-                </td>
-                <td>
-                  {gift.status !== "confirmed" &&
-                    gift.status !== "rejected" &&
-                    gift.status !== "cancelled" && (
-                      <button
-                        onClick={(evt) =>
-                          onUpdateGiftStatus(gift, "confirmed", evt)
-                        }
-                      >
-                        Confirm
-                      </button>
-                    )}
-                  {gift.status !== "rejected" &&
-                    gift.status !== "cancelled" && (
-                      <button
-                        onClick={(evt) =>
-                          onUpdateGiftStatus(gift, "rejected", evt)
-                        }
-                      >
-                        Reject
-                      </button>
-                    )}
-                </td>
-                <td>
-                  <button onClick={() => onDeleteGift(gift)}>Delete</button>
-                </td>
-              </tr>
-              {showingDetails[gift.id] && (
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td colSpan={4}>
-                    <GiftDetails
-                      gift={gift}
-                      onUpdateGift={onUpdateGiftDetails}
-                    />
+      <header className="header">
+        <Navigation currentPage="gifts" />
+      </header>
+
+      <main className="main">
+        <h2>Summary</h2>
+        <GiftsSummary data={tableData} />
+        <h2>All Gifts</h2>
+        <table className="gifts--list">
+          <thead></thead>
+          <tbody>
+            {tableData.map(({ gift, slot, assignedArtist }) => (
+              <React.Fragment key={gift.id}>
+                <tr onClick={() => onToggleDetails(gift)}>
+                  <td>{slot && formatDate(slot.date)}</td>
+                  <td>{slot && formatTime(slot.time)}</td>
+                  <td>{slot?.region}</td>
+                  <td>{gift.toAddress}</td>
+                  <td>{gift.fromEmail}</td>
+                  <td>
+                    <span
+                      className={classNames(
+                        "giftStatus",
+                        gift.status || "pending"
+                      )}
+                    >
+                      {gift.status || "pending"}
+                    </span>
+                  </td>
+                  <td>
+                    <span
+                      className={classNames(
+                        "giftArtistStatus",
+                        assignedArtist ? "assigned" : "unassigned"
+                      )}
+                    >
+                      {gift.status === "confirmed"
+                        ? assignedArtist || "no artist"
+                        : ""}
+                    </span>
+                  </td>
+                  <td>
+                    {gift.status !== "confirmed" &&
+                      gift.status !== "rejected" &&
+                      gift.status !== "cancelled" && (
+                        <button
+                          onClick={(evt) =>
+                            onUpdateGiftStatus(gift, "confirmed", evt)
+                          }
+                        >
+                          Confirm
+                        </button>
+                      )}
+                    {gift.status !== "rejected" &&
+                      gift.status !== "cancelled" && (
+                        <button
+                          onClick={(evt) =>
+                            onUpdateGiftStatus(gift, "rejected", evt)
+                          }
+                        >
+                          Reject
+                        </button>
+                      )}
+                  </td>
+                  <td>
+                    <button onClick={() => onDeleteGift(gift)}>Delete</button>
                   </td>
                 </tr>
-              )}
-            </React.Fragment>
-          ))}
-        </tbody>
-      </table>
-      <button onClick={onExportCSV}>Export as CSV</button>
+                {showingDetails[gift.id] && (
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td colSpan={4}>
+                      <GiftDetails
+                        gift={gift}
+                        onUpdateGift={onUpdateGiftDetails}
+                      />
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
+            ))}
+          </tbody>
+        </table>
+        <button onClick={onExportCSV}>Export as CSV</button>
+      </main>
     </div>
   );
 };

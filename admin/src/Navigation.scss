@@ -1,20 +1,89 @@
 .navigation {
-  margin-bottom: 40px;
+  .inner {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &--primary,
+  &--secondary {
+    display: inline-flex;
+    flex-flow: row wrap;
+  }
 
   a {
-    display: inline-block;
-    margin-right: 20px;
-    &.isCurrent {
-      text-decoration: underline;
+    position: relative;
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    text-transform: capitalize;
+    padding: 24px 30px;
+    background: transparent;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background: rgba(white, 0.05);
+    }
+
+    &.isCurrent:after {
+      content: "";
+      display: block;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: white;
     }
   }
+
   .appState {
-    font-size: 16px;
-    position: fixed;
-    top: 30px;
-    right: 20px;
-    button {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    margin-right: 30px;
+    font-weight: 600;
+    color: white;
+
+    &Toggle {
+      display: flex;
+      flex-flow: row nowrap;
       margin-left: 10px;
+      background: rgba(white, 0.05);
+      border-radius: 5px;
+    }
+
+    &Current,
+    &Alt {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 15px;
+      background: none;
+      border: none;
+      border-radius: 0;
+      color: white;
+      font-weight: 600;
+    }
+
+    &Current {
+      background: rgba(white, 0.1);
+      border-radius: 5px;
+      box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
+    }
+
+    &Alt {
+      color: rgba(white, 0.25);
+      transition: color 0.15s ease;
+
+      &:hover {
+        color: rgba(white, 0.5);
+      }
     }
   }
 }

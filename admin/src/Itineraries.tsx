@@ -55,18 +55,23 @@ export const Itineraries: React.FC = () => {
 
   return (
     <div className="itineraries">
-      <Navigation currentPage="itineraries" />
-      {REGIONS.map((r) => (
-        <div key={r}>
-          <h2>{r}</h2>
-          <RegionItineraries
-            regionId={r}
-            artists={artists}
-            onAddItinerary={addItinerary}
-            onDeleteItinerary={deleteItinerary}
-          />
-        </div>
-      ))}
+      <header className="header">
+        <Navigation currentPage="itineraries" />
+      </header>
+
+      <main className="main">
+        {REGIONS.map((r) => (
+          <div key={r}>
+            <h2>{r}</h2>
+            <RegionItineraries
+              regionId={r}
+              artists={artists}
+              onAddItinerary={addItinerary}
+              onDeleteItinerary={deleteItinerary}
+            />
+          </div>
+        ))}
+      </main>
     </div>
   );
 };

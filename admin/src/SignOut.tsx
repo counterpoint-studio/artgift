@@ -14,7 +14,7 @@ export const SignOut: React.FC = () => {
     };
   }, []);
   return isSignedIn ? (
-    <button className="signOut" onClick={() => firebase.auth().signOut()}>
+    <button className="signOutButton" onClick={() => firebase.auth().signOut()}>
       Sign out
     </button>
   ) : (

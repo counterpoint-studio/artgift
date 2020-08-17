@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import classNames from "classnames";
 import firebase from "firebase/app";
 
-import "./Navigation.scss";
+import { SignOut } from "./SignOut";
 import { AppState } from "./types";
+
+import "./Navigation.scss";
 
 interface NavigationProps {
   currentPage:
@@ -32,75 +34,109 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
   };
 
   return (
-    <h1 className="navigation">
-      <Link
-        to="/slots"
-        className={classNames({ isCurrent: currentPage === "slots" })}
-      >
-        Slots
-      </Link>
-      <Link
-        to="/gifts"
-        className={classNames({ isCurrent: currentPage === "gifts" })}
-      >
-        Gifts
-      </Link>
-      <Link
-        to="/artists"
-        className={classNames({ isCurrent: currentPage === "artists" })}
-      >
-        Artists
-      </Link>
-      <Link
-        to="/itineraries"
-        className={classNames({ isCurrent: currentPage === "itineraries" })}
-      >
-        itineraries
-      </Link>
-      <Link
-        to="/admins"
-        className={classNames({ isCurrent: currentPage === "admins" })}
-      >
-        admins
-      </Link>
-      <Link
-        to="/auditlog"
-        className={classNames({ isCurrent: currentPage === "auditLog" })}
-      >
-        log
-      </Link>
-      <div className="appState">
-        {appState === "pre" && (
-          <>
-            Pre-reservations{" "}
-            <button onClick={() => updateAppState("open")}>&rarr;Open</button>
-          </>
-        )}
-        {appState === "open" && (
-          <>
-            Open{" "}
-            <button onClick={() => updateAppState("paused")}>
-              &rarr;Paused
-            </button>
-            <button onClick={() => updateAppState("post")}>&rarr;Closed</button>
-            <button onClick={() => updateAppState("pre")}>
-              &rarr;Pre-reservations
-            </button>
-          </>
-        )}
-        {appState === "paused" && (
-          <>
-            Paused{" "}
-            <button onClick={() => updateAppState("open")}>&rarr;Open</button>
-          </>
-        )}
-        {appState === "post" && (
-          <>
-            Closed{" "}
-            <button onClick={() => updateAppState("open")}>&rarr;Open</button>
-          </>
-        )}
+    <nav className="navigation">
+      <div className="inner">
+        <div className="navigation--primary">
+          <Link
+            to="/slots"
+            className={classNames({ isCurrent: currentPage === "slots" })}
+          >
+            Slots
+          </Link>
+          <Link
+            to="/gifts"
+            className={classNames({ isCurrent: currentPage === "gifts" })}
+          >
+            Gifts
+          </Link>
+          <Link
+            to="/artists"
+            className={classNames({ isCurrent: currentPage === "artists" })}
+          >
+            Artists
+          </Link>
+          <Link
+            to="/itineraries"
+            className={classNames({ isCurrent: currentPage === "itineraries" })}
+          >
+            Itineraries
+          </Link>
+          <Link
+            to="/admins"
+            className={classNames({ isCurrent: currentPage === "admins" })}
+          >
+            Admins
+          </Link>
+          <Link
+            to="/auditlog"
+            className={classNames({ isCurrent: currentPage === "auditLog" })}
+          >
+            Log
+          </Link>
+        </div>
+        <div className="navigation--secondary">
+          <div className="appState">
+            Status:
+            {appState === "pre" && (
+              <div className="appStateToggle">
+                <div className="appStateCurrent">Pre-reservations</div>
+                <button
+                  className="appStateAlt"
+                  onClick={() => updateAppState("open")}
+                >
+                  Open
+                </button>
+              </div>
+            )}
+            {appState === "open" && (
+              <div className="appStateToggle">
+                <div className="appStateCurrent">Open</div>
+                <button
+                  className="appStateAlt"
+                  onClick={() => updateAppState("paused")}
+                >
+                  Paused
+                </button>
+                <button
+                  className="appStateAlt"
+                  onClick={() => updateAppState("post")}
+                >
+                  Closed
+                </button>
+                <button
+                  className="appStateAlt"
+                  onClick={() => updateAppState("pre")}
+                >
+                  Pre-reservations
+                </button>
+              </div>
+            )}
+            {appState === "paused" && (
+              <div className="appStateToggle">
+                <div className="appStateCurrent">Paused</div>
+                <button
+                  className="appStateAlt"
+                  onClick={() => updateAppState("open")}
+                >
+                  Open
+                </button>
+              </div>
+            )}
+            {appState === "post" && (
+              <div className="appStateToggle">
+                <div className="appStateCurrent">Closed</div>
+                <button
+                  className="appStateAlt"
+                  onClick={() => updateAppState("open")}
+                >
+                  Open
+                </button>
+              </div>
+            )}
+          </div>
+          <SignOut />
+        </div>
       </div>
-    </h1>
+    </nav>
   );
 };
