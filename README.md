@@ -532,4 +532,4 @@ In the _Admin_ section you specify the email addresses of the people who are all
 
 ## License
 
-The source code and other assets in this repository are [licensed under ISC](LICENSE.md)
+The source code and other assets in this repository are [licensed under MIT](LICENSE.md)
