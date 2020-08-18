@@ -2,7 +2,7 @@
 
 _Short tagline, grab from the Helsinki Fest site._
 
-GIF EXCERPT OF BOOKING PROCESS VIDEO
+![Intro animation](/docs-assets/intro-animation.gif)
 
 This repository contains the application source code for the Art Gift application and backend, as well as instructions for setting up Art Gifts in your own city.
 
@@ -312,13 +312,13 @@ To remove a language you don't want to include (when e.g. you dont want Finnish 
 
 ```js
 {
-    resolve: `gatsby-plugin-intl`,
-    options: {
+  resolve: `gatsby-plugin-intl`,
+  options: {
     path: `${__dirname}/src/intl`,
     languages: [`en`],
     defaultLanguage: `en`,
     redirect: true,
-    },
+  },
 },
 ```
 
@@ -328,13 +328,13 @@ To add a new language, first add it to the `gatsby-plugin-intl` section of `fron
 
 ```js
 {
-    resolve: `gatsby-plugin-intl`,
-    options: {
+  resolve: `gatsby-plugin-intl`,
+  options: {
     path: `${__dirname}/src/intl`,
     languages: [`en`, `is`],
     defaultLanguage: `en`,
     redirect: true,
-    },
+  },
 },
 ```
 
