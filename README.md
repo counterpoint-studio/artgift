@@ -6,7 +6,7 @@ _TODO: Tagline, grabbed from the Helsinki Fest site, with link back to it._
 
 This repository contains the application source code for the Art Gift application and backend. Everything you need to set up an Art Gift event in your own city!
 
-# Table of Contents
+## Table of Contents
 
 - [Conceptual Overview](#conceptual-overview)
 - [Process Overview](#process-overview)
@@ -100,7 +100,12 @@ Artists are sent invitations into the app, from which they may see the gifts ass
 
 Artists deliver the gifts, following the itineraries they were assigned.
 
-PHOTO OF AN ART GIFT?
+<figure>
+   <img src="docs-assets/Taidelahjat_08_kuvaaja_Saara_Autere.jpg">
+   <figcaption>
+   Tytti Arola delivering an Art Gift in Helsinki. Photo: Saara Autere / Helsinki Fest
+   </figcaption>
+</figure>
 
 ## Development
 
@@ -110,7 +115,7 @@ We do, however, expect some further development work to be needed when the softw
 
 ## Technical Overview
 
-![system diagram](docs-assets/artgift-system-diagram.png)
+<img src="docs-assets/artgift-system-diagram.png" style="max-width: 500px">
 
 The system is written in TypeScript, and consists of three main subsystems, which reside in three respective directories:
 
@@ -525,7 +530,7 @@ Once everything up and running, localized, and customised, the administration of
 
 In the top left corner of the admin, you will see the current store state, and buttons for changing it.
 
-![Admin store states](/docs-assets/admin-store-states.png)
+<img src="docs-assets/admin-store-state.png" style="max-width: 500px">
 
 The store states are:
 
@@ -538,13 +543,17 @@ The store states are:
 
 In the _Slots_ section, you can manage Slots that may then be booked by people. This should generally be done before the store is opened, according to how many artists you plan to assign to each region.
 
+![Slot management](docs-assets/admin-slots.png)
+
 The page lists all the slots that have been added to the system, as well as their reservation state - whether they currently have a gift attached to them or not. Slots that are still available may also be deleted.
 
 At the bottom of the page, there is a form that may be used to add new Slots to the system, by choosing a region, date, and time.
 
 ### Gift Management & Approval
 
-In the _Gifts_ section, you see all the Gifts people have booked. They are shown in reverse chronological order.
+In the _Gifts_ section, you see all the Gifts people have booked. They are shown in reverse chronological order. A section with summary statistics about the gift booking situation per region is also shown.
+
+![Gift management](docs-assets/admin-gifts.png)
 
 This is where most of your time will be spent when the store is open. People will make bookings, which will turn up on this list in real time in the "Pending" state. Review each one to see whether it is appropriate and take one of two actions:
 
@@ -555,13 +564,17 @@ You may also _Delete_ a gift, which releases the reserved slot back, but does _n
 
 ### Artist Management
 
-In the _Artists_ section, you manage the Artists that will deliver gifts: their names and contact information. You can add, edit and delete artists at will.
+In the _Artists_ section, you manage the Artists that will deliver gifts: their names and contact information. You can add, edit and remove artists at will.
+
+![Artist management](docs-assets/admin-artists.png)
 
 Each artist will have an automatically generated page in the frontend application, which will list all their itineraries and gift details. You'll find the link to each artist's Artist page here, and you can use the Send Invitation button to send them a link to their own page over email and SMS.
 
 ### Artist Itinerary Management
 
 In the _Itineraries_ section, you assign the artists itineraries, for when they should be at a given region delivering gifts.
+
+![Itinerary management](docs-assets/admin-itineraries.png)
 
 There is a subheading for each geographic region, and under it a list of Artist time windows, which you can add and delete. Once you have done so, _the system will automatically assign gifts to the artists in real time_, and this is done again whenever a new Gift is confirmed or cancelled. You can see which gifts are under each itinerary by clicking to expand it. The _Gifts_ page also shows which artist each gift has been assigned.
 
@@ -580,4 +593,4 @@ In the _Admin_ section you specify the email addresses of the people who are all
 
 ## License
 
-The source code and other assets in this repository are [licensed under MIT](LICENSE.md)
+The source code and other assets in this repository are [open source licensed under the MIT license](LICENSE.md)
