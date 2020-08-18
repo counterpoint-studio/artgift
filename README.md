@@ -1,10 +1,10 @@
 # Art Gift
 
-_Short tagline, grab from the Helsinki Fest site._
+_TODO: Tagline, grabbed from the Helsinki Fest site, with link back to it._
 
-![Intro animation](/docs-assets/intro-animation.gif)
+![Intro animation](docs-assets/intro-animation.gif)
 
-This repository contains the application source code for the Art Gift application and backend, as well as instructions for setting up Art Gifts in your own city.
+This repository contains the application source code for the Art Gift application and backend. Everything you need to set up an Art Gift event in your own city!
 
 TOC
 
@@ -62,7 +62,7 @@ We do, however, expect some further development work to be needed when the softw
 
 ## Technical Overview
 
-![system diagram](/docs-assets/artgift-system-diagram.png)
+![system diagram](docs-assets/artgift-system-diagram.png)
 
 The system is written in TypeScript, and consists of three main subsystems, which reside in three respective directories:
 
