@@ -1,4 +1,4 @@
-# Art Gift
+# Art Gifts
 
 Art Gifts are short 5 minute performances – of music, dance, circus and poetry – safely delivered in front of the recipients house or under their balcony. Everybody can use a simple web app to send one to a friend or relative, free of charge.
 
