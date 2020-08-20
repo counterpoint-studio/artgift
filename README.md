@@ -81,7 +81,8 @@ The central concepts you see in the application code as well as the database are
 
 ## Process Overview
 
-In a chronological order and from a technical point of view, the process of runnning an Art Gifts event has roughly the following timeline:
+In a chronological order and from a technical point of view, the process of runnning an Art Gifts event has roughly the following timeline.
+On details about how events transpired in Helsinki Fest 2020, see [the production notes](https://github.com/counterpoint-studio/artgift/wiki/Event-Production-Notes-Helsinki-Fest-2020)
 
 ### 1. Preparation
 
@@ -528,7 +529,11 @@ Once you know what your domains are, remember to also configure them to
 
 ## Administration Guide
 
-Once everything up and running, localized, and customised, the administration of the system mainly happens through the Admin UI. The admin is divided into a handful of functional areas:
+Once everything up and running, localized, and customised, the administration of the system mainly happens through the Admin UI.
+
+This guide describes the major functional areas of the admin. For guidance on how to structure your Art Gifts events, you will some some valuable information in [the production notes from Helsinki Fest](https://github.com/counterpoint-studio/artgift/wiki/Event-Production-Notes-Helsinki-Fest-2020).
+
+The admin is divided into a handful of functional areas:
 
 ### Store State Management
 
