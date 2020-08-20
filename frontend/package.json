@@ -30,6 +30,7 @@
     "gatsby-plugin-sitemap": "^2.4.4",
     "gatsby-source-filesystem": "^2.3.8",
     "gatsby-transformer-sharp": "^2.5.3",
+    "serialize-javascript": ">=3.1.0",
     "geojson-geometries-lookup": "^0.3.1",
     "mapbox-gl": "^1.10.1",
     "nanoid": "^3.1.10",
