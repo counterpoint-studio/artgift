@@ -1,6 +1,8 @@
 # Art Gift
 
-_TODO: Tagline, grabbed from the Helsinki Fest site, with link back to it._
+Art Gifts are short 5 minute performances – of music, dance, circus and poetry – safely delivered in front of the recipients house or under their balcony. Everybody can use a simple web app to send one to a friend or relative, free of charge.
+
+Art Gifts were [originally introduced at Helsinki Fest 2020](https://helsinkifest.fi/artgifts/), where selected 20 artists were paid a fee per day in exchange for about eight Art Gifts to be performed around a particular district. Hundreds of Art Gifts were immediately booked.
 
 ![Intro animation](docs-assets/intro-animation.gif)
 
