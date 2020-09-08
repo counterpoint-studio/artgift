@@ -16,7 +16,10 @@ module.exports = {
     `gatsby-plugin-map-background`,
     `gatsby-plugin-sass`,
     //`gatsby-plugin-sitemap`,
-    `gatsby-plugin-netlify`,
+    {
+      resolve: `gatsby-plugin-netlify`,
+      generateMatchPathRewrites: false,
+    },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
