@@ -23,7 +23,7 @@
     "handlebars": "^4.7.6",
     "lodash": "^4.17.19",
     "mandrill-api": "^1.0.45",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "@types/chai": "^4.2.12",
