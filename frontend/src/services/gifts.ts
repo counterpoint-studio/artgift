@@ -1,5 +1,6 @@
 import firebase from 'gatsby-plugin-firebase';
 import { nanoid } from 'nanoid';
+import { DEFAULT_TO_LANGUAGE } from '../constants';
 
 import { GiftSlot, Gift, Artist, AppState } from '../types';
 
@@ -17,7 +18,7 @@ export function initGift(fromLanguage = 'fi'): Gift {
         status: "creating",
         toName: "",
         toAddress: "",
-        toLanguage: "fi",
+        toLanguage: DEFAULT_TO_LANGUAGE,
         toSignificance: "",
         fromName: "",
         fromPhoneNumber: "",

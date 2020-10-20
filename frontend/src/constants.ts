@@ -17,3 +17,6 @@ export const ADDRESS_STREET_NUMBER_MATCH = /\d/;
 
 // To extract from a street address the part that is needed to geocode it with the Mapbox API
 export const ADDRESS_GEOCODING_PREFIX = /.*?\d+/;
+
+// The default selection for the gift receiver language
+export const DEFAULT_TO_LANGUAGE = 'fi';
