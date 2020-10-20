@@ -197,7 +197,10 @@ function renderAssignment(
                     {gift.fromEmail}
                   </a>
                   <br />
-                  <a className="phone" href={`tel:#31#${gift.fromPhoneNumber}`}>
+                  <a
+                    className="phone"
+                    href={`tel:${PHONE_NUMBER_PRIVACY_PREFIX}${gift.fromPhoneNumber}`}
+                  >
                     <span className="phonePrivacyPrefix">
                       {PHONE_NUMBER_PRIVACY_PREFIX}
                     </span>
