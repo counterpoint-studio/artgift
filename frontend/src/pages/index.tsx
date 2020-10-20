@@ -101,11 +101,11 @@ const IntroPage = () => {
             <p>
               {intl.formatMessage({ id: "introMoreInfo" })}:{" "}
               <a
-                href="https://helsinkifest.fi"
+                href={intl.formatMessage({ id: "introMoreInfoLinkTarget" })}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                helsinkifest.fi
+                {intl.formatMessage({ id: "introMoreInfoLinkText" })}
               </a>
             </p>
           </div>
