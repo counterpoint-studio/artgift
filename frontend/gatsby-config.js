@@ -19,6 +19,11 @@ module.exports = {
     {
       resolve: `gatsby-plugin-netlify`,
       generateMatchPathRewrites: false,
+      options: {
+        headers: {
+          'Referrer-Policy': 'no-referrer-when-downgrade'
+        }
+      }
     },
     {
       resolve: `gatsby-source-filesystem`,
