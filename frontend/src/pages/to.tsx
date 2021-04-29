@@ -204,7 +204,7 @@ const ToPage = () => {
               }}
               onBlur={() => {}}
               onChange={name => {
-                setGift({ ...gift, toName: name })
+                setGift(g => ({ ...gift, toName: name }))
               }}
               validationOption={{
                 required: false,
@@ -226,6 +226,7 @@ const ToPage = () => {
                 onChange: (_, { newValue }) => onUpdateAddress(newValue),
                 asyncMsgObj: addressValidationResult,
               }}
+              focusInputOnSuggestionClick={false}
               renderInputComponent={inputProps => (
                 <Textbox
                   {...omit(inputProps, "ref")}

@@ -55,8 +55,8 @@ export async function locateAddress(
     if (containingFeatures.features.length > 0) {
       let region = fromRegions.find(
         r =>
-          r.feature.properties.id ===
-          containingFeatures.features[0].properties.id
+          r.feature.properties.ID1 ===
+          containingFeatures.features[0].properties.ID1
       )
       return {
         region: region.name,
