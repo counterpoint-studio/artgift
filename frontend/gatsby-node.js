@@ -15,10 +15,6 @@ exports.onCreateWebpackConfig = ({ stage, loaders, actions, plugins }) => {
             test: /mapbox-gl/,
             use: loaders.null(),
           },
-          {
-            test: /@mapbox/,
-            use: loaders.null(),
-          },
         ],
       },
       plugins: [new webpack.IgnorePlugin({
