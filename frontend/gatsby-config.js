@@ -21,7 +21,9 @@ module.exports = {
       generateMatchPathRewrites: false,
       options: {
         headers: {
-          'Referrer-Policy': 'no-referrer-when-downgrade'
+          '/*': [
+            'Referrer-Policy: no-referrer-when-downgrade'
+          ]
         }
       }
     },
