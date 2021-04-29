@@ -4,6 +4,8 @@
  * See: https://www.gatsbyjs.org/docs/node-apis/
  */
 
+let webpack = require('webpack');
+
 exports.onCreateWebpackConfig = ({ stage, loaders, actions, plugins }) => {
   if (stage === "build-html" || stage === "develop-html") {
     actions.setWebpackConfig({
@@ -15,7 +17,10 @@ exports.onCreateWebpackConfig = ({ stage, loaders, actions, plugins }) => {
           },
         ],
       },
-      plugins: [plugins.ignore(/^electron$/)],
+      plugins: [new webpack.IgnorePlugin({
+        resourceRegExp: /^electron$/
+      })],
     })
   }
 }
+
