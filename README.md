@@ -150,10 +150,10 @@ This technical setup keeps you in the original Helsinki geographic region, local
 
 #### Firebase
 
-1. Go to [https://firebase.google.com/](firebase.google.com) and sign in with your Google account, if you have not already.
+1. Go to [https://firebase.google.com/](https://firebase.google.com) and sign in with your Google account, if you have not already.
 2. Click on "Get Started", then "Create a Project" and follow the on-screen instructions for setting up a Firebase project, until your through to the Dashboard of your new project.
 3. Go to Settings -> Usage and Billing -> Details & Settings and enable the "Blaze" billing plan.
-4. Go to Database -> Create database. Create a database in production mode, choosing the closest geographic location to you.
+4. Go to Firestore -> Create database. Create a database in production mode, choosing the closest geographic location to you.
 5. Go to Project Overview -> Add app. Register a _Web App_ called "Frontend".
    Once you've done so, find the values shown in the `firebaseConfig` object under the "Add Firebase SDK" section.
 
@@ -162,7 +162,6 @@ This technical setup keeps you in the original Helsinki geographic region, local
    ```
    FIREBASE_API_KEY=your api key
    FIREBASE_AUTH_DOMAIN=your auth domain
-   FIREBASE_DATABASE_URL=your database url
    FIREBASE_PROJECT_ID=your project id
    FIREBASE_STORAGE_BUCKET=your storage bucket
    FIREBASE_MESSAGING_SENDER_ID=your messaging sender id
@@ -184,7 +183,7 @@ This technical setup keeps you in the original Helsinki geographic region, local
    REACT_APP_FIREBASE_APP_ID=your app id
    ```
 
-7. Go to Authentication -> Set Up Sign In method. Enable the "Google" Sign-in provider. Under Authorized domains, be sure to include both `localhost` and the domain name under which you plan to deploy the Art Gift Admin user interface.
+7. Go to Authentication -> Get Started. Enable the "Google" Sign-in provider. Under Authorized domains, be sure to include both `localhost` and the domain name under which you plan to deploy the Art Gift Admin user interface.
 8. Go to Settings -> Service Accounts -> Firebase Admin SDK. Click "Generate new private key". This will download a Firebase Admin SDK private key file we'll need to run local scripts. Rename it to `/your/artgift/clone/dir/functions/art-gift-firebase-adminsdk-credentials.json`.
 
 #### Mapbox
