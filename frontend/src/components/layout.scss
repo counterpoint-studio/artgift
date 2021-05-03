@@ -210,6 +210,7 @@ body {
 }
 
 .inputGroup {
+  position: relative;
   display: flex;
   flex-flow: column nowrap;
   margin-bottom: $fontSizeBaseMobileXS * 2;
@@ -246,8 +247,7 @@ body {
   input[type="email"],
   input[type="tel"] {
     width: 100%;
-    padding-left: 0;
-    padding-right: 0;
+    padding: 3px 12px;
     border-radius: 0;
     border: none;
     border-bottom: 1px solid black;
@@ -268,24 +268,13 @@ body {
     &:focus {
       outline: none;
     }
-
-    &.react-inputs-validation__error___2aXSp {
-      border: none;
-      border-bottom: 1px solid red;
-
-      font-size: $fontSizeBaseMobileXS;
-
-      @media (min-width: 360px) {
-        font-size: $fontSizeBaseMobile;
-      }
-
-      @media (min-width: 768px) {
-        font-size: $fontSizeBase;
-      }
-    }
   }
 
   .react-inputs-validation__msg_identifier {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transform: translateY(100%);
     display: inline-flex;
     align-items: center;
     background: red;
@@ -300,9 +289,8 @@ body {
     display: flex;
     align-items: center;
     width: 100%;
-    margin-top: $fontSizeBase;
-    padding: 0 28px 3px 12px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 7.2'%3E%3Cpath style='fill:%23000000' d='M0,1.6,6,7.2l6-5.6L10.4,0,6,4,1.6,0Z'/%3E%3C/svg%3E") !important;
+    padding: 3px 28px 3px 12px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 7.2'%3E%3Cpath style='fill:%23ffffff' d='M0,1.6,6,7.2l6-5.6L10.4,0,6,4,1.6,0Z'/%3E%3C/svg%3E") !important;
     background-size: 10px 12px !important;
     background-repeat: no-repeat !important;
     background-position: right 13px center !important;
@@ -341,7 +329,6 @@ body {
   }
 
   textarea {
-    margin-top: $fontSizeBase;
     border-radius: 0;
     border: 1px solid black;
     padding: (0.5 * $fontSizeBase);
