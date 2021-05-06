@@ -143,9 +143,13 @@ const GiftsPage: React.FC<PageProps> = ({ location }) => {
         key="helmet"
       />
       <main
-        className={classNames("main", {
-          isVisible: mounted && !isMapMoving,
-        })}
+        className={classNames(
+          "main",
+          camelCase(gift.toLocation?.region.toLowerCase()),
+          {
+            isVisible: mounted && !isMapMoving,
+          }
+        )}
       >
         <h1>
           {intl.formatMessage({ id: "giftsTitle" })}:{" "}
