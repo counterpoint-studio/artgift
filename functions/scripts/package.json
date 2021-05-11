@@ -3,7 +3,7 @@
   "dependencies": {
     "@types/lodash": "^4.14.157",
     "firebase-admin": "^8.10.0",
-    "lodash": "^4.17.19"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "ts-node": "^8.10.2",
