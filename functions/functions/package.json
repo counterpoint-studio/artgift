@@ -23,7 +23,8 @@
     "handlebars": "^4.7.7",
     "lodash": "^4.17.21",
     "mandrill-api": "^1.0.45",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "twilio": "^3.63.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.17",
