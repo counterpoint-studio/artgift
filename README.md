@@ -133,7 +133,7 @@ In addition to the code contained in this repository, the system has 3-4 service
 - _Firebase_, including a Firestore database, and Functions for backend business logic.
 - _Mapbox_ for rendering map views and for address geocoding.
 - _Mandrill_ for outgoing emails.
-- An _SMS sending API_ for outgoing text messages. In Helsinki we interfaced with [https://tekstari.fi/](tekstari.fi) but this will need to be substituted with a local operator in your country.
+- An _SMS sending API_ for outgoing text messages. We have technical integrations for [Twilio](http://twilio.com/) (worldwide) and [https://tekstari.fi/](tekstari.fi) (Finland) but you may also want to provide a local operator for your country.
 
 ## Setup Guide
 
@@ -231,9 +231,18 @@ After having setup the Firebase Project and Applications as described above, you
 
 ### Enable And Customise SMS Sending
 
-The system is capable of sending out SMS notifications of bookings, confirmations, and reminders. But as the technical means of sending SMSs are specific to each country, you will likely need to do a bit of development work to implement one for an SMS provider in your country.
+The system is capable of sending out SMS notifications of bookings, confirmations, and reminders. However, depending on the telecom situation in your country, there might be some work required to set this up. By default, SMS sending is disabled, but an adaptor for [Twilio](https://www.twilio.com/) is available, which you can enable if that works in your country and you are comfortable with their pricing.
 
-By default, SMS sending is disabled. Go to `functions/functions/src/sms/index.ts` to see how to enable them, and use the `tekstariFiSMSSender.ts` as an example for how to create a sender that works with the API of your SMS provider.
+To enable Twilio, go to `functions/functions/src/sms/index.ts` and uncomment the Twilio sender. Then go [sign up for a Twilio account](https://www.twilio.com/) and add some balance. Once you have done so, find the _Project SID_ and _Auth Token_ from your Twilio dashboard, and set them as Firebase configuration variables:
+
+```
+firebase functions:config:set artgift.smsapi.accountsid="the acccount SID from Twilio"
+firebase functions:config:set artgift.smsapi.authtoken="the auth token from Twilio"
+```
+
+Then deploy the backend functions to Firebase once more: `firebase deploy`.
+
+If you want to use some other SMS sending service, you can use the `twilioSMSSender.ts` file as an example for how to create a sender that works with the API of your provider.
 
 ### Prepare And Apply Database Seed
 
